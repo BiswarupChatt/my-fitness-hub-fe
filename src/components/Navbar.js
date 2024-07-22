@@ -7,9 +7,10 @@ import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, 
 
 const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'Login', path: '/login' },
-    { name: 'Sign Up', path: '/coach-signup' },
+    { name: 'Pricing', path: '/pricing' },
     { name: 'About', path: '/about' },
+    { name: 'Login', path: '/login' },
+    { name: 'Get Started', path: '/coach-signup' },
 ]
 
 const userItems = [
