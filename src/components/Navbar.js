@@ -2,10 +2,19 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
+const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Login', path: '/login' },
+    { name: 'About us', path: '/about' },
+]
 
-const navItems = ['Home', 'Login', 'About us'];
-const userSettings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const userItems = [
+    { name: 'Profile', path: '/profile' },
+    { name: 'Account', path: '/account' },
+    { name: 'Logout', path: '/logout' },
+]
 
 export default function Navbar(props) {
     const { window } = props;
@@ -21,16 +30,18 @@ export default function Navbar(props) {
     };
 
     const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ my: 2 }}>
-                MyFitnessHub
-            </Typography>
+        <Box onClick={handleDrawerToggle} >
+            <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', display: 'flex', textAlign: 'center' }}>
+                <Typography variant="h6" sx={{ color: 'inherit' }}>
+                    MyFitnessHub
+                </Typography>
+            </Button>
             <Divider />
             <List>
                 {navItems.map((item) => (
-                    <ListItem key={item} disablePadding>
-                        <ListItemButton sx={{ textAlign: 'center' }}>
-                            <ListItemText primary={item} />
+                    <ListItem key={item.name} disablePadding>
+                        <ListItemButton component={Link} to={item.path} sx={{ textAlign: 'center' }}>
+                            <ListItemText primary={item.name} />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -54,17 +65,21 @@ export default function Navbar(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ flexGrow: 1, textAlign: { xs: 'center', sm: 'left' } }}
-                    >
-                        MyFitnessHub
-                    </Typography>
-                    <Box sx={{ display: { xs: 'none', sm: 'block' }, marginRight: 2  }}>
+
+                    <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'left'} }}>
+                        <Typography variant="h6" sx={{ color: '#fff',}}>
+                            MyFitnessHub
+                        </Typography>
+                    </Button>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' }, marginRight: 2 }}>
                         {navItems.map((item) => (
-                            <Button key={item} sx={{ color: '#fff' }}>
-                                {item}
+                            <Button
+                                key={item.name}
+                                component={Link}
+                                to={item.path}
+                                sx={{ color: '#fff' }}
+                            >
+                                {item.name}
                             </Button>
                         ))}
                     </Box>
@@ -90,9 +105,9 @@ export default function Navbar(props) {
                             open={Boolean(anchorElUser)}
                             onClose={handleToggleUserMenu}
                         >
-                            {userSettings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleToggleUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                            {userItems.map((setting) => (
+                                <MenuItem key={setting.name} component={Link} to={setting.path} onClick={handleToggleUserMenu}>
+                                    <Typography textAlign="center">{setting.name}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -117,7 +132,6 @@ export default function Navbar(props) {
                 </Drawer>
             </nav>
             <Box component="main" sx={{ p: 3 }}>
-                
             </Box>
         </Box>
     );
