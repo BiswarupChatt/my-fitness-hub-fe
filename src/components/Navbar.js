@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem } from '@mui/material';
+import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem, useScrollTrigger, Slide, Fab, Fade } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 
 const navItems = [
     { name: 'Home', path: '/' },
     { name: 'Login', path: '/login' },
-    { name: 'About us', path: '/about' },
+    { name: 'Sign Up', path: '/coach-signup' },
+    { name: 'About', path: '/about' },
 ]
 
 const userItems = [
@@ -15,6 +17,51 @@ const userItems = [
     { name: 'Account', path: '/account' },
     { name: 'Logout', path: '/logout' },
 ]
+
+
+function HideOnScroll(props) {
+    const { children, window } = props
+    const trigger = useScrollTrigger({
+        target: window ? window() : undefined,
+    });
+
+    return (
+        <Slide appear={false} direction="down" in={!trigger}>
+            {children}
+        </Slide>
+    );
+}
+
+function ScrollTop(props) {
+    const { children, window } = props
+    const trigger = useScrollTrigger({
+        target: window ? window() : undefined,
+        disableHysteresis: true,
+        threshold: 100,
+    });
+
+    const handleClick = (event) => {
+        const anchor = (event.target.ownerDocument || document).querySelector(
+            '#back-to-top-anchor',
+        )
+        if (anchor) {
+            anchor.scrollIntoView({
+                block: 'center',
+            });
+        }
+    }
+    return (
+        <Fade in={trigger}>
+            <Box
+                onClick={handleClick}
+                role="presentation"
+                sx={{ position: 'fixed', bottom: 16, right: 16 }}
+            >
+                {children}
+            </Box>
+        </Fade>
+    );
+}
 
 export default function Navbar(props) {
     const { window } = props;
@@ -54,66 +101,68 @@ export default function Navbar(props) {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar component="nav">
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
-                    <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'left'} }}>
-                        <Typography variant="h6" sx={{ color: '#fff',}}>
-                            MyFitnessHub
-                        </Typography>
-                    </Button>
-                    <Box sx={{ display: { xs: 'none', sm: 'block' }, marginRight: 2 }}>
-                        {navItems.map((item) => (
-                            <Button
-                                key={item.name}
-                                component={Link}
-                                to={item.path}
-                                sx={{ color: '#fff' }}
-                            >
-                                {item.name}
-                            </Button>
-                        ))}
-                    </Box>
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleToggleUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="https://picsum.photos/id/64/200" />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleToggleUserMenu}
+            <HideOnScroll {...props}>
+                <AppBar component="nav">
+                    <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{ mr: 2, display: { sm: 'none' } }}
                         >
-                            {userItems.map((setting) => (
-                                <MenuItem key={setting.name} component={Link} to={setting.path} onClick={handleToggleUserMenu}>
-                                    <Typography textAlign="center">{setting.name}</Typography>
-                                </MenuItem>
+                            <MenuIcon />
+                        </IconButton>
+
+                        <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'left' } }}>
+                            <Typography variant="h6" sx={{ color: '#fff', }}>
+                                MyFitnessHub
+                            </Typography>
+                        </Button>
+                        <Box sx={{ display: { xs: 'none', sm: 'block' }, marginRight: 2 }}>
+                            {navItems.map((item) => (
+                                <Button
+                                    key={item.name}
+                                    component={Link}
+                                    to={item.path}
+                                    sx={{ color: '#fff' }}
+                                >
+                                    {item.name}
+                                </Button>
                             ))}
-                        </Menu>
-                    </Box>
-                </Toolbar>
-            </AppBar>
+                        </Box>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip title="Open settings">
+                                <IconButton onClick={handleToggleUserMenu} sx={{ p: 0 }}>
+                                    <Avatar alt="Remy Sharp" src="https://picsum.photos/id/64/200" />
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleToggleUserMenu}
+                            >
+                                {userItems.map((setting) => (
+                                    <MenuItem key={setting.name} component={Link} to={setting.path} onClick={handleToggleUserMenu}>
+                                        <Typography textAlign="center">{setting.name}</Typography>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Box>
+                    </Toolbar >
+                </AppBar>
+            </HideOnScroll >
             <nav>
                 <Drawer
                     container={container}
@@ -131,12 +180,28 @@ export default function Navbar(props) {
                     {drawer}
                 </Drawer>
             </nav>
-            <Box component="main" sx={{ p: 3 }}>
-            </Box>
+            <Toolbar id="back-to-top-anchor" />
+            {/* <Box component="main" sx={{ p: 0 }}>
+            </Box> */}
+            <ScrollTop {...props}>
+                <Fab size="small" aria-label="scroll back to top">
+                    <KeyboardArrowUpIcon />
+                </Fab>
+            </ScrollTop>
         </Box>
-    );
-};
+    )
+}
 
 Navbar.propTypes = {
     window: PropTypes.func,
-};
+}
+
+HideOnScroll.propTypes = {
+    children: PropTypes.element.isRequired,
+    window: PropTypes.func,
+}
+
+ScrollTop.propTypes = {
+    children: PropTypes.element.isRequired,
+    window: PropTypes.func,
+}

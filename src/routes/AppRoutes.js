@@ -4,6 +4,7 @@ import LoginScreen from '../pages/LoginScreen'
 import AboutScreen from '../pages/AboutScreen'
 import ProfileScreen from '../pages/ProfileScreen'
 import AccountScreen from '../pages/AccountScreen'
+import CoachRegisterScreen from '../pages/CoachSignupScreen'
 
 export default function AppRoute() {
     return (
@@ -14,6 +15,7 @@ export default function AppRoute() {
             <Route path='/profile' element={<ProfileScreen />} />
             <Route path='/account' element={<AccountScreen />} />
             <Route path='/account' element={<AccountScreen />} />
+            <Route path='/coach-signup' element={<CoachRegisterScreen />} />
         </Routes>
     )
 }
