@@ -1,7 +1,7 @@
 export default function CoachRegisterScreen(){
     return(
         <div>
-            <h2>Coach Register Screen</h2>
+            <h2>Coach Sign Up Screen</h2>
         </div>
     )
 }

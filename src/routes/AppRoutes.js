@@ -4,6 +4,7 @@ import LoginScreen from '../pages/LoginScreen'
 import AboutScreen from '../pages/AboutScreen'
 import ProfileScreen from '../pages/ProfileScreen'
 import AccountScreen from '../pages/AccountScreen'
+import ForgetPasswordScreen from '../pages/ForegetPasswordScreen'
 import CoachRegisterScreen from '../pages/CoachSignupScreen'
 
 export default function AppRoute() {
@@ -15,6 +16,7 @@ export default function AppRoute() {
             <Route path='/profile' element={<ProfileScreen />} />
             <Route path='/account' element={<AccountScreen />} />
             <Route path='/account' element={<AccountScreen />} />
+            <Route path='/forget-password' element={<ForgetPasswordScreen />} />
             <Route path='/coach-signup' element={<CoachRegisterScreen />} />
         </Routes>
     )

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem, useScrollTrigger, Slide, Fab, Fade } from '@mui/material';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem, useScrollTrigger, Slide, Fab, Fade } from '@mui/material';
 
 const navItems = [
     { name: 'Home', path: '/' },
@@ -64,6 +64,7 @@ function ScrollTop(props) {
 }
 
 export default function Navbar(props) {
+
     const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
@@ -181,8 +182,7 @@ export default function Navbar(props) {
                 </Drawer>
             </nav>
             <Toolbar id="back-to-top-anchor" />
-            {/* <Box component="main" sx={{ p: 0 }}>
-            </Box> */}
+            
             <ScrollTop {...props}>
                 <Fab size="small" aria-label="scroll back to top">
                     <KeyboardArrowUpIcon />
