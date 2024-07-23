@@ -1,6 +1,8 @@
-import React from 'react';
-import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography, IconButton } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
 
@@ -19,8 +21,9 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-
 export default function Login() {
+    const [showPassword, setShowPassword] = useState(false)
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -76,9 +79,19 @@ export default function Login() {
                                 fullWidth
                                 name="password"
                                 label="Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 autoComplete="current-password"
+                                InputProps={{
+                                    endAdornment: (
+                                        <IconButton
+                                            aria-label="Toggle password visibility"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                        </IconButton>
+                                    ),
+                                }}
                             />
                             <Button
                                 type="submit"

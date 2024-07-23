@@ -183,7 +183,7 @@ export default function Navbar(props) {
                 </Drawer>
             </nav>
             <Toolbar id="back-to-top-anchor" />
-            
+
             <ScrollTop {...props}>
                 <Fab size="small" aria-label="scroll back to top">
                     <KeyboardArrowUpIcon />

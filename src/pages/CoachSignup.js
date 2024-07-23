@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography, FormControlLabel, Checkbox, Tooltip } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography, FormControlLabel, Checkbox, Tooltip, IconButton } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function Copyright(props) {
     return (
@@ -22,11 +24,13 @@ const defaultTheme = createTheme();
 
 export default function CoachSignup() {
 
+    const [showPassword, setShowPassword] = useState(false)
     const [termsChecked, setTermsChecked] = useState(false)
 
     const handleTermsChange = (e) => {
         setTermsChecked(e.target.checked);
     }
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -105,9 +109,19 @@ export default function CoachSignup() {
                                         fullWidth
                                         name="password"
                                         label="Password"
-                                        type="password"
+                                        type={showPassword ? 'text' : 'password'}
                                         id="password"
                                         autoComplete="new-password"
+                                        InputProps={{
+                                            endAdornment: (
+                                                <IconButton
+                                                    aria-label="Toggle password visibility"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                >
+                                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                                </IconButton>
+                                            ),
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -122,7 +136,7 @@ export default function CoachSignup() {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Tooltip
-                                    
+
                                         title={!termsChecked ? "You must agree to the terms and conditions to proceed" : ""} arrow>
                                         <span>
                                             <Button
@@ -137,7 +151,7 @@ export default function CoachSignup() {
                                                     }
                                                 }}
                                             >
-                                                Sign Up As a Coach
+                                                Sign Up For Free
                                             </Button>
                                         </span>
                                     </Tooltip>

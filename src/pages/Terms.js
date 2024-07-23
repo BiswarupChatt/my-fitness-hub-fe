@@ -1,13 +1,14 @@
 import React from 'react';
-import { Container, Typography } from '@mui/material'
+import { Container, Typography, Divider } from '@mui/material'
 
 export default function Terms() {
     return (
-        <Container>
+        <Container sx={{ marginTop: 3 }}>
             <Typography variant="h3" component="h2" gutterBottom align="center">
                 Terms and Conditions
             </Typography>
-            <Typography variant="body1" paragraph align="left">
+            <Divider />
+            <Typography variant="body1" paragraph align="left" sx={{ marginTop: 3 }}>
                 Welcome to our application. These terms and conditions outline the rules and regulations for the use of our service.
             </Typography>
             <Typography variant="h6" component="h2" gutterBottom align="left">
