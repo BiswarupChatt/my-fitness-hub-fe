@@ -20,4 +20,36 @@ const errorToast = (message) => {
     toast.error(message, toastStyle)
 }
 
-export { successToast, errorToast }
+const loadingToast = (message, toastId) => {
+    toast.loading(message, {
+        toastId: toastId,
+        position: "top-center",
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        pauseOnFocusLoss: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Zoom,
+    })
+}
+
+const updateToast = (message, toastId, type) => {
+    toast.update(toastId, {
+        render: message,
+        type: type,
+        isLoading: false,
+        autoClose: 5000,
+        position: "top-center",
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        pauseOnFocusLoss: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Zoom,
+    })
+}
+export { successToast, errorToast, loadingToast, updateToast }
