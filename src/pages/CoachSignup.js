@@ -6,18 +6,6 @@ import { Link as LinkComponent } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" component={LinkComponent} to='/'>
-                MyFitnessHub
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
 
 const defaultTheme = createTheme();
 
@@ -169,8 +157,6 @@ export default function CoachSignup() {
                                     </Link>
                                 </Grid>
                             </Grid>
-
-                            <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>
                 </Grid>

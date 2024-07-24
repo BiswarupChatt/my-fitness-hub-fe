@@ -5,33 +5,36 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
-
-function Copyright(props) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" component={LinkComponent} to='/'>
-                MyFitnessHub
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { useFormik } from 'formik';
+import { loginValidation } from '../validations/loginValidations';
+import axios from '../services/api/axios'
+import { errorToast, successToast } from '../utils/toastify';
 
 const defaultTheme = createTheme();
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
+    const initialValues = {
+        email: 'user2@email.com',
+        password: 'secret123'
+    }
+
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues: initialValues,
+        validationSchema: loginValidation,
+        onSubmit: async (value) => {
+            try {
+                const response = await axios.post('/users/login', value)
+                localStorage.setItem("token", response.data.token)
+                console.log(response.data.token)
+                successToast("Logged In Successfully")
+            } catch (err) {
+                console.log(err)
+                errorToast(err.response.data.errors)
+            }
+        }
+    })
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -49,13 +52,7 @@ export default function Login() {
                 />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                     <Box
-                        sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
+                        sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             <LockOutlinedIcon />
@@ -72,6 +69,11 @@ export default function Login() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.email && !!errors.email}
+                                helperText={(touched && errors.email)}
                             />
                             <TextField
                                 margin="normal"
@@ -92,6 +94,11 @@ export default function Login() {
                                         </IconButton>
                                     ),
                                 }}
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.password && !!errors.password}
+                                helperText={(touched && errors.password)}
                             />
                             <Button
                                 type="submit"
@@ -113,8 +120,6 @@ export default function Login() {
                                     </Link>
                                 </Grid>
                             </Grid>
-
-                            <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>
                 </Grid>
