@@ -40,7 +40,7 @@ export default function CoachSignup() {
             try {
                 setIsSubmitting(true)
                 loadingToast('Creating Account...', 'signup-toast')
-                const response = await axios.post('/users/register/coach', value)
+                await axios.post('/users/register/coach', value)
                 // console.log(response.data)
                 updateToast('Account Created Successfully', 'signup-toast', 'success')
                 navigate('/login')
