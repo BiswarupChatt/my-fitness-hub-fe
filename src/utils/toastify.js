@@ -1,8 +1,8 @@
-import { Zoom, toast, Slide } from "react-toastify";
+import { Zoom, toast } from "react-toastify";
 
 const toastStyle = {
     position: "top-center",
-    autoClose: 5000,
+    autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -40,7 +40,7 @@ const updateToast = (message, toastId, type) => {
         render: message,
         type: type,
         isLoading: false,
-        autoClose: 5000,
+        autoClose: 3000,
         position: "top-center",
         hideProgressBar: false,
         closeOnClick: true,

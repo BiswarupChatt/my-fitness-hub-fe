@@ -8,15 +8,16 @@ import { Link as LinkComponent } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { loginValidation } from '../validations/loginValidations';
 import axios from '../services/api/axios'
-import {loadingToast, updateToast } from '../utils/toastify';
+import { loadingToast, updateToast } from '../utils/toastify';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../services/context/AuthContext';
 
 const defaultTheme = createTheme();
 
 export default function Login() {
 
     const navigate = useNavigate()
-
+    const { dispatch } = useAuth()
     const [showPassword, setShowPassword] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -33,13 +34,43 @@ export default function Login() {
             loadingToast("Logging in...", 'login-toast')
             try {
                 const response = await axios.post('/users/login', value)
-                localStorage.setItem("token", response.data.token)
-                console.log(response.data)
+                const token = response.data.token
+                localStorage.setItem("token", token)
+
+                const getAccountResponse = await axios.get('/users/account', {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                const account = getAccountResponse.data
+
+                let url
+                if (account.role === 'coach' || account.role === 'admin') {
+                    url = '/coach'
+                } else {
+                    url = '/client'
+                }
+
+                const getProfileResponse = await axios.get(url, {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                const profile = getProfileResponse.data
+
+                dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
                 updateToast('Logged In Successfully', 'login-toast', 'success')
                 navigate('/')
             } catch (err) {
+                if (err.response) {
+                    const errorMessage = err.response.data.errors || 'An error occurred'
+                    updateToast(errorMessage, 'login-toast', 'error')
+                } else if (err.request) {
+                    updateToast('No response from server', 'login-toast', 'error')
+                } else {
+                    updateToast('An unknown error occurred', 'login-toast', 'error')
+                }
                 console.log(err)
-                updateToast(err.response.data.errors, 'login-toast', 'error')
             }
             setIsSubmitting(false)
         }

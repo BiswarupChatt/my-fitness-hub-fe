@@ -111,17 +111,17 @@ export default function Navbar(props) {
                             aria-label="open drawer"
                             edge="start"
                             onClick={handleDrawerToggle}
-                            sx={{ mr: 2, display: { sm: 'none' } }}
+                            sx={{ mr: 2, display: { md: 'none' } }}
                         >
                             <MenuIcon />
                         </IconButton>
 
-                        <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', sm: 'left' } }}>
+                        <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'left' } }}>
                             <Typography variant="h6" sx={{ color: '#fff', }}>
                                 MyFitnessHub
                             </Typography>
                         </Button>
-                        <Box sx={{ display: { xs: 'none', sm: 'block' }, marginRight: 2 }}>
+                        <Box sx={{ display: { xs: 'none', md: 'block' }, marginRight: 2 }}>
                             {navItems.map((item) => (
                                 <Button
                                     key={item.name}
@@ -175,7 +175,7 @@ export default function Navbar(props) {
                         keepMounted: true, // Better open performance on mobile.
                     }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
+                        display: { xs: 'block', md: 'none' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '60%' },
                     }}
                 >
