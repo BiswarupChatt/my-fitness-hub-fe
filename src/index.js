@@ -5,12 +5,15 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import { AuthProvider } from './services/context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
-        <App />
-        <ToastContainer />
-    </BrowserRouter>
+    <AuthProvider>
+        <BrowserRouter>
+            <App />
+            <ToastContainer />
+        </BrowserRouter>
+    </AuthProvider>
 );
 
