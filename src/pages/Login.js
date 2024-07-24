@@ -8,7 +8,7 @@ import { Link as LinkComponent } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { loginValidation } from '../validations/loginValidations';
 import axios from '../services/api/axios'
-import { errorToast, successToast, loadingToast, updateToast } from '../utils/toastify';
+import {loadingToast, updateToast } from '../utils/toastify';
 
 const defaultTheme = createTheme();
 
@@ -30,7 +30,7 @@ export default function Login() {
             try {
                 const response = await axios.post('/users/login', value)
                 localStorage.setItem("token", response.data.token)
-                console.log(response.data.token)
+                console.log(response.data)
                 updateToast('Logged In Successfully', 'login-toast', 'success')
             } catch (err) {
                 console.log(err)

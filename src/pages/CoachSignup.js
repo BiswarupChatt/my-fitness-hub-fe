@@ -5,7 +5,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
+import { useFormik } from 'formik';
+import { registerValidation } from '../validations/registerValidation';
+import axios from '../services/api/axios';
+import { updateToast, loadingToast } from '../utils/toastify';
 
 const defaultTheme = createTheme();
 
@@ -14,20 +17,37 @@ export default function CoachSignup() {
 
     const [showPassword, setShowPassword] = useState(false)
     const [termsChecked, setTermsChecked] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleTermsChange = (e) => {
         setTermsChecked(e.target.checked);
     }
 
+    const initialValues = {
+        firstName: "sdfdfssdf",
+        lastName: "",
+        email: "",
+        password: 'secret123'
+    }
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues: initialValues,
+        validationSchema: registerValidation,
+        onSubmit: async (value) => {
+            setIsSubmitting(true)
+            loadingToast('Creating Account...', 'signup-toast')
+            try {
+                const response = await axios.post('/users/register/coach', value)
+                console.log(response.data)
+                updateToast('Logged In Successfully', 'signup-toast', 'success')
+            } catch (err) {
+                console.log(err)
+                updateToast(err.response.data.errors, 'signup-toast', 'error')
+            }
+            setIsSubmitting(false)
+        }
+
+    })
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -63,12 +83,17 @@ export default function CoachSignup() {
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        autoComplete="given-name"
-                                        name="firstName"
                                         required
                                         fullWidth
                                         id="firstName"
                                         label="First Name"
+                                        name="firstName"
+                                        autoComplete="given-name"
+                                        value={values.firstName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.firstName && !!errors.firstName}
+                                        helperText={touched && errors.firstName}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -79,6 +104,11 @@ export default function CoachSignup() {
                                         label="Last Name"
                                         name="lastName"
                                         autoComplete="family-name"
+                                        value={values.lastName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.lastName && !!errors.lastName}
+                                        helperText={touched && errors.lastName}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -89,6 +119,11 @@ export default function CoachSignup() {
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
+                                        value={values.email}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.email && !!errors.email}
+                                        helperText={touched && errors.email}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -100,6 +135,11 @@ export default function CoachSignup() {
                                         type={showPassword ? 'text' : 'password'}
                                         id="password"
                                         autoComplete="new-password"
+                                        value={values.password}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.password && !!errors.password}
+                                        helperText={touched && errors.password}
                                         InputProps={{
                                             endAdornment: (
                                                 <IconButton
@@ -131,6 +171,7 @@ export default function CoachSignup() {
                                                 type="submit"
                                                 fullWidth
                                                 variant="contained"
+                                                disabled={isSubmitting}
                                                 sx={{ mt: 1, mb: 2 }}
                                                 style={{ cursor: termsChecked ? 'pointer' : 'not-allowed' }}
                                                 onClick={(e) => {
