@@ -9,15 +9,19 @@ import { useFormik } from 'formik';
 import { loginValidation } from '../validations/loginValidations';
 import axios from '../services/api/axios'
 import {loadingToast, updateToast } from '../utils/toastify';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 export default function Login() {
+
+    const navigate = useNavigate()
+
     const [showPassword, setShowPassword] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const initialValues = {
-        email: 'coach2@email.com',
+        email: 'chatterjeebiswarup61@gmail.com',
         password: 'secret123'
     }
 
@@ -32,6 +36,7 @@ export default function Login() {
                 localStorage.setItem("token", response.data.token)
                 console.log(response.data)
                 updateToast('Logged In Successfully', 'login-toast', 'success')
+                navigate('/')
             } catch (err) {
                 console.log(err)
                 updateToast(err.response.data.errors, 'login-toast', 'error')

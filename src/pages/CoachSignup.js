@@ -9,11 +9,14 @@ import { useFormik } from 'formik';
 import { registerValidation } from '../validations/registerValidation';
 import axios from '../services/api/axios';
 import { updateToast, loadingToast } from '../utils/toastify';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 
 export default function CoachSignup() {
+
+    const navigate = useNavigate()
 
     const [showPassword, setShowPassword] = useState(false)
     const [termsChecked, setTermsChecked] = useState(false)
@@ -24,9 +27,9 @@ export default function CoachSignup() {
     }
 
     const initialValues = {
-        firstName: "sdfdfssdf",
-        lastName: "",
-        email: "",
+        firstName: "Biswarup",
+        lastName: "Chatterjee",
+        email: "chatterjeebiswarup61@gmail.com",
         password: 'secret123'
     }
 
@@ -40,13 +43,17 @@ export default function CoachSignup() {
                 const response = await axios.post('/users/register/coach', value)
                 console.log(response.data)
                 updateToast('Logged In Successfully', 'signup-toast', 'success')
+                navigate('/login')
             } catch (err) {
-                console.log(err)
-                updateToast(err.response.data.errors, 'signup-toast', 'error')
+                if (err.response.data.errors && err.response.data.errors.length > 0) {
+                    console.log(err)
+                    updateToast(err.response.data.errors[0].msg, 'signup-toast', 'error')
+                } else {
+                    updateToast('An unknown error occurred', 'signup-toast', 'error')
+                }
             }
-            setIsSubmitting(false)
+                setIsSubmitting(false)
         }
-
     })
 
     return (
