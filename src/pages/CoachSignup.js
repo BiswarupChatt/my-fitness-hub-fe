@@ -37,22 +37,30 @@ export default function CoachSignup() {
         initialValues: initialValues,
         validationSchema: registerValidation,
         onSubmit: async (value) => {
-            setIsSubmitting(true)
-            loadingToast('Creating Account...', 'signup-toast')
             try {
+                setIsSubmitting(true)
+                loadingToast('Creating Account...', 'signup-toast')
                 const response = await axios.post('/users/register/coach', value)
-                console.log(response.data)
-                updateToast('Logged In Successfully', 'signup-toast', 'success')
+                // console.log(response.data)
+                updateToast('Account Created Successfully', 'signup-toast', 'success')
                 navigate('/login')
             } catch (err) {
-                if (err.response.data.errors && err.response.data.errors.length > 0) {
-                    console.log(err)
-                    updateToast(err.response.data.errors[0].msg, 'signup-toast', 'error')
+                if (err.response) {
+                    if (err.response.data.errors && err.response.data.errors.length > 0) {
+                        const errorMessage = err.response.data.errors[0].msg
+                        updateToast(errorMessage, 'signup-toast', 'error')
+                    } else {
+                        updateToast('An error occurred while creating account', 'signup-toast', 'error')
+                    }
+                }
+                else if (err.request) {
+                    updateToast('No response from server', 'signup-toast', 'error')
                 } else {
                     updateToast('An unknown error occurred', 'signup-toast', 'error')
                 }
-            }
+            } finally {
                 setIsSubmitting(false)
+            }
         }
     })
 

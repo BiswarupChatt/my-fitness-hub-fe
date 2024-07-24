@@ -30,9 +30,9 @@ export default function Login() {
         initialValues: initialValues,
         validationSchema: loginValidation,
         onSubmit: async (value) => {
-            setIsSubmitting(true)
-            loadingToast("Logging in...", 'login-toast')
             try {
+                setIsSubmitting(true)
+                loadingToast("Logging in...", 'login-toast')
                 const response = await axios.post('/users/login', value)
                 const token = response.data.token
                 localStorage.setItem("token", token)
@@ -70,9 +70,10 @@ export default function Login() {
                 } else {
                     updateToast('An unknown error occurred', 'login-toast', 'error')
                 }
-                console.log(err)
+                // console.log(err)
+            } finally {
+                setIsSubmitting(false)
             }
-            setIsSubmitting(false)
         }
     })
 
