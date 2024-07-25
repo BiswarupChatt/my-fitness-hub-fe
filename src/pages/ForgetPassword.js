@@ -11,19 +11,21 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { ForgetPasswordValidation } from '../validations/forgetPasswordValidation';
 
 const defaultTheme = createTheme();
 
 export default function ForgetPassword() {
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
+    const initialValues = {
+        email: ''
+    }
+
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues: initialValues,
+        validationSchema: ForgetPasswordValidation
+    })
 
 
     return (
@@ -63,7 +65,12 @@ export default function ForgetPassword() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
+                            placeholder='yourEmail@example.com'
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.email && !!errors.email}
+                            helperText={(touched && errors.email)}
                         />
 
                         <Button
@@ -75,11 +82,11 @@ export default function ForgetPassword() {
                             Send E-Mail
                         </Button>
                         <Grid container justifyContent="space-between">
-                        <Grid item>
-                                    <Link component={LinkComponent} to='/login' variant="body2" >
-                                        Already have an account? Log In
-                                    </Link>
-                                </Grid>
+                            <Grid item>
+                                <Link component={LinkComponent} to='/login' variant="body2" >
+                                    Already have an account? Log In
+                                </Link>
+                            </Grid>
                             <Grid item>
                                 <Link component={LinkComponent} to='/coach-signup' variant="body2" >
                                     Don't have an account? Sign Up
