@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import axios from "../services/api/axios";
 import { useAuth } from "../services/context/AuthContext";
+import { errorToast } from "../utils/toastify";
 
 export const useFetchUser = () => {
     const { user, dispatch } = useAuth()
@@ -33,7 +34,7 @@ export const useFetchUser = () => {
 
                     dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
                 } catch (err) {
-                    console.error(err)
+                    errorToast("Unable to Login")
                 }
 
             })();
