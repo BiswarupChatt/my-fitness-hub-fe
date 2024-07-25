@@ -18,14 +18,18 @@ import { useFormik } from 'formik';
 import { resetPasswordValidation } from '../validations/resetPasswordValidation';
 import { loadingToast, updateToast } from '../utils/toastify';
 import axios from '../services/api/axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme()
 
 export default function ResetPassword() {
 
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showNewPassword, setShowNewPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+    const { token } = useParams()
+    const navigate = useNavigate()
 
     const initialValues = {
         password: '',
@@ -35,8 +39,31 @@ export default function ResetPassword() {
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, resetForm } = useFormik({
         initialValues: initialValues,
         validationSchema: resetPasswordValidation,
-        
+        onSubmit: async (values) => {
+            try {
+                setIsSubmitting(true)
+                loadingToast("Resetting Password...", 'reset_password')
+                const response = await axios.post(`/users/resetPassword/${token}`, values)
+                console.log(response)
+                const successMessage = response.data.message || 'Password restored Successfully'
+                updateToast(successMessage, 'reset_password', 'success')
+                navigate('/login')
+            } catch (err) {
+                console.log("err", err)
+                if (err.response) {
+                    const errorMessage = err.response.data.errors[0].msg || err.response.data.errors || 'An error occurred'
+                    updateToast(errorMessage, 'reset_password', 'error')
+                } else if (err.request) {
+                    updateToast('No response from server', 'reset_password', 'error')
+                } else {
+                    updateToast('An unknown error occurred', 'reset_password', 'error')
+                }
+            } finally {
+                setIsSubmitting(false)
+            }
+        }
     })
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main">
@@ -85,7 +112,10 @@ export default function ResetPassword() {
                                 endAdornment: (
                                     <IconButton
                                         aria-label="Toggle password visibility"
-                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        onClick={() => {
+                                            return setShowNewPassword(!showNewPassword),
+                                                setShowConfirmPassword(false)
+                                        }}
                                     >
                                         {showNewPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                     </IconButton>
@@ -109,11 +139,17 @@ export default function ResetPassword() {
                                 endAdornment: (
                                     <IconButton
                                         aria-label="Toggle password visibility"
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        onClick={() => {
+                                            return setShowConfirmPassword(!showConfirmPassword),
+                                                setShowNewPassword(false)
+                                        }}
                                     >
                                         {showConfirmPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                                     </IconButton>
                                 ),
+                            }}
+                            onPaste={(e) => {
+                                return e.preventDefault()
                             }}
                         />
 
@@ -125,7 +161,7 @@ export default function ResetPassword() {
                             disabled={isSubmitting}
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Send E-Mail
+                            Reset Password
                         </Button>
                         <Grid container justifyContent="space-between">
                             <Grid item>
