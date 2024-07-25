@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,18 +13,47 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { ForgetPasswordValidation } from '../validations/forgetPasswordValidation';
+import { loadingToast, updateToast } from '../utils/toastify';
+import axios from '../services/api/axios';
 
 const defaultTheme = createTheme();
 
 export default function ForgetPassword() {
 
+    
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
     const initialValues = {
         email: ''
     }
 
-    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit, resetForm } = useFormik({
         initialValues: initialValues,
-        validationSchema: ForgetPasswordValidation
+        validationSchema: ForgetPasswordValidation,
+        onSubmit: async (value) => {
+            // console.log(value)
+            try {
+                setIsSubmitting(true)
+                loadingToast("Sending Email", 'forgetPassword-toast')
+                const forgetPasswordResponse = await axios.post('/users/forgetPassword', value)
+                const forgetPassword = forgetPasswordResponse.data
+                console.log(forgetPassword)
+                updateToast('Email Sent Successfully', 'forgetPassword-toast', 'success')
+                resetForm({values: initialValues})
+            } catch (err) {
+                console.log(err)
+                if (err.response) {
+                    const errorMessage = err.response.data.errors || 'An error occurred'
+                    updateToast(errorMessage, 'forgetPassword-toast', 'error')
+                } else if (err.request) {
+                    updateToast('No response from server', 'forgetPassword-toast', 'error')
+                } else {
+                    updateToast('An unknown error occurred', 'forgetPassword-toast', 'error')
+                }
+            } finally {
+                    setIsSubmitting(false)
+            }
+        }
     })
 
 
@@ -77,6 +106,7 @@ export default function ForgetPassword() {
                             type="submit"
                             fullWidth
                             variant="contained"
+                            disabled={isSubmitting}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Send E-Mail

@@ -5,6 +5,7 @@ import About from '../pages/About'
 import Profile from '../pages/Profile'
 import Account from '../pages/Account'
 import ForgetPassword from '../pages/ForgetPassword'
+import ResetPassword from '../pages/ResetPassword'
 import CoachRegister from '../pages/CoachSignup'
 import Terms from '../pages/Terms'
 import Pricing from '../pages/Pricing'
@@ -18,6 +19,7 @@ export default function AppRoute() {
             <Route path='/profile' element={<Profile />} />
             <Route path='/account' element={<Account />} />
             <Route path='/forget-password' element={<ForgetPassword />} />
+            <Route path='/reset-password/:token' element={<ResetPassword />} />
             <Route path='/coach-signup' element={<CoachRegister />} />
             <Route path='/terms' element={<Terms/>} />
             <Route path='/pricing' element={<Pricing/>} />
