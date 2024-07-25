@@ -10,7 +10,8 @@ import { loginValidation } from '../validations/loginValidations';
 import axios from '../services/api/axios'
 import { loadingToast, updateToast } from '../utils/toastify';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../services/context/AuthContext';
+import { useAuth } from '../services/context/AuthContext'
+import { Helmet } from 'react-helmet';
 
 const defaultTheme = createTheme();
 
@@ -79,6 +80,9 @@ export default function Login() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
+            <Helmet>
+                <title>Login</title>
+            </Helmet>
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
