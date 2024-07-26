@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem, useScrollTrigger, Slide, Fab, Fade } from '@mui/material';
+import { useAuth } from '../services/context/AuthContext';
 
 const navItems = [
     { name: 'Home', path: '/' },
@@ -66,6 +67,7 @@ function ScrollTop(props) {
 
 export default function Navbar(props) {
 
+    const { dispatch } = useAuth()
     const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
@@ -74,9 +76,14 @@ export default function Navbar(props) {
         setMobileOpen((prevState) => !prevState);
     };
 
-    const handleToggleUserMenu = (event) => {
-        setAnchorElUser((prev) => (prev ? null : event.currentTarget));
+    const handleToggleUserMenu = (e) => {
+        setAnchorElUser((prev) => (prev ? null : e.currentTarget));
     };
+
+    const handleLogout = (e) => {
+        localStorage.removeItem('token')
+        dispatch({ type: 'LOGOUT' })
+    }
 
     const drawer = (
         <Box onClick={handleDrawerToggle} >
@@ -155,11 +162,17 @@ export default function Navbar(props) {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleToggleUserMenu}
                             >
-                                {userItems.map((setting) => (
-                                    <MenuItem key={setting.name} component={Link} to={setting.path} onClick={handleToggleUserMenu}>
-                                        <Typography textAlign="center">{setting.name}</Typography>
-                                    </MenuItem>
-                                ))}
+                                {userItems.map((ele) => {
+                                    if (ele.name === 'Logout') {
+                                        return (<MenuItem key={ele.name} onClick={()=>{handleLogout(); handleToggleUserMenu()}}>
+                                        <Typography textAlign="center">{ele.name}</Typography>
+                                        </MenuItem>)
+                                    } else {
+                                        return (<MenuItem key={ele.name} component={Link} to={ele.path} onClick={handleToggleUserMenu}>
+                                            <Typography textAlign="center">{ele.name}</Typography>
+                                        </MenuItem>)
+                                    }
+                                })}
                             </Menu>
                         </Box>
                     </Toolbar >

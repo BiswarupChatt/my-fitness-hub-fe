@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <div>
             <Helmet>
-                <title>My Fitness hub</title>
+                <title>My Fitness Hub</title>
             </Helmet>
             <h2>Home Screen</h2>
             {!user.isLoggedIn ? <p>User Not Logged In</p> : <p>Welcome {user.account.firstName} {user.profile.payment.endDate}</p>}
