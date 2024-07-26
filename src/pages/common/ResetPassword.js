@@ -15,9 +15,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { resetPasswordValidation } from '../validations/resetPasswordValidation';
-import { loadingToast, updateToast } from '../utils/toastify';
-import axios from '../services/api/axios';
+import { resetPasswordValidation } from '../../validations/resetPasswordValidation';
+import { loadingToast, updateToast } from '../../utils/toastify';
+import axios from '../../services/api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme()

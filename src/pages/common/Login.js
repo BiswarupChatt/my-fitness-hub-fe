@@ -6,11 +6,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { loginValidation } from '../validations/loginValidations';
-import axios from '../services/api/axios'
-import { loadingToast, updateToast } from '../utils/toastify';
+import { loginValidation } from '../../validations/loginValidations';
+import axios from '../../services/api/axios'
+import { loadingToast, updateToast } from '../../utils/toastify';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../services/context/AuthContext'
+import { useAuth } from '../../services/context/AuthContext'
 import { Helmet } from 'react-helmet';
 
 const defaultTheme = createTheme();

@@ -12,15 +12,15 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as LinkComponent } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { ForgetPasswordValidation } from '../validations/forgetPasswordValidation';
-import { loadingToast, updateToast } from '../utils/toastify';
-import axios from '../services/api/axios';
+import { ForgetPasswordValidation } from '../../validations/forgetPasswordValidation';
+import { loadingToast, updateToast } from '../../utils/toastify';
+import axios from '../../services/api/axios';
 
 const defaultTheme = createTheme();
 
 export default function ForgetPassword() {
 
-    
+
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const initialValues = {
@@ -39,7 +39,7 @@ export default function ForgetPassword() {
                 const forgetPassword = forgetPasswordResponse.data
                 console.log(forgetPassword)
                 updateToast('Email Sent Successfully', 'forgetPassword-toast', 'success')
-                resetForm({values: initialValues})
+                resetForm({ values: initialValues })
             } catch (err) {
                 console.log(err)
                 if (err.response) {
@@ -51,7 +51,7 @@ export default function ForgetPassword() {
                     updateToast('An unknown error occurred', 'forgetPassword-toast', 'error')
                 }
             } finally {
-                    setIsSubmitting(false)
+                setIsSubmitting(false)
             }
         }
     })

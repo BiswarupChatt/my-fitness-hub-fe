@@ -5,19 +5,20 @@ import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, Button, Tooltip, Avatar, Menu, MenuItem, useScrollTrigger, Slide, Fab, Fade } from '@mui/material';
 import { useAuth } from '../services/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
+const userItems = [
+    { name: 'Profile', path: '/profile' },
+    { name: 'Account', path: '/account' },
+    { name: 'Logout', path: '/logout' },
+]
 
 const navItems = [
     { name: 'Home', path: '/' },
     { name: 'Pricing', path: '/pricing' },
     { name: 'About', path: '/about' },
     { name: 'Login', path: '/login' },
-    { name: 'Get Started', path: '/coach-signup' },
-]
-
-const userItems = [
-    { name: 'Profile', path: '/profile' },
-    { name: 'Account', path: '/account' },
-    { name: 'Logout', path: '/logout' },
+    { name: 'Sign Up', path: '/coach-signup' },
 ]
 
 const coachItems = [
@@ -79,13 +80,16 @@ const ScrollTop = (props) => {
 }
 
 const ItemDisplay = ({ items }) => {
-    return (<Box sx={{ display: { xs: 'none', md: 'block' }, marginRight: 2 }}>
+    return (<Box sx={{ display: { xs: 'none', md: 'block' } }}>
         {items.map((ele) => (
             <Button
                 key={ele.name}
                 component={Link}
                 to={ele.path}
-                sx={{ color: '#fff' }}
+                sx={{
+                    color: '#fff',
+                    textTransform: 'none'
+                }}
             >
                 {ele.name}
             </Button>
@@ -111,9 +115,10 @@ const ItemDisplayDrawer = ({ items }) => {
 export default function Navbar(props) {
 
     const { user, dispatch } = useAuth()
-    const { window } = props;
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [anchorElUser, setAnchorElUser] = useState(null);
+    const { window } = props
+    const [mobileOpen, setMobileOpen] = useState(false)
+    const [anchorElUser, setAnchorElUser] = useState(null)
+    const navigate = useNavigate()
 
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
@@ -126,14 +131,14 @@ export default function Navbar(props) {
     const handleLogout = (e) => {
         localStorage.removeItem('token')
         dispatch({ type: 'LOGOUT' })
+        navigate('/')
     }
-
 
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', }}>
             <CssBaseline />
             <HideOnScroll {...props}>
                 <AppBar component="nav">
@@ -148,11 +153,12 @@ export default function Navbar(props) {
                             <MenuIcon />
                         </IconButton>
 
-                        <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'left' } }}>
+                        <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: { xs: user.isLoggedIn ? 'center' : 'right', md: 'left' } }}>
                             <Typography variant="h6" sx={{ color: '#fff', }}>
                                 MyFitnessHub
                             </Typography>
                         </Button>
+
                         {user.isLoggedIn ? (
                             user.role === 'client' ? (
                                 <ItemDisplay items={clientItems} />
@@ -162,35 +168,36 @@ export default function Navbar(props) {
                         ) : (
                             <ItemDisplay items={navItems} />
                         )}
-
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton onClick={handleToggleUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="Remy Sharp" src="https://picsum.photos/id/64/200" />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
-                                keepMountedtransformOrigin={{ vertical: 'top', horizontal: 'right', }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleToggleUserMenu}
-                            >
-                                {userItems.map((ele) => {
-                                    if (ele.name === 'Logout') {
-                                        return (<MenuItem key={ele.name} onClick={() => { handleLogout(); handleToggleUserMenu() }}>
+                        {user.isLoggedIn ? (
+                            <Box sx={{ flexGrow: 0 }}>
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleToggleUserMenu} sx={{ p: 0, marginLeft: 2 }}>
+                                        <Avatar alt="Remy Sharp" src="https://picsum.photos/id/64/200" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                    keepMounted
+                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleToggleUserMenu}
+                                >
+                                    {userItems.map((ele) => (
+                                        <MenuItem
+                                            key={ele.name}
+                                            onClick={ele.name === 'Logout' ? () => { handleLogout(); handleToggleUserMenu(); } : handleToggleUserMenu}
+                                            component={ele.name !== 'Logout' ? Link : 'div'}
+                                            to={ele.name !== 'Logout' ? ele.path : undefined}
+                                        >
                                             <Typography textAlign="center">{ele.name}</Typography>
-                                        </MenuItem>)
-                                    } else {
-                                        return (<MenuItem key={ele.name} component={Link} to={ele.path} onClick={handleToggleUserMenu}>
-                                            <Typography textAlign="center">{ele.name}</Typography>
-                                        </MenuItem>)
-                                    }
-                                })}
-                            </Menu>
-                        </Box>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </Box>
+                        ) : (null)}
                     </Toolbar >
                 </AppBar>
             </HideOnScroll >

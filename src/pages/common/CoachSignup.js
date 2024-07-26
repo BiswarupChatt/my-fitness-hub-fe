@@ -6,9 +6,9 @@ import { Link as LinkComponent } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useFormik } from 'formik';
-import { registerValidation } from '../validations/registerValidation';
-import axios from '../services/api/axios';
-import { updateToast, loadingToast } from '../utils/toastify';
+import { registerValidation } from '../../validations/registerValidation';
+import axios from '../../services/api/axios';
+import { updateToast, loadingToast } from '../../utils/toastify';
 import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();

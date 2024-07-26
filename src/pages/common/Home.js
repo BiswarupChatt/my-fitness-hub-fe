@@ -1,4 +1,4 @@
-import { useAuth } from "../services/context/AuthContext"
+import { useAuth } from "../../services/context/AuthContext"
 import { Helmet } from "react-helmet"
 export default function Home() {
     const { user } = useAuth()
