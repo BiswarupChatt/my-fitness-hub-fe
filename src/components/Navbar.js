@@ -20,8 +20,21 @@ const userItems = [
     { name: 'Logout', path: '/logout' },
 ]
 
+const coachItems = [
+    { name: 'Your Client', path: '/' },
+    { name: 'Your Subscription', path: '/' },
+    { name: 'Food Item', path: '/' },
+    { name: 'Workout Item', path: '/' },
+]
+const clientItems = [
+    { name: 'Your Coach', path: '/' },
+    { name: 'Your Workout', path: '/' },
+    { name: 'Your Nutrition', path: '/' },
+    { name: 'Your Progress', path: '/' },
+    { name: 'Your Program', path: '/' },
+]
 
-function HideOnScroll(props) {
+const HideOnScroll = (props) => {
     const { children, window } = props
     const trigger = useScrollTrigger({
         target: window ? window() : undefined,
@@ -34,7 +47,7 @@ function HideOnScroll(props) {
     );
 }
 
-function ScrollTop(props) {
+const ScrollTop = (props) => {
     const { children, window } = props
     const trigger = useScrollTrigger({
         target: window ? window() : undefined,
@@ -65,45 +78,57 @@ function ScrollTop(props) {
     );
 }
 
+const ItemDisplay = ({ items }) => {
+    return (<Box sx={{ display: { xs: 'none', md: 'block' }, marginRight: 2 }}>
+        {items.map((ele) => (
+            <Button
+                key={ele.name}
+                component={Link}
+                to={ele.path}
+                sx={{ color: '#fff' }}
+            >
+                {ele.name}
+            </Button>
+        ))}
+    </Box>)
+}
+
+const ItemDisplayDrawer = ({ items }) => {
+    return (
+        <List>
+            {items.map((ele) => (
+                <ListItem key={ele.name} disablePadding>
+                    <ListItemButton component={Link} to={ele.path} sx={{ textAlign: 'center' }}>
+                        <ListItemText primary={ele.name} />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
+    )
+}
+
+
 export default function Navbar(props) {
 
-    const { dispatch } = useAuth()
+    const { user, dispatch } = useAuth()
     const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
-    };
+    }
 
     const handleToggleUserMenu = (e) => {
         setAnchorElUser((prev) => (prev ? null : e.currentTarget));
-    };
+    }
 
     const handleLogout = (e) => {
         localStorage.removeItem('token')
         dispatch({ type: 'LOGOUT' })
     }
 
-    const drawer = (
-        <Box onClick={handleDrawerToggle} >
-            <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', display: 'flex', textAlign: 'center' }}>
-                <Typography variant="h6" sx={{ color: 'inherit' }}>
-                    MyFitnessHub
-                </Typography>
-            </Button>
-            <Divider />
-            <List>
-                {navItems.map((item) => (
-                    <ListItem key={item.name} disablePadding>
-                        <ListItemButton component={Link} to={item.path} sx={{ textAlign: 'center' }}>
-                            <ListItemText primary={item.name} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
+
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -128,18 +153,16 @@ export default function Navbar(props) {
                                 MyFitnessHub
                             </Typography>
                         </Button>
-                        <Box sx={{ display: { xs: 'none', md: 'block' }, marginRight: 2 }}>
-                            {navItems.map((item) => (
-                                <Button
-                                    key={item.name}
-                                    component={Link}
-                                    to={item.path}
-                                    sx={{ color: '#fff' }}
-                                >
-                                    {item.name}
-                                </Button>
-                            ))}
-                        </Box>
+                        {user.isLoggedIn ? (
+                            user.role === 'client' ? (
+                                <ItemDisplay items={clientItems} />
+                            ) : (
+                                <ItemDisplay items={coachItems} />
+                            )
+                        ) : (
+                            <ItemDisplay items={navItems} />
+                        )}
+
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleToggleUserMenu} sx={{ p: 0 }}>
@@ -150,22 +173,15 @@ export default function Navbar(props) {
                                 sx={{ mt: '45px' }}
                                 id="menu-appbar"
                                 anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
+                                anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+                                keepMountedtransformOrigin={{ vertical: 'top', horizontal: 'right', }}
                                 open={Boolean(anchorElUser)}
                                 onClose={handleToggleUserMenu}
                             >
                                 {userItems.map((ele) => {
                                     if (ele.name === 'Logout') {
-                                        return (<MenuItem key={ele.name} onClick={()=>{handleLogout(); handleToggleUserMenu()}}>
-                                        <Typography textAlign="center">{ele.name}</Typography>
+                                        return (<MenuItem key={ele.name} onClick={() => { handleLogout(); handleToggleUserMenu() }}>
+                                            <Typography textAlign="center">{ele.name}</Typography>
                                         </MenuItem>)
                                     } else {
                                         return (<MenuItem key={ele.name} component={Link} to={ele.path} onClick={handleToggleUserMenu}>
@@ -192,7 +208,23 @@ export default function Navbar(props) {
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '60%' },
                     }}
                 >
-                    {drawer}
+                    <Box onClick={handleDrawerToggle} >
+                        <Button component={Link} to="/" sx={{ textDecoration: 'none', textTransform: 'none', display: 'flex', textAlign: 'center' }}>
+                            <Typography variant="h6" sx={{ color: 'inherit' }}>
+                                MyFitnessHub
+                            </Typography>
+                        </Button>
+                        <Divider />
+                        {user.isLoggedIn ? (
+                            user.role === 'client' ? (
+                                <ItemDisplayDrawer items={clientItems} />
+                            ) : (
+                                <ItemDisplayDrawer items={coachItems} />
+                            )
+                        ) : (
+                            <ItemDisplayDrawer items={navItems} />
+                        )}
+                    </Box>
                 </Drawer>
             </nav>
             <Toolbar id="back-to-top-anchor" />
