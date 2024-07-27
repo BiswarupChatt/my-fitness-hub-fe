@@ -1,13 +1,10 @@
 import { useAuth } from "../services/context/AuthContext"
 import { Navigate, useLocation } from "react-router-dom"
 import { errorToast } from "../utils/toastify"
-import { useMemo } from "react"
 
 export default function PrivateRoute({ permittedRoles, children }) {
     const { user } = useAuth()
-    // const memoizeUser = useMemo(() => {
-    //     return user, [user]
-    // })
+    console.log("auth calling", user)
     const location = useLocation()
     const token = localStorage.getItem('token')
 

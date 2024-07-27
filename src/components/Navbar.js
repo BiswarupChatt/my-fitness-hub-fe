@@ -28,11 +28,11 @@ const coachItems = [
     { name: 'Workout Item', path: '/workout-item' },
 ]
 const clientItems = [
-    { name: 'Your Coach', path: '/' },
-    { name: 'Your Workout', path: '/' },
-    { name: 'Your Nutrition', path: '/' },
-    { name: 'Your Progress', path: '/' },
-    { name: 'Your Program', path: '/' },
+    { name: 'Training', path: '/training' },
+    { name: 'Nutrition', path: '/nutrition' },
+    { name: 'Progress', path: '/progress' },
+    { name: 'My Coach', path: '/coach' },
+    { name: 'My Program', path: '/program' },
 ]
 
 const HideOnScroll = (props) => {
