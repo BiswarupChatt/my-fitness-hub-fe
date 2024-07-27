@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet"
-export default function Subscription() {
+export default function FoodItem() {
     return (
         <>
             <Helmet>
-                <title>Subscription</title>
+                <title>Food Item</title>
             </Helmet>
-            <h2>Subscription Screen</h2>
+            <h2>Food Item Screen</h2>
         </>
 
     )

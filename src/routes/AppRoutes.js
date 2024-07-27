@@ -11,6 +11,8 @@ import Terms from '../pages/common/Terms'
 import Pricing from '../pages/common/Pricing'
 import PrivateRoute from './PrivateRoute'
 import Client from '../pages/coaches/Client'
+import Subscription from '../pages/coaches/Subscription'
+import FoodItem from '../pages/coaches/FoodItem'
 
 export default function AppRoute() {
     return (
@@ -30,6 +32,16 @@ export default function AppRoute() {
             <Route path='/client' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
                     <Client />
+                </PrivateRoute>
+            } />
+            <Route path='/subscription' element={
+                <PrivateRoute permittedRoles={['coach', 'admin']}>
+                    <Subscription />
+                </PrivateRoute>
+            } />
+            <Route path='/food-item' element={
+                <PrivateRoute permittedRoles={['coach', 'admin']}>
+                    <FoodItem />
                 </PrivateRoute>
             } />
         </Routes>

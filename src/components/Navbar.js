@@ -23,8 +23,8 @@ const navItems = [
 
 const coachItems = [
     { name: 'Client', path: '/client' },
-    { name: 'Subscription', path: '/' },
-    { name: 'Food Item', path: '/' },
+    { name: 'Subscription', path: '/subscription' },
+    { name: 'Food Item', path: '/food-item' },
     { name: 'Workout Item', path: '/' },
 ]
 const clientItems = [
