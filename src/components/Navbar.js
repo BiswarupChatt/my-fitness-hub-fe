@@ -25,7 +25,7 @@ const coachItems = [
     { name: 'Client', path: '/client' },
     { name: 'Subscription', path: '/subscription' },
     { name: 'Food Item', path: '/food-item' },
-    { name: 'Workout Item', path: '/' },
+    { name: 'Workout Item', path: '/workout-item' },
 ]
 const clientItems = [
     { name: 'Your Coach', path: '/' },
