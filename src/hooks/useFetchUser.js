@@ -34,9 +34,9 @@ export const useFetchUser = () => {
 
                     dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
                 } catch (err) {
-                    errorToast("Unable to Login")
+                    localStorage.removeItem('token')
+                    errorToast("Unable to login please try again")
                 }
-
             })();
         }
     }, [])

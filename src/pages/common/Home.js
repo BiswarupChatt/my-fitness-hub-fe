@@ -9,7 +9,7 @@ export default function Home() {
                 <title>My Fitness Hub</title>
             </Helmet>
             <h2>Home Screen</h2>
-            {!user.isLoggedIn ? <p>User Not Logged In</p> : <p>Welcome {user.account.firstName} {user.profile.payment.endDate}</p>}
+            {!user.isLoggedIn ? <p>User Not Logged In</p> : <p>Welcome {user.account.firstName}</p>}
         </div>
     )
 }

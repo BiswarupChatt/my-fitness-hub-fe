@@ -4,12 +4,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link as LinkComponent } from 'react-router-dom';
+import { Link as LinkComponent, useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { loginValidation } from '../../validations/loginValidations';
 import axios from '../../services/api/axios'
 import { loadingToast, updateToast } from '../../utils/toastify';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/context/AuthContext'
 import { Helmet } from 'react-helmet';
 
@@ -17,6 +16,7 @@ const defaultTheme = createTheme();
 
 export default function Login() {
 
+    const location = useLocation()
     const navigate = useNavigate()
     const { dispatch } = useAuth()
     const [showPassword, setShowPassword] = useState(false)
@@ -61,7 +61,8 @@ export default function Login() {
 
                 dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
                 updateToast('Logged In Successfully', 'login-toast', 'success')
-                navigate('/')
+                const from = location.state?.from?.pathname || '/'
+                navigate(from, {replace: true})
             } catch (err) {
                 if (err.response) {
                     const errorMessage = err.response.data.errors || 'An error occurred'

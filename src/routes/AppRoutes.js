@@ -9,6 +9,8 @@ import ResetPassword from '../pages/common/ResetPassword'
 import CoachSignup from '../pages/common/CoachSignup'
 import Terms from '../pages/common/Terms'
 import Pricing from '../pages/common/Pricing'
+import PrivateRoute from './PrivateRoute'
+import Client from '../pages/coaches/Client'
 
 export default function AppRoute() {
     return (
@@ -21,8 +23,15 @@ export default function AppRoute() {
             <Route path='/forget-password' element={<ForgetPassword />} />
             <Route path='/reset-password/:token' element={<ResetPassword />} />
             <Route path='/coach-signup' element={<CoachSignup />} />
-            <Route path='/terms' element={<Terms/>} />
-            <Route path='/pricing' element={<Pricing/>} />
+            <Route path='/terms' element={<Terms />} />
+            <Route path='/pricing' element={<Pricing />} />
+
+            {/* coach page */}
+            <Route path='/client' element={
+                <PrivateRoute permittedRoles={['coach', 'admin']}>
+                    <Client />
+                </PrivateRoute>
+            } />
         </Routes>
     )
 }

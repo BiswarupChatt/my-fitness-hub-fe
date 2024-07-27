@@ -22,8 +22,8 @@ const navItems = [
 ]
 
 const coachItems = [
-    { name: 'Your Client', path: '/' },
-    { name: 'Your Subscription', path: '/' },
+    { name: 'Client', path: '/client' },
+    { name: 'Subscription', path: '/' },
     { name: 'Food Item', path: '/' },
     { name: 'Workout Item', path: '/' },
 ]
@@ -160,7 +160,7 @@ export default function Navbar(props) {
                         </Button>
 
                         {user.isLoggedIn ? (
-                            user.role === 'client' ? (
+                            user.account.role === 'client' ? (
                                 <ItemDisplay items={clientItems} />
                             ) : (
                                 <ItemDisplay items={coachItems} />
@@ -223,7 +223,7 @@ export default function Navbar(props) {
                         </Button>
                         <Divider />
                         {user.isLoggedIn ? (
-                            user.role === 'client' ? (
+                            user.account.role === 'client' ? (
                                 <ItemDisplayDrawer items={clientItems} />
                             ) : (
                                 <ItemDisplayDrawer items={coachItems} />
