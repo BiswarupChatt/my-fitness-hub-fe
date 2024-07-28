@@ -14,6 +14,19 @@ import { Helmet } from 'react-helmet';
 
 const defaultTheme = createTheme();
 
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="https://mui.com/">
+                MyFitnessHub
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
 export default function Login() {
 
     const location = useLocation()
@@ -62,7 +75,7 @@ export default function Login() {
                 dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
                 updateToast('Logged In Successfully', 'login-toast', 'success')
                 const from = location.state?.from?.pathname || '/'
-                navigate(from, {replace: true})
+                navigate(from, { replace: true })
             } catch (err) {
                 if (err.response) {
                     const errorMessage = err.response.data.errors || 'An error occurred'
@@ -167,6 +180,7 @@ export default function Login() {
                                     </Link>
                                 </Grid>
                             </Grid>
+                            <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>
                 </Grid>

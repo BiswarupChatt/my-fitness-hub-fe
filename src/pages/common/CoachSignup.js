@@ -13,6 +13,18 @@ import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
+function Copyright(props) {
+    return (
+        <Typography variant="body2" color="text.secondary" align="center" {...props}>
+            {'Copyright © '}
+            <Link color="inherit" href="https://mui.com/">
+                MyFitnessHub
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
 
 export default function CoachSignup() {
 
@@ -213,6 +225,7 @@ export default function CoachSignup() {
                                     </Link>
                                 </Grid>
                             </Grid>
+                            <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>
                 </Grid>

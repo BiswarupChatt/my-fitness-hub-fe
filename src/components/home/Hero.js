@@ -41,7 +41,7 @@ export default function Hero() {
                             fontWeight: 'Medium',
                         }}
                     >
-                        The Best Platform for <Box sx={{ color: '#1976d2' }}>Fitness Coaches</Box>
+                        The Best Platform for Managing Client's for <Box sx={{ color: '#1976d2' }}>Fitness Coaches</Box>
                     </Typography>
 
                     <Typography
