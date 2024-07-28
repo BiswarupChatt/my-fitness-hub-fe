@@ -10,6 +10,7 @@ import CoachSignup from '../pages/common/CoachSignup'
 import Terms from '../pages/common/Terms'
 import Pricing from '../pages/common/Pricing'
 import PrivateRoute from './PrivateRoute'
+import Unauthorized from '../pages/common/Unauthorized'
 
 import Client from '../pages/coaches/Client'
 import Subscription from '../pages/coaches/Subscription'
@@ -35,6 +36,7 @@ export default function AppRoute() {
             <Route path='/coach-signup' element={<CoachSignup />} />
             <Route path='/terms' element={<Terms />} />
             <Route path='/pricing' element={<Pricing />} />
+            <Route path='/unauthorized' element={<Unauthorized />} />
 
             {/* coach page */}
             <Route path='/client' element={
