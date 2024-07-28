@@ -1,5 +1,7 @@
 import { useAuth } from "../../services/context/AuthContext"
 import { Helmet } from "react-helmet"
+import Features from "../../components/home/Features"
+import Hero from "../../components/home/Hero"
 export default function Home() {
     const { user } = useAuth()
     console.log(user)
@@ -8,8 +10,14 @@ export default function Home() {
             <Helmet>
                 <title>My Fitness Hub</title>
             </Helmet>
-            <h2>Home Screen</h2>
-            {!user.isLoggedIn ? <p>User Not Logged In</p> : <p>Welcome {user.account.firstName}</p>}
+            {!user.isLoggedIn ?
+                <>
+                    <Hero />
+                    <Features />
+                </>
+                : <>
+                    <p>Welcome {user.account.firstName}</p>
+                </>}
         </div>
     )
 }
