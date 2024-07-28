@@ -1,4 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
+
+import PrivateRoute from './PrivateRoute'
+import RedirectToMain from './RedirectToMain'
+
 import Home from '../pages/common/Home'
 import Login from '../pages/common/Login'
 import About from '../pages/common/About'
@@ -9,7 +13,6 @@ import ResetPassword from '../pages/common/ResetPassword'
 import CoachSignup from '../pages/common/CoachSignup'
 import Terms from '../pages/common/Terms'
 import Pricing from '../pages/common/Pricing'
-import PrivateRoute from './PrivateRoute'
 import Unauthorized from '../pages/common/Unauthorized'
 
 import Client from '../pages/coaches/Client'
@@ -27,16 +30,24 @@ export default function AppRoute() {
     return (
         <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/login' element={<Login />} />
+            <Route path='/login' element={
+                <RedirectToMain>
+                    <Login />
+                </RedirectToMain>
+            } />
             <Route path='/about' element={<About />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/account' element={<Account />} />
             <Route path='/forget-password' element={<ForgetPassword />} />
             <Route path='/reset-password/:token' element={<ResetPassword />} />
-            <Route path='/coach-signup' element={<CoachSignup />} />
+            <Route path='/coach-signup' element={
+                <RedirectToMain>
+                    <CoachSignup />
+                </RedirectToMain>
+            } />
             <Route path='/terms' element={<Terms />} />
             <Route path='/pricing' element={<Pricing />} />
-            <Route path='/unauthorized' element={<Unauthorized />} />
+            <Route path='/Unauthorized' element={<Unauthorized />} />
 
             {/* coach page */}
             <Route path='/client' element={

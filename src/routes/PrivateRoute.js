@@ -7,21 +7,21 @@ export default function PrivateRoute({ permittedRoles, children }) {
     console.log("auth calling", user)
     const location = useLocation()
     const token = localStorage.getItem('token')
-    const navigate = useNavigate()
 
 
-    if (!user) {
-        if (token) {
-            // replaced with loading element later
-            return <p>Loading...</p>
-        } else {
-            return (<Navigate to='/login' state={{ from: location }} />)
-        }
-    }
-
-    if (!user.account) {
+    if (!user.isLoggedIn && token) {
+        console.log('1')
         return <p>Loading...</p>
     }
+
+    // if (!user.account) {
+    //     console.log('2')
+    //     return <p>Loading...</p>
+    // }
+
+    if (!user.isLoggedIn) {
+        return (<Navigate to='/login' state={{ from: location }} />)
+    }    
 
     if (!permittedRoles.includes(user.account.role)) {
         errorToast('You are unauthorized to access this page.')
