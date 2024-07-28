@@ -52,7 +52,7 @@ export default function FAQ() {
                         aria-controls="panel1d-content"
                         id="panel1d-header"
                     >
-                        <Typography component="h3" variant="subtitle2">
+                        <Typography component="h3" variant="subtitle2" textAlign="left">
                             How do I contact customer support if I have a question or issue?
                         </Typography>
                     </AccordionSummary>
@@ -78,7 +78,7 @@ export default function FAQ() {
                         aria-controls="panel2d-content"
                         id="panel2d-header"
                     >
-                        <Typography component="h3" variant="subtitle2">
+                        <Typography component="h3" variant="subtitle2" textAlign="left">
                             Can I return the product if it doesn&apos;t meet my expectations?
                         </Typography>
                     </AccordionSummary>
@@ -103,7 +103,7 @@ export default function FAQ() {
                         aria-controls="panel3d-content"
                         id="panel3d-header"
                     >
-                        <Typography component="h3" variant="subtitle2">
+                        <Typography component="h3" variant="subtitle2" textAlign="left">
                             What makes your product stand out from others in the market?
                         </Typography>
                     </AccordionSummary>
@@ -128,7 +128,7 @@ export default function FAQ() {
                         aria-controls="panel4d-content"
                         id="panel4d-header"
                     >
-                        <Typography component="h3" variant="subtitle2">
+                        <Typography component="h3" variant="subtitle2" textAlign="left">
                             Is there a warranty on the product, and what does it cover?
                         </Typography>
                     </AccordionSummary>
@@ -146,9 +146,18 @@ export default function FAQ() {
                     </AccordionDetails>
                 </Accordion>
             </Box>
-            <Button component={LinkComponent} to={'/coach-signup'} variant="contained" color="primary">
-                Get Started
-            </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Button component={LinkComponent} to={'/coach-signup'} variant="contained" color="primary" sx={{ mb: 2 }}>
+                    Get started as a coach
+                </Button>
+                <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+                    No Credit Card Required. <br />By clicking &quot;Get Started as a coach&quot;  you agree to our&nbsp;
+                    <Link component={LinkComponent} to={'/terms'} target='_blank' color="primary">
+                        Terms & Conditions
+                    </Link>
+                    .
+                </Typography>
+            </Box>
         </Container>
     );
 }

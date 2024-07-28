@@ -1,3 +1,4 @@
+import ShowAllClients from "../../components/coach/ShowAllClient"
 import { Helmet } from "react-helmet"
 export default function Client() {
     return (
@@ -5,7 +6,7 @@ export default function Client() {
             <Helmet>
                 <title>Client</title>
             </Helmet>
-            <h2>Client Screen</h2>
+            <ShowAllClients />
         </>
 
     )

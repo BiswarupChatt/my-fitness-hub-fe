@@ -5,6 +5,10 @@ import Hero from "../../components/home/Hero"
 import FAQ from "../../components/home/FAQ"
 import Highlights from "../../components/home/Highlights"
 import Footer from "../../components/Footer"
+import ShowAllClients from "../../components/coach/ShowAllClient"
+
+
+
 export default function Home() {
     const { user } = useAuth()
     console.log(user)
@@ -22,6 +26,7 @@ export default function Home() {
                 </>
                 : <>
                     <p>Welcome {user.account.firstName}</p>
+                    <ShowAllClients user={user}/>
                 </>}
             <Footer />
         </div>
