@@ -10,6 +10,7 @@ import { registerValidation } from '../../validations/registerValidation';
 import axios from '../../services/api/axios';
 import { updateToast, loadingToast } from '../../utils/toastify';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const defaultTheme = createTheme();
 
@@ -51,24 +52,19 @@ export default function CoachSignup() {
         onSubmit: async (value) => {
             try {
                 setIsSubmitting(true)
-                loadingToast('Creating Account...', 'signup-toast')
+                loadingToast('Creating Account...', 'coach-signup-toast')
                 await axios.post('/users/register/coach', value)
-                // console.log(response.data)
-                updateToast('Account Created Successfully', 'signup-toast', 'success')
+                updateToast('Account Created Successfully', 'coach-signup-toast', 'success')
                 navigate('/login')
             } catch (err) {
+                console.log("err", err)
                 if (err.response) {
-                    if (err.response.data.errors && err.response.data.errors.length > 0) {
-                        const errorMessage = err.response.data.errors[0].msg
-                        updateToast(errorMessage, 'signup-toast', 'error')
-                    } else {
-                        updateToast('An error occurred while creating account', 'signup-toast', 'error')
-                    }
-                }
-                else if (err.request) {
-                    updateToast('No response from server', 'signup-toast', 'error')
+                    const errorMessage = err.response.data.errors[0].msg || err.response.data.errors || 'An error occurred'
+                    updateToast(errorMessage, 'coach-signup-toast', 'error')
+                } else if (err.request) {
+                    updateToast('No response from server', 'coach-signup-toast', 'error')
                 } else {
-                    updateToast('An unknown error occurred', 'signup-toast', 'error')
+                    updateToast('An unknown error occurred', 'coach-signup-toast', 'error')
                 }
             } finally {
                 setIsSubmitting(false)
@@ -78,6 +74,7 @@ export default function CoachSignup() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
+            <Helmet><title>Sign Up As a Coach</title></Helmet>
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid

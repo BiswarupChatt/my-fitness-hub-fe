@@ -148,7 +148,7 @@ export default function FAQ() {
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Button component={LinkComponent} to={'/coach-signup'} variant="contained" color="primary" sx={{ mb: 2 }}>
-                    Get started as a coach
+                    Get started
                 </Button>
                 <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
                     No Credit Card Required. <br />By clicking &quot;Get Started as a coach&quot;  you agree to our&nbsp;

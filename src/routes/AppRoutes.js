@@ -14,6 +14,7 @@ import CoachSignup from '../pages/common/CoachSignup'
 import Terms from '../pages/common/Terms'
 import Pricing from '../pages/common/Pricing'
 import Unauthorized from '../pages/common/Unauthorized'
+import ClientSignUp from '../pages/common/ClientSignup'
 
 import Client from '../pages/coaches/Client'
 import Subscription from '../pages/coaches/Subscription'
@@ -43,6 +44,11 @@ export default function AppRoute() {
             <Route path='/coach-signup' element={
                 <RedirectToMain>
                     <CoachSignup />
+                </RedirectToMain>
+            } />
+            <Route path='/client-signup/:token' element={
+                <RedirectToMain>
+                    <ClientSignUp />
                 </RedirectToMain>
             } />
             <Route path='/terms' element={<Terms />} />

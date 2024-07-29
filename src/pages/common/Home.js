@@ -24,10 +24,16 @@ export default function Home() {
                     <Highlights />
                     <FAQ />
                 </>
-                : <>
-                    <p>Welcome {user.account.firstName}</p>
-                    <ShowAllClients user={user}/>
-                </>}
+                : (
+                    user.account.role === 'client' ? (
+                        <>
+                        Welcome {user.account.firstName}
+                        </>
+                    ) : (<>
+                        <p>Welcome {user.account.firstName}</p>
+                        <ShowAllClients user={user} />
+                    </>)
+                )}
             <Footer />
         </div>
     )
