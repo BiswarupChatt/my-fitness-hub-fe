@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, TablePagination, Paper, TextField, Container, Grid, Button, Typography, Divider, Modal, Box, } from '@mui/material'
+import { useFormik } from 'formik';
+import { inviteClientValidation } from '../../validations/inviteClientValidations';
+import { loadingToast, updateToast } from '../../utils/toastify';
+import axios from '../../services/api/axios';
 
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -27,7 +31,7 @@ const modalStyle = {
 };
 
 export default function ShowAllClients({ user }) {
-    
+
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [page, setPage] = useState(0);
@@ -35,21 +39,56 @@ export default function ShowAllClients({ user }) {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [open, setOpen] = useState(false);
-    const [email, setEmail] = useState('');
+    // const [email, setEmail] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    const initialValues = {
+        email: ''
+    }
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues: initialValues,
+        validationSchema: inviteClientValidation,
+        onSubmit: async (value) => {
+            try {
+                const token = localStorage.getItem('token')
+                setIsSubmitting(true)
+                loadingToast("Sending Invitation", 'client-invite-toast')
 
-    const handleSend = () => {
-        // Handle the send action here, like sending the email address to the server
-        console.log(email);
-        setEmail('')
-        handleClose();
+                await axios.post('/coach/sendInvitationEmail', value, {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                console.log('1')
+                updateToast('Sent Invitation Successfully', 'client-invite-toast', 'success')
+            } catch (err) {
+                console.error('Error caught in catch block:', err)
+
+                if (err.response) {
+                    const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
+                    console.log('2')
+                    updateToast(errorMessage, 'client-invite-toast', 'error')
+                } else if (err.request) {
+                    console.log('3')
+                    updateToast('No response from server', 'client-invite-toast', 'error')
+                } else {
+                    console.log('4')
+                    updateToast('An unknown error occurred', 'client-invite-toast', 'error')
+                }
+            } finally {
+                console.log('5')
+                setIsSubmitting(false)
+                handleToggle()
+            }
+        }
+    });
+
+
+    const handleToggle = () => {
+        setOpen((ele) => {
+            return !ele;
+        });
     };
 
     const handleRequestSort = (event, property) => {
@@ -93,8 +132,8 @@ export default function ShowAllClients({ user }) {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={handleClickOpen}>
-                        Add Client
+                    <Button variant="contained" color="primary" onClick={handleToggle}>
+                        Invite Client
                     </Button>
                 </Grid>
             </Grid>
@@ -190,27 +229,30 @@ export default function ShowAllClients({ user }) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <Modal open={open} onClose={handleClose}>
-                <Box sx={modalStyle}>
+            <Modal open={open} onClose={handleToggle}>
+                <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
                     <Typography variant="h6" component="h2">
                         Invite Client
                     </Typography>
                     <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Email Address"
-                        type="email"
+                        margin="normal"
+                        required
                         fullWidth
-                        variant="outlined"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        sx={{ mt: 2 }}
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={touched.email && !!errors.email}
+                        helperText={(touched && errors.email)}
                     />
                     <Box mt={2} display="flex" justifyContent="flex-end">
-                        <Button onClick={handleClose} color="primary" sx={{ mr: 1 }}>
+                        <Button onClick={handleToggle} color="primary" sx={{ mr: 1 }}>
                             Cancel
                         </Button>
-                        <Button onClick={handleSend} color="primary" variant="contained">
+                        <Button type='submit' color="primary" variant="contained" disabled={isSubmitting}>
                             Send Invitation
                         </Button>
                     </Box>
