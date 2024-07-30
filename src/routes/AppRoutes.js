@@ -17,6 +17,7 @@ import Unauthorized from '../pages/common/Unauthorized'
 import ClientSignUp from '../pages/common/ClientSignup'
 
 import Client from '../pages/coaches/Client'
+import SingleCLient from '../pages/coaches/SingleClient'
 import Subscription from '../pages/coaches/Subscription'
 import FoodItem from '../pages/coaches/FoodItem'
 import WorkoutItem from '../pages/coaches/WorkoutItem'
@@ -59,6 +60,11 @@ export default function AppRoute() {
             <Route path='/client' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
                     <Client />
+                </PrivateRoute>
+            } />
+            <Route path='/client/:id' element={
+                <PrivateRoute permittedRoles={['coach', 'admin']}>
+                    <SingleCLient />
                 </PrivateRoute>
             } />
             <Route path='/subscription' element={

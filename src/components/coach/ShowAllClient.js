@@ -8,6 +8,7 @@ import moment from 'moment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HelpIcon from '@mui/icons-material/Help';
+import { useNavigate } from 'react-router-dom';
 
 const modalStyle = {
     position: 'absolute',
@@ -53,6 +54,7 @@ const AvatarDisplay = ({ user }) => {
 export default function ShowAllClients({ user }) {
 
     const token = localStorage.getItem('token')
+    const navigate = useNavigate()
 
     const [clients, setClients] = useState([])
     const [loading, setLoading] = useState(false)
@@ -67,6 +69,9 @@ export default function ShowAllClients({ user }) {
     const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    const handleClick = (id) => {
+        navigate(`/client/${id}`)
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -257,7 +262,12 @@ export default function ShowAllClients({ user }) {
                                 </TableRow>
                             ) : (
                                 clients.map((ele, index) => (
-                                    <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
+                                    <TableRow key={ele._id} sx={{
+                                        backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
+                                        cursor: 'pointer',transition: 'background-color 0.3s ease, transform 0.2s ease','&:hover': {backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0",},'&:active': {backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0",}
+                                    }} onClick={() => {
+                                        return handleClick(ele._id)
+                                    }}>
                                         <TableCell>
                                             <AvatarDisplay user={ele.user} />
                                         </TableCell>
@@ -276,7 +286,7 @@ export default function ShowAllClients({ user }) {
                 </TableContainer>
 
                 <TablePagination
-                    rowsPerPageOptions={[2,5, 10, 25]}
+                    rowsPerPageOptions={[2, 5, 10, 25]}
                     component="div"
                     count={totalClients}
                     rowsPerPage={rowsPerPage}
@@ -322,6 +332,6 @@ export default function ShowAllClients({ user }) {
 
             <Divider variant="middle" />
 
-        </Container>
+        </Container >
     );
 }
