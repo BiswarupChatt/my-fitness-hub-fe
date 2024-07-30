@@ -1,22 +1,10 @@
-import { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, TablePagination, Paper, TextField, Container, Grid, Button, Typography, Divider, Modal, Box, } from '@mui/material'
+import { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, TablePagination, Paper, TextField, Container, Grid, Button, Typography, Divider, Modal, Box, CircularProgress, FormControl, MenuItem, Select } from '@mui/material'
 import { useFormik } from 'formik';
 import { inviteClientValidation } from '../../validations/inviteClientValidations';
 import { loadingToast, updateToast } from '../../utils/toastify';
 import axios from '../../services/api/axios';
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
+import moment from 'moment';
 
 const modalStyle = {
     position: 'absolute',
@@ -30,20 +18,76 @@ const modalStyle = {
     p: 4,
 };
 
+
+
+
 export default function ShowAllClients({ user }) {
 
-    const [order, setOrder] = useState('asc');
-    const [orderBy, setOrderBy] = useState('calories');
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [searchQuery, setSearchQuery] = useState('');
+    const token = localStorage.getItem('token')
 
-    const [open, setOpen] = useState(false);
-    // const [email, setEmail] = useState('');
+    const [clients, setClients] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [totalClients, setTotalClients] = useState(0)
+    const [sortBy, setSortBy] = useState('createdAt')
+    const [sortOrder, setSortOrder] = useState('asc')
+    const [search, setSearch] = useState('')
+    const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setPage(0)
+    }
+
+    const handleToggle = () => {
+        setOpen((ele) => {
+            return !ele;
+        });
+    };
 
     const initialValues = {
         email: ''
+    }
+
+    const fetchClients = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.get('/coach/getAllClient', {
+                headers: {
+                    Authorization: token
+                },
+                params: {
+                    page: page + 1,
+                    limit: rowsPerPage,
+                    sortBy: sortBy,
+                    sortOrder: sortOrder,
+                    search: search
+                }
+            });
+            setClients(response.data.client)
+            setTotalClients(response.data.totalClients)
+        } catch (err) {
+            console.error('Error fetching data:', err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchClients()
+    }, [page, rowsPerPage, sortBy, sortOrder, token])
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault()
+        fetchClients()
+        setPage(0)
     }
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
@@ -51,7 +95,7 @@ export default function ShowAllClients({ user }) {
         validationSchema: inviteClientValidation,
         onSubmit: async (value) => {
             try {
-                const token = localStorage.getItem('token')
+
                 setIsSubmitting(true)
                 loadingToast("Sending Invitation", 'client-invite-toast')
 
@@ -85,44 +129,6 @@ export default function ShowAllClients({ user }) {
     });
 
 
-    const handleToggle = () => {
-        setOpen((ele) => {
-            return !ele;
-        });
-    };
-
-    const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
-    };
-
-    const filteredRows = rows.filter(row => {
-        return row.name.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-
-    const sortedRows = filteredRows.sort((a, b) => {
-        if (orderBy === 'name') {
-            return (order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
-        }
-        return (order === 'asc' ? a[orderBy] - b[orderBy] : b[orderBy] - a[orderBy]);
-    });
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedRows.length - page * rowsPerPage);
-
     return (
         <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
             <Grid container alignItems="center" justifyContent="space-between" pb={4}>
@@ -137,84 +143,91 @@ export default function ShowAllClients({ user }) {
                     </Button>
                 </Grid>
             </Grid>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-                <TextField
-                    label="Search"
-                    variant="outlined"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    sx={{ mb: 2, mt: 2 }}
-                />
+
+            <Paper>
+                <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', }} >
+                    <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', ml: 2, marginTop: 3 }}>
+                        <TextField
+                            label="Search"
+                            variant="outlined"
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value)
+                            }}
+                        />
+                        <Button variant="contained" color="primary" type='submit' sx={{ ml: 2 }}>
+                            Search
+                        </Button>
+                    </FormControl>
+                    <Grid >
+                        <FormControl variant="outlined" sx={{ mr: 2, marginTop: 3 }}>
+                            <Select
+                                value={sortBy}
+                                onChange={(e) => {
+                                    setSortBy(e.target.value)
+                                }}
+                            >
+                                <MenuItem value="createdAt">Created At</MenuItem>
+                                <MenuItem value="firstName">First Name</MenuItem>
+                                <MenuItem value="lastName">Last Name</MenuItem>
+                                <MenuItem value="email">Email</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="outlined" sx={{ mr: 2, marginTop: 3 }}>
+                            <Select
+                                value={sortOrder}
+                                onChange={(e) => {
+                                    setSortOrder(e.target.value)
+                                }}
+                            >
+                                <MenuItem value="asc">Ascending</MenuItem>
+                                <MenuItem value="desc">Descending</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
                 <TableContainer>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell>
-                                    <TableSortLabel
-                                        active={orderBy === 'name'}
-                                        direction={orderBy === 'name' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'name')}
-                                    >
-                                        Dessert (100g serving)
-                                    </TableSortLabel>
+                                    {/* <TableSortLabel
+                                        active={sortBy === 'firstName'}
+                                        direction={sortBy === 'firstName' ? sortOrder : 'asc'}
+                                        onClick={() => setSortBy('firstName')}
+                                    > */}
+                                    First Name
+                                    {/* </TableSortLabel> */}
                                 </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={orderBy === 'calories'}
-                                        direction={orderBy === 'calories' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'calories')}
-                                    >
-                                        Calories
-                                    </TableSortLabel>
+                                <TableCell>
+                                    {/* <TableSortLabel
+                                        active={sortBy === 'lastName'}
+                                        direction={sortBy === 'lastName' ? sortOrder : 'asc'}
+                                        onClick={() => setSortBy('lastName')}
+                                    > */}
+                                    Last Name
+                                    {/* </TableSortLabel> */}
                                 </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={orderBy === 'fat'}
-                                        direction={orderBy === 'fat' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'fat')}
-                                    >
-                                        Fat&nbsp;(g)
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={orderBy === 'carbs'}
-                                        direction={orderBy === 'carbs' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'carbs')}
-                                    >
-                                        Carbs&nbsp;(g)
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={orderBy === 'protein'}
-                                        direction={orderBy === 'protein' ? order : 'asc'}
-                                        onClick={(e) => handleRequestSort(e, 'protein')}
-                                    >
-                                        Protein&nbsp;(g)
-                                    </TableSortLabel>
-                                </TableCell>
+                                <TableCell>Email</TableCell>
+                                <TableCell>Created At</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                                <TableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={4} align="center">
+                                        <CircularProgress />
                                     </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                    <TableCell align="right">{row.carbs}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
                                 </TableRow>
-                            ))}
-                            {emptyRows > 0 && (
-                                <TableRow style={{ height: 53 * emptyRows }}>
-                                    <TableCell colSpan={6} />
-                                </TableRow>
+                            ) : (
+                                clients.map((ele, index) => (
+                                    <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
+                                        <TableCell>{ele.firstName}</TableCell>
+                                        <TableCell>{ele.lastName}</TableCell>
+                                        <TableCell>{ele.email}</TableCell>
+                                        <TableCell>{moment(ele.createdAt).format("Do MMM YYYY")}</TableCell>
+                                    </TableRow>
+                                ))
                             )}
                         </TableBody>
                     </Table>
@@ -222,13 +235,14 @@ export default function ShowAllClients({ user }) {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={sortedRows.length}
+                    count={totalClients}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
+
             <Modal open={open} onClose={handleToggle}>
                 <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
                     <Typography variant="h6" component="h2">
