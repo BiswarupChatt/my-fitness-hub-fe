@@ -32,7 +32,9 @@ export const useFetchUser = () => {
                     })
                     const profile = getProfileResponse.data
 
-                    dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
+                    // setTimeout(() => {
+                        dispatch({ type: 'LOGIN', payload: { account: account, profile: profile } })
+                    // }, 2000);
                 } catch (err) {
                     localStorage.removeItem('token')
                     errorToast("Unable to login please try again")

@@ -1,6 +1,7 @@
 import { useAuth } from "../services/context/AuthContext"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { errorToast } from "../utils/toastify"
+import { CircularProgress, LinearProgress, Box } from "@mui/material"
 
 export default function PrivateRoute({ permittedRoles, children }) {
     const { user } = useAuth()
@@ -10,7 +11,12 @@ export default function PrivateRoute({ permittedRoles, children }) {
 
 
     if (!user.isLoggedIn && token) {
-        return <p>Loading...</p>
+        // return <CircularProgress sx={{ margin: 10 }} />
+        return (
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+        )
     }
 
     // if (!user.account) {
