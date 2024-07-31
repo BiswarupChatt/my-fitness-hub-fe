@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Container, Box, Tab, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { startGetClient } from '../../services/redux/action/client-action';
 
 
 export default function SingleCLient() {
     const [value, setValue] = useState('Profile');
-    const { id } = useParams()
+    const { userId } = useParams()
+    const token = localStorage.getItem('token')
+    const dispatch = useDispatch()
 
+    useEffect(() => {
+        if (userId && token) {
+            dispatch(startGetClient(userId, token))
+        }
+    }, [userId, token, dispatch])
+
+    const client = useSelector((state) => {
+        return state.client.data
+    })
+    const error = useSelector((state) => {
+        return state.client.error
+    })
+
+    console.log('userId', userId)
+    console.log('client', client)
+    console.log('error', error)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -17,7 +37,7 @@ export default function SingleCLient() {
 
     return (
         <>
-            <h2>Single Client Screen {id}</h2>
+            <h2>Single Client Screen {userId}</h2>
             <Container sx={{ py: { xs: 8, sm: 4 } }}>
                 <Paper>
                     <Box sx={{ width: '100%', typography: 'body1' }}>

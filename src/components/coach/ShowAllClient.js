@@ -69,8 +69,8 @@ export default function ShowAllClients({ user }) {
     const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleClick = (id) => {
-        navigate(`/client/${id}`)
+    const handleClick = (userId) => {
+        navigate(`/client/${userId}`)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -264,7 +264,7 @@ export default function ShowAllClients({ user }) {
                                 clients.map((ele, index) => (
                                     <TableRow key={ele._id}
                                         onClick={() => {
-                                            return handleClick(ele._id)
+                                            return handleClick(ele.user._id)
                                         }}
                                         sx={{
                                             backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",

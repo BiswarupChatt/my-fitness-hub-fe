@@ -3,6 +3,7 @@
         "appbar",
         "Formik",
         "Mountedtransform",
+        "reduxjs",
         "toastify"
     ]
 }

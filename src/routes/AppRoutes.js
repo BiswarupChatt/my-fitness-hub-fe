@@ -64,7 +64,7 @@ export default function AppRoute() {
                     <Client />
                 </PrivateRoute>
             } />
-            <Route path='/client/:id' element={
+            <Route path='/client/:userId' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
                     <SingleCLient />
                 </PrivateRoute>
