@@ -13,8 +13,9 @@ import ResetPassword from '../pages/common/ResetPassword'
 import CoachSignup from '../pages/common/CoachSignup'
 import Terms from '../pages/common/Terms'
 import Pricing from '../pages/common/Pricing'
-import Unauthorized from '../pages/common/Unauthorized'
+import Forbidden from '../pages/common/Forbidden'
 import ClientSignUp from '../pages/common/ClientSignup'
+import ErrorPage from '../pages/common/ErrorPage'
 
 import Client from '../pages/coaches/Client'
 import SingleCLient from '../pages/coaches/SingleClient'
@@ -54,7 +55,8 @@ export default function AppRoute() {
             } />
             <Route path='/terms' element={<Terms />} />
             <Route path='/pricing' element={<Pricing />} />
-            <Route path='/Unauthorized' element={<Unauthorized />} />
+            <Route path='/forbidden' element={<Forbidden />} />
+            <Route path='/*' element={<ErrorPage />} />
 
             {/* coach page */}
             <Route path='/client' element={

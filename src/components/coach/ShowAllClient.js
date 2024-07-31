@@ -262,12 +262,15 @@ export default function ShowAllClients({ user }) {
                                 </TableRow>
                             ) : (
                                 clients.map((ele, index) => (
-                                    <TableRow key={ele._id} sx={{
-                                        backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
-                                        cursor: 'pointer',transition: 'background-color 0.3s ease, transform 0.2s ease','&:hover': {backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0",},'&:active': {backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0",}
-                                    }} onClick={() => {
-                                        return handleClick(ele._id)
-                                    }}>
+                                    <TableRow key={ele._id}
+                                        onClick={() => {
+                                            return handleClick(ele._id)
+                                        }}
+                                        sx={{
+                                            backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
+                                            cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
+                                        }}
+                                    >
                                         <TableCell>
                                             <AvatarDisplay user={ele.user} />
                                         </TableCell>

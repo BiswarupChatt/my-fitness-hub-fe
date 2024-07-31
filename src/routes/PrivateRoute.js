@@ -26,7 +26,7 @@ export default function PrivateRoute({ permittedRoles, children }) {
     if (!permittedRoles.includes(user.account.role)) {
         errorToast('You are unauthorized to access this page.')
         return (
-            <Navigate to='/unauthorized' />
+            <Navigate to='/forbidden' />
         )
     }
     else {

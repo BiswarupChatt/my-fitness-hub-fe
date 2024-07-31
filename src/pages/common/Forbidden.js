@@ -1,16 +1,15 @@
 import { Container, Box, Typography, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 
 
-export default function ErrorPage() {
+export default function Unauthorized() {
 
     const navigate = useNavigate()
 
     const handleGoHome = () => {
-        navigate('/')
+        navigate('/');
     }
-
 
     return (
         <Container
@@ -33,15 +32,15 @@ export default function ErrorPage() {
                     mb: 4,
                 }}
             >
-                <ErrorOutlineIcon sx={{ fontSize: 100, color: 'primary.main' }} />
+                <LockOutlinedIcon sx={{ fontSize: 100, color: 'error.main' }} />
                 <Typography variant="h1" component="h1" sx={{ mt: 2 }}>
-                    404
+                    403
                 </Typography>
                 <Typography variant="h4" component="h2" sx={{ mt: 2 }}>
-                    Page Not Found
+                    Forbidden
                 </Typography>
                 <Typography variant="body1" sx={{ mt: 2, color: 'text.secondary' }}>
-                Apologies, the page you are looking for does not exist. It might have been moved or deleted.
+                    You do not have permission to view this page. Please contact support if you believe this is an error.
                 </Typography>
             </Box>
             <Button
