@@ -137,7 +137,7 @@ export default function ShowAllClients({ user }) {
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
         initialValues: { email: '' },
         validationSchema: inviteClientValidation,
-        onSubmit: async (value) => {
+        onSubmit: async (value, { resetForm }) => {
             try {
 
                 setIsSubmitting(true)
@@ -150,6 +150,7 @@ export default function ShowAllClients({ user }) {
                 })
                 console.log('1')
                 updateToast('Sent Invitation Successfully', 'client-invite-toast', 'success')
+                resetForm()
             } catch (err) {
                 console.error('Error caught in catch block:', err)
 

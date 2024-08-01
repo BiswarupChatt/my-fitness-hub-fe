@@ -42,7 +42,7 @@ export default function CoachSignup() {
     const initialValues = {
         firstName: "Biswarup",
         lastName: "Chatterjee",
-        email: "chatterjeebiswarup61@gmail.com",
+        email: "chatterjeebiswarup61@email.com",
         password: 'secret123'
     }
 
