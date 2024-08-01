@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { AuthProvider } from './services/context/AuthContext';
 import createAppStore from './services/redux/store/createAppStore';
 import { Provider } from 'react-redux';
+import { HelmetProvider } from 'react-helmet-async';
 
 const store = createAppStore()
 
@@ -16,8 +17,10 @@ root.render(
     <AuthProvider>
         <Provider store={store}>
             <BrowserRouter>
-                <App />
-                <ToastContainer />
+                <HelmetProvider>
+                    <App />
+                    <ToastContainer />
+                </HelmetProvider>
             </BrowserRouter>
         </Provider>
     </AuthProvider>

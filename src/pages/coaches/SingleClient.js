@@ -6,6 +6,7 @@ import { Container, Box, Tab, Paper, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { startGetClient } from '../../services/redux/action/client-action';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 
 import ClientProfile from '../../components/coach/ClientProfile';
 import ClientWorkout from '../../components/coach/ClientWorkout';
@@ -43,6 +44,10 @@ export default function SingleCLient() {
 
     return (
         <>
+
+            <Helmet>
+                <title>{client ? `${client.firstName} ${client.lastName}` : 'Client'}</title>
+            </Helmet>
             <Container sx={{ py: { xs: 8, sm: 4 } }}>
                 <Paper elevation={3} sx={{ padding: 1 }}>
                     <Box sx={{ width: '100%', }}>

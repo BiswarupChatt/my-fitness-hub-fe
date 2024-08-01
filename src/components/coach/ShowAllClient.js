@@ -44,10 +44,17 @@ const ProgramStatus = ({ program }) => {
 }
 
 const AvatarDisplay = ({ user }) => {
-    if (user.profilePicture) {
-        return <Avatar src={user.profilePicture} alt={user.firstName} />;
-    }
-    return <Avatar alt={user.firstName}>{user.firstName.charAt(0).toUpperCase()}</Avatar>;
+    const { profileImage, firstName } = user
+
+    return (
+        <Avatar
+            src={profileImage? profileImage : firstName}
+            alt={firstName}
+            sx={{
+                width: 56,
+                height: 56,
+            }}/>
+    )
 }
 
 
@@ -59,7 +66,7 @@ export default function ShowAllClients({ user }) {
     const [clients, setClients] = useState([])
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
     const [totalClients, setTotalClients] = useState(0)
     const [sortBy, setSortBy] = useState('createdAt')
     const [sortOrder, setSortOrder] = useState('asc')
@@ -170,6 +177,7 @@ export default function ShowAllClients({ user }) {
         }
     });
 
+    console.log('c', clients)
     return (
         <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
             <Grid container alignItems="center" justifyContent="space-between" pb={4}>
