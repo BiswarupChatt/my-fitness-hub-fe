@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Typography, Divider, Modal, Box, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel } from '@mui/material'
 import { useFormik } from 'formik';
-import { inviteClientValidation } from '../../validations/inviteClientValidations';
-import { loadingToast, updateToast, errorToast } from '../../utils/toastify';
-import axios from '../../services/api/axios';
+import { inviteClientValidation } from '../../../validations/inviteClientValidations';
+import { loadingToast, updateToast, errorToast } from '../../../utils/toastify';
+import axios from '../../../services/api/axios';
 import moment from 'moment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HelpIcon from '@mui/icons-material/Help';
 import { useNavigate } from 'react-router-dom';
+import AddClient from './AddClient';
 
 const modalStyle = {
     position: 'absolute',
@@ -48,17 +49,17 @@ const AvatarDisplay = ({ user }) => {
 
     return (
         <Avatar
-            src={profileImage? profileImage : firstName}
+            src={profileImage ? profileImage : firstName}
             alt={firstName}
             sx={{
                 width: 56,
                 height: 56,
-            }}/>
+            }} />
     )
 }
 
 
-export default function ShowAllClients({ user }) {
+export default function ClientTable({ user }) {
 
     const token = localStorage.getItem('token')
     const navigate = useNavigate()
@@ -73,8 +74,6 @@ export default function ShowAllClients({ user }) {
     const [totalPages, setTotalPages] = useState(null)
     const [currentPages, setCurrentPages] = useState(null)
     const [search, setSearch] = useState('')
-    const [open, setOpen] = useState(false)
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleClick = (userId) => {
         navigate(`/client/${userId}`)
@@ -88,12 +87,6 @@ export default function ShowAllClients({ user }) {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
     }
-
-    const handleToggle = () => {
-        setOpen((ele) => {
-            return !ele;
-        });
-    };
 
     const fetchClients = async () => {
         setLoading(true)
@@ -141,57 +134,10 @@ export default function ShowAllClients({ user }) {
         setPage(0)
     }
 
-    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
-        initialValues: { email: '' },
-        validationSchema: inviteClientValidation,
-        onSubmit: async (value, { resetForm }) => {
-            try {
-
-                setIsSubmitting(true)
-                loadingToast("Sending Invitation", 'client-invite-toast')
-
-                await axios.post('/coach/sendInvitationEmail', value, {
-                    headers: {
-                        Authorization: token
-                    }
-                })
-                console.log('1')
-                updateToast('Sent Invitation Successfully', 'client-invite-toast', 'success')
-                resetForm()
-            } catch (err) {
-                console.error('Error caught in catch block:', err)
-
-                if (err.response) {
-                    const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
-                    updateToast(errorMessage, 'client-invite-toast', 'error')
-                } else if (err.request) {
-                    updateToast('No response from server', 'client-invite-toast', 'error')
-                } else {
-                    updateToast('An unknown error occurred', 'client-invite-toast', 'error')
-                }
-            } finally {
-                console.log('5')
-                setIsSubmitting(false)
-                handleToggle()
-            }
-        }
-    });
-
     console.log('c', clients)
     return (
         <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
-            <Grid container alignItems="center" justifyContent="space-between" pb={4}>
-                <Grid item>
-                    <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
-                        Client List
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <Button variant="contained" color="primary" onClick={handleToggle}>
-                        Invite Client
-                    </Button>
-                </Grid>
-            </Grid>
+            <AddClient />
 
             <Paper>
 
@@ -245,7 +191,6 @@ export default function ShowAllClients({ user }) {
                         </FormControl>
                     </Grid>
                 </Grid>
-
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -311,36 +256,6 @@ export default function ShowAllClients({ user }) {
                 />
 
             </Paper>
-
-            <Modal open={open} onClose={handleToggle}>
-                <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
-                    <Typography variant="h6" component="h2">
-                        Invite Client
-                    </Typography>
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={touched.email && !!errors.email}
-                        helperText={(touched && errors.email)}
-                    />
-                    <Box mt={2} display="flex" justifyContent="flex-end">
-                        <Button onClick={handleToggle} color="primary" sx={{ mr: 1 }}>
-                            Cancel
-                        </Button>
-                        <Button type='submit' color="primary" variant="contained" disabled={isSubmitting}>
-                            Send Invitation
-                        </Button>
-                    </Box>
-                </Box>
-            </Modal>
 
             <Divider variant="middle" />
 

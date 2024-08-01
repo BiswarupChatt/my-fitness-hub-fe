@@ -1,3 +1,4 @@
+import WorkoutItemTable from "../../components/coach/Workout/WorkoutItemTable"
 import { Helmet } from "react-helmet"
 export default function WorkoutItem() {
     return (
@@ -5,7 +6,7 @@ export default function WorkoutItem() {
             <Helmet>
                 <title>Workout Item</title>
             </Helmet>
-            <h2>Workout Item Screen</h2>
+            <h2><WorkoutItemTable /></h2>
         </>
 
     )

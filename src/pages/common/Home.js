@@ -5,7 +5,7 @@ import Hero from "../../components/home/Hero"
 import FAQ from "../../components/home/FAQ"
 import Highlights from "../../components/home/Highlights"
 import Footer from "../../components/Footer"
-import ShowAllClients from "../../components/coach/ShowAllClient"
+import ShowAllClients from "../../components/coach/Client/ClientTable"
 
 
 

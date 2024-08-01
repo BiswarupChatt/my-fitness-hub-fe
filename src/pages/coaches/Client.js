@@ -1,4 +1,4 @@
-import ShowAllClients from "../../components/coach/ShowAllClient"
+import ClientTable from "../../components/coach/Client/ClientTable"
 import { Helmet } from "react-helmet"
 export default function Client() {
     return (
@@ -6,7 +6,7 @@ export default function Client() {
             <Helmet>
                 <title>Client</title>
             </Helmet>
-            <ShowAllClients />
+            <ClientTable />
         </>
 
     )
