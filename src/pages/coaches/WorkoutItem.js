@@ -1,4 +1,4 @@
-import WorkoutItemTable from "../../components/coach/Workout/WorkoutItemTable"
+import WorkoutItemTable from "../../components/coach/Table/WorkoutItemTable"
 import { Helmet } from "react-helmet"
 export default function WorkoutItem() {
     return (

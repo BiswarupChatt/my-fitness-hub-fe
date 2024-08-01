@@ -1,29 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Typography, Divider, Modal, Box, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel } from '@mui/material'
-import { useFormik } from 'formik';
-import { inviteClientValidation } from '../../../validations/inviteClientValidations';
-import { loadingToast, updateToast, errorToast } from '../../../utils/toastify';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel } from '@mui/material'
+import { errorToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import moment from 'moment';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HelpIcon from '@mui/icons-material/Help';
 import { useNavigate } from 'react-router-dom';
-import AddClient from './AddClient';
+import AddWorkoutItem from '../Form/AddWorkoutitem';
 
-const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: {
-        xs: '90%', sm: '80%', md: '60%', lg: '50%', xl: '30%',
-    },
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    borderRadius: 2,
-    p: 4,
-};
+
 
 const ProgramStatus = ({ program }) => {
     if (program?.isActive !== undefined) {
@@ -59,7 +45,7 @@ const AvatarDisplay = ({ user }) => {
 }
 
 
-export default function ClientTable({ user }) {
+export default function WorkoutItemTable({ user }) {
 
     const token = localStorage.getItem('token')
     const navigate = useNavigate()
@@ -137,7 +123,7 @@ export default function ClientTable({ user }) {
     console.log('c', clients)
     return (
         <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
-            <AddClient />
+            <AddWorkoutItem />
 
             <Paper>
 

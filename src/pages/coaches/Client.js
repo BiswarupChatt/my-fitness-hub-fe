@@ -1,4 +1,4 @@
-import ClientTable from "../../components/coach/Client/ClientTable"
+import ClientTable from "../../components/coach/Table/ClientTable"
 import { Helmet } from "react-helmet"
 export default function Client() {
     return (
