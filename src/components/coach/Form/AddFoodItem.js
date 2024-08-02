@@ -1,9 +1,9 @@
-import { TextField, Grid, Button, Typography, Modal, Box, } from '@mui/material'
+import { TextField, Grid, Button, Typography, Modal, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useFormik } from 'formik'
 import { loadingToast, updateToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import { addFoodItemValidation } from '../../../validations/addFoodItemValidation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 
 const modalStyle = {
@@ -18,6 +18,8 @@ const modalStyle = {
     boxShadow: 24,
     borderRadius: 2,
     p: 4,
+    maxHeight: '75vh',
+    overflowY: 'auto',
 };
 
 
@@ -27,6 +29,7 @@ export default function AddFoodItem() {
     const token = localStorage.getItem('token')
     const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [message, setMessage] = useState('')
 
     const handleToggle = () => {
         setOpen((ele) => {
@@ -44,7 +47,16 @@ export default function AddFoodItem() {
         calories: '',
     }
 
-    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+    const units = [
+        { value: 'grams', label: 'Grams', quantity: '100' },
+        { value: 'milliliters', label: 'Milliliters', quantity: '100' },
+        { value: 'liters', label: 'Liters', quantity: '1' },
+        { value: 'pounds', label: 'Pounds', quantity: '1' },
+        { value: 'ounces', label: 'Ounces', quantity: '1' },
+        { value: 'piece', label: 'Piece', quantity: '1' },
+    ]
+
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
         validationSchema: addFoodItemValidation,
         onSubmit: async (value, { resetForm }) => {
@@ -79,6 +91,29 @@ export default function AddFoodItem() {
             }
         }
     });
+
+    useEffect(() => {
+        const selectedUnit = units.find((ele) => {
+            return ele.value === values.unit
+        })
+        if (selectedUnit) {
+            setFieldValue('quantity', selectedUnit.quantity)
+            setMessage(` Note:- You need to put all the value as per the ${selectedUnit.quantity} ${selectedUnit.label} quantity.`)
+        } else {
+            setMessage('');
+        }
+    }, [values.unit, setFieldValue])
+
+
+    const handleUnitChange = (e) => {
+        handleChange(e)
+        const selectedUnit = units.find((ele) => {
+            return ele.value === e.target.value
+        })
+        if (selectedUnit) {
+            setFieldValue('quantity', selectedUnit.quantity)
+        }
+    }
 
     return (
         <>
@@ -118,20 +153,33 @@ export default function AddFoodItem() {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <TextField
-                                margin="normal"
-                                required
+                            <FormControl
                                 fullWidth
-                                id="unit"
-                                label="Unit"
-                                name="unit"
-                                autoComplete="unit"
-                                value={values.unit}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.unit && !!errors.unit}
-                                helperText={(touched && errors.unit)}
-                            />
+                                margin="normal"
+                                required error={touched.unit && !!errors.unit}
+                            >
+                                <InputLabel id="unit-label">Unit</InputLabel>
+                                <Select
+                                    labelId="unit-label"
+                                    id="unit"
+                                    name="unit"
+                                    value={values.unit}
+                                    onChange={handleUnitChange}
+                                    onBlur={handleBlur}
+                                    label="Unit"
+                                >
+                                    {units.map((ele) => (
+                                        <MenuItem key={ele.value} value={ele.value}>
+                                            {ele.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {touched.unit && errors.unit && (
+                                    <Typography color="error" variant="body2">
+                                        {errors.unit}
+                                    </Typography>
+                                )}
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <TextField
@@ -147,8 +195,12 @@ export default function AddFoodItem() {
                                 onBlur={handleBlur}
                                 error={touched.quantity && !!errors.quantity}
                                 helperText={(touched && errors.quantity)}
+                                InputProps={{ readOnly: true }}
                             />
                         </Grid>
+                        <Typography variant="body2" color="error" mt={2} ml={2}>
+                            {message}
+                        </Typography>
                         <Grid item xs={12} md={6}>
                             <TextField
                                 margin="normal"
