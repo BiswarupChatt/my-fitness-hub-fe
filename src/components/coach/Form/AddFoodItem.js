@@ -1,7 +1,7 @@
 import { TextField, Grid, Button, Typography, Modal, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useFormik } from 'formik'
-import { loadingToast, updateToast } from '../../../utils/toastify';
-import axios from '../../../services/api/axios';
+import { loadingToast, updateToast } from '../../../utils/toastify' 
+import axios from '../../../services/api/axios' 
 import { addFoodItemValidation } from '../../../validations/addFoodItemValidation'
 import { useState, useEffect } from 'react'
 
@@ -20,7 +20,7 @@ const modalStyle = {
     p: 4,
     maxHeight: '75vh',
     overflowY: 'auto',
-};
+} 
 
 
 export default function AddFoodItem() {
@@ -33,9 +33,9 @@ export default function AddFoodItem() {
 
     const handleToggle = () => {
         setOpen((ele) => {
-            return !ele;
-        });
-    };
+            return !ele 
+        }) 
+    } 
 
     const initialValues = {
         foodName: '',
@@ -63,15 +63,15 @@ export default function AddFoodItem() {
             try {
 
                 setIsSubmitting(true)
-                loadingToast("Sending Invitation", 'client-invite-toast')
+                loadingToast("Adding food item", 'client-invite-toast')
 
-                await axios.post('/coach/sendInvitationEmail', value, {
+                console.log('value', value)
+                await axios.post('/food-item', value, {
                     headers: {
                         Authorization: token
                     }
                 })
-                console.log('1')
-                updateToast('Sent Invitation Successfully', 'client-invite-toast', 'success')
+                updateToast('Food item added successfully', 'client-invite-toast', 'success')
                 resetForm()
             } catch (err) {
                 console.error('Error caught in catch block:', err)
@@ -90,7 +90,7 @@ export default function AddFoodItem() {
                 handleToggle()
             }
         }
-    });
+    }) 
 
     useEffect(() => {
         const selectedUnit = units.find((ele) => {
@@ -98,11 +98,11 @@ export default function AddFoodItem() {
         })
         if (selectedUnit) {
             setFieldValue('quantity', selectedUnit.quantity)
-            setMessage(` Note:- You need to put all the value as per the ${selectedUnit.quantity} ${selectedUnit.label} quantity.`)
+            setMessage(`Note: Please ensure that all values are based on the default quantity of ${selectedUnit.quantity} ${selectedUnit.label} for ${values.foodName ? values.foodName : 'this food item'}.`) 
         } else {
-            setMessage('');
+            setMessage('') 
         }
-    }, [values.unit, setFieldValue])
+    }, [values.unit, setFieldValue, values.foodName])
 
 
     const handleUnitChange = (e) => {
@@ -114,6 +114,19 @@ export default function AddFoodItem() {
             setFieldValue('quantity', selectedUnit.quantity)
         }
     }
+
+    useEffect(() => {
+        const protein = parseFloat(values.protein) || 0 
+        const fat = parseFloat(values.fat) || 0 
+        const carbohydrate = parseFloat(values.carbohydrate) || 0 
+
+        const calories = (protein * 4) + (fat * 9) + (carbohydrate * 4)
+        if (!isNaN(calories)) {
+            setFieldValue('calories', calories.toFixed(2))
+        } else {
+            setFieldValue('calories', '0.00')
+        }
+    }, [values.protein, values.fat, values.carbohydrate, setFieldValue])
 
     return (
         <>
@@ -198,11 +211,9 @@ export default function AddFoodItem() {
                                 InputProps={{ readOnly: true }}
                             />
                         </Grid>
-                        <Typography variant="body2" color="error" mt={2} ml={2}>
-                            {message}
-                        </Typography>
                         <Grid item xs={12} md={6}>
                             <TextField
+                                type='number'
                                 margin="normal"
                                 required
                                 fullWidth
@@ -215,10 +226,12 @@ export default function AddFoodItem() {
                                 onBlur={handleBlur}
                                 error={touched.protein && !!errors.protein}
                                 helperText={(touched && errors.protein)}
+                                InputProps={{ inputProps: { min: 0 }, disableUnderline: true }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <TextField
+                                type='number'
                                 margin="normal"
                                 required
                                 fullWidth
@@ -231,15 +244,17 @@ export default function AddFoodItem() {
                                 onBlur={handleBlur}
                                 error={touched.fat && !!errors.fat}
                                 helperText={(touched && errors.fat)}
+                                InputProps={{ inputProps: { min: 0 }, disableUnderline: true }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <TextField
+                                type='number'
                                 margin="normal"
                                 required
                                 fullWidth
                                 id="carbohydrate"
-                                label="Carbohydrate"
+                                label="carbohydrate"
                                 name="carbohydrate"
                                 autoComplete="carbohydrate"
                                 value={values.carbohydrate}
@@ -247,10 +262,12 @@ export default function AddFoodItem() {
                                 onBlur={handleBlur}
                                 error={touched.carbohydrate && !!errors.carbohydrate}
                                 helperText={(touched && errors.carbohydrate)}
+                                InputProps={{ inputProps: { min: 0 }, disableUnderline: true }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <TextField
+                                type='number'
                                 margin="normal"
                                 required
                                 fullWidth
@@ -263,9 +280,13 @@ export default function AddFoodItem() {
                                 onBlur={handleBlur}
                                 error={touched.calories && !!errors.calories}
                                 helperText={(touched && errors.calories)}
+                                InputProps={{ readOnly: true, inputProps: { min: 0 }, disableUnderline: true }}
                             />
                         </Grid>
                     </Grid>
+                    <Typography variant="body2" color="error" mt={2} ml={2}>
+                        {message}
+                    </Typography>
                     <Box mt={2} display="flex" justifyContent="flex-end">
                         <Button onClick={handleToggle} color="primary" sx={{ mr: 1 }}>
                             Cancel
