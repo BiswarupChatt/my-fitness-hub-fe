@@ -4,17 +4,7 @@ import moment from 'moment';
 
 export default function ClientProfile({ client }) {
 
-    const email = "yourEmail@email.com";
-    const firstName = "John";
-    const lastName = "Doe";
-    const profilePicture = "https://picsum.photos/id/64/200";
-    const dateOfBirth = "1990-01-01T00:00:00.000Z";
-    const height = 180;
-    const weight = 75;
-    const gender = "Male";
-    const phoneNumber = "1234567890";
-
-    console.log('client', client)
+    console.log('client coming from client profile Page', client)
 
     return (
         <Container sx={{ py: { xs: 4, sm: 8 }, display: 'flex', justifyContent: 'center' }}>

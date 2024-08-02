@@ -8,11 +8,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { startGetClient } from '../../services/redux/action/client-action';
 import { Helmet } from 'react-helmet-async';
 
-import ClientProfile from '../../components/coach/ClientProfile';
-import ClientWorkout from '../../components/coach/ClientWorkout';
-import ClientNutrition from '../../components/coach/ClientNutrition';
-import ClientProgress from '../../components/coach/ClientProgress';
-import ClientProgram from '../../components/coach/ClientProgram';
+import ClientProfile from '../../components/coach/client/ClientProfile';
+import ClientWorkout from '../../components/coach/client/ClientWorkout';
+import ClientNutrition from '../../components/coach/client/ClientNutrition';
+import ClientProgress from '../../components/coach/client/ClientProgress';
+import ClientProgram from '../../components/coach/client/ClientProgram';
 
 
 export default function SingleCLient() {

@@ -7,7 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HelpIcon from '@mui/icons-material/Help';
 import { useNavigate } from 'react-router-dom';
-import AddFoodItem from '../Form/AddFoodItem';
+import AddFoodItem from '../form/AddFoodItem';
 
 
 
