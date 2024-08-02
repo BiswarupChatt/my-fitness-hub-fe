@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { TextField, Grid, Button, Typography, Modal, Box, } from '@mui/material'
+import { useFormik } from 'formik'
+import { loadingToast, updateToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
-import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, TablePagination, Paper, TextField, Button, Container, Divider, Select, MenuItem, FormControl, InputLabel, Grid, Typography, Modal, Box
-} from '@mui/material';
-import { useFormik } from 'formik';
-import { addFoodItemValidation } from '../../../validations/addFoodItemValidation';
+import { addFoodItemValidation } from '../../../validations/addFoodItemValidation'
+import { useState } from 'react'
+
 
 const modalStyle = {
     position: 'absolute',
@@ -20,29 +20,29 @@ const modalStyle = {
     p: 4,
 };
 
+
 export default function AddFoodItem() {
 
-    const [open, setOpen] = useState(false);
-    const [email, setEmail] = useState('');
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
-    const handleSend = () => {
-        // Handle the send action here, like sending the email address to the server
-        console.log(email);
-        setEmail('')
-        handleClose();
-    };
+    const token = localStorage.getItem('token')
+    const [open, setOpen] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleToggle = () => {
+        setOpen((ele) => {
+            return !ele;
+        });
     };
 
     const initialValues = {
-        foodName: ''
+        foodName: '',
+        unit: '',
+        quantity: '',
+        protein: '',
+        fat: '',
+        carbohydrate: '',
+        calories: '',
     }
-
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
         initialValues: initialValues,
@@ -50,88 +50,180 @@ export default function AddFoodItem() {
         onSubmit: async (value, { resetForm }) => {
             try {
 
+                setIsSubmitting(true)
+                loadingToast("Sending Invitation", 'client-invite-toast')
 
+                await axios.post('/coach/sendInvitationEmail', value, {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                console.log('1')
+                updateToast('Sent Invitation Successfully', 'client-invite-toast', 'success')
+                resetForm()
             } catch (err) {
+                console.error('Error caught in catch block:', err)
 
+                if (err.response) {
+                    const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
+                    updateToast(errorMessage, 'client-invite-toast', 'error')
+                } else if (err.request) {
+                    updateToast('No response from server', 'client-invite-toast', 'error')
+                } else {
+                    updateToast('An unknown error occurred', 'client-invite-toast', 'error')
+                }
             } finally {
-
+                console.log('5')
+                setIsSubmitting(false)
+                handleToggle()
             }
         }
     });
 
-
     return (
-        <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
-            <Grid container alignItems="center" justifyContent="space-between" pb={4}>
-                <Grid item>
+        <>
+            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
+                <Grid item margin={1}>
                     <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
-                        Food List
+                        Food Item List
                     </Typography>
                 </Grid>
-                <Grid item>
-                    <Button variant="contained" color="primary" onClick={handleClickOpen}>
+                <Grid item margin={1}>
+                    <Button variant="contained" color="primary" onClick={handleToggle}>
                         Add Food Item
                     </Button>
                 </Grid>
             </Grid>
 
-            <Modal open={open} onClose={handleClose}>
-                <Box sx={modalStyle}>
+            <Modal open={open} onClose={handleToggle}>
+                <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
                     <Typography variant="h6" component="h2">
-                        Add Food Item
+                        Add FoodItem
                     </Typography>
                     <Grid container spacing={2}>
-
                         <Grid item xs={12}>
                             <TextField
-                                autoFocus
-                                margin="dense"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="foodName"
                                 label="Food Name"
-                                type="text"
-                                fullWidth
-                                variant="outlined"
+                                name="foodName"
+                                autoComplete="email"
                                 value={values.foodName}
-                                onChange={(e) => setEmail(e.target.value)}
-                                sx={{ mt: 2 }}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.foodName && !!errors.foodName}
+                                helperText={(touched && errors.foodName)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} md={6}>
                             <TextField
-                                autoFocus
-                                margin="dense"
-                                label="Email Address"
-                                type="email"
+                                margin="normal"
+                                required
                                 fullWidth
-                                variant="outlined"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                sx={{ mt: 2 }}
+                                id="unit"
+                                label="Unit"
+                                name="unit"
+                                autoComplete="unit"
+                                value={values.unit}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.unit && !!errors.unit}
+                                helperText={(touched && errors.unit)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} md={6}>
                             <TextField
-                                autoFocus
-                                margin="dense"
-                                label="Email Address"
-                                type="email"
+                                margin="normal"
+                                required
                                 fullWidth
-                                variant="outlined"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                sx={{ mt: 2 }}
+                                id="quantity"
+                                label="Quantity"
+                                name="quantity"
+                                autoComplete="quantity"
+                                value={values.quantity}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.quantity && !!errors.quantity}
+                                helperText={(touched && errors.quantity)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="protein"
+                                label="Protein"
+                                name="protein"
+                                autoComplete="protein"
+                                value={values.protein}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.protein && !!errors.protein}
+                                helperText={(touched && errors.protein)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="fat"
+                                label="Fat"
+                                name="fat"
+                                autoComplete="fat"
+                                value={values.fat}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.fat && !!errors.fat}
+                                helperText={(touched && errors.fat)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="carbohydrate"
+                                label="Carbohydrate"
+                                name="carbohydrate"
+                                autoComplete="carbohydrate"
+                                value={values.carbohydrate}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.carbohydrate && !!errors.carbohydrate}
+                                helperText={(touched && errors.carbohydrate)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="calories"
+                                label="Calories"
+                                name="calories"
+                                autoComplete="calories"
+                                value={values.calories}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.calories && !!errors.calories}
+                                helperText={(touched && errors.calories)}
                             />
                         </Grid>
                     </Grid>
                     <Box mt={2} display="flex" justifyContent="flex-end">
-                        <Button onClick={handleClose} color="primary" sx={{ mr: 1 }}>
+                        <Button onClick={handleToggle} color="primary" sx={{ mr: 1 }}>
                             Cancel
                         </Button>
-                        <Button onClick={handleSend} color="primary" variant="contained">
+                        <Button type='submit' color="primary" variant="contained" disabled={isSubmitting}>
                             Send Invitation
                         </Button>
                     </Box>
                 </Box>
             </Modal>
-        </Container >
+        </>
     )
 }

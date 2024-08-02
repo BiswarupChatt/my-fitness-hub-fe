@@ -1,6 +1,6 @@
-import {TextField, Grid, Button, Typography, Modal, Box,  } from '@mui/material'
+import { TextField, Grid, Button, Typography, Modal, Box, } from '@mui/material'
 import { useFormik } from 'formik'
-import { loadingToast, updateToast} from '../../../utils/toastify';
+import { loadingToast, updateToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import { inviteClientValidation } from '../../../validations/inviteClientValidations'
 import { useState } from 'react'
@@ -72,13 +72,13 @@ export default function AddClient() {
 
     return (
         <>
-            <Grid container alignItems="center" justifyContent="space-between" pb={4}>
-                <Grid item>
+            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
+                <Grid item margin={1}>
                     <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
                         Client List
                     </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item margin={1}>
                     <Button variant="contained" color="primary" onClick={handleToggle}>
                         Invite Client
                     </Button>
