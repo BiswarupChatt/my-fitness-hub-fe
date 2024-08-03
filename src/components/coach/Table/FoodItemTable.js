@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton} from '@mui/material'
 import { errorToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import { useNavigate } from 'react-router-dom';
 import AddFoodItem from '../form/AddFoodItem';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useAuth } from '../../../services/context/AuthContext';
 
-
-export default function FoodItemTable({ user }) {
-
+export default function FoodItemTable() {
+    const { user } = useAuth()
     const token = localStorage.getItem('token')
     const navigate = useNavigate()
 
@@ -83,6 +84,7 @@ export default function FoodItemTable({ user }) {
         fetchFoodItems()
         setPage(0)
     }
+    console.log('user', user)
 
     // let filteredFoodItems;
 
@@ -126,12 +128,10 @@ export default function FoodItemTable({ user }) {
                                 }}
                             >
                                 <MenuItem value="foodName">Food Name</MenuItem>
-                                <MenuItem value="unit">Unit</MenuItem>
                                 <MenuItem value="calories">Calories</MenuItem>
                                 <MenuItem value="protein">Protein</MenuItem>
                                 <MenuItem value="fat">Fat</MenuItem>
                                 <MenuItem value="carbohydrate">Carbohydrate</MenuItem>
-                                <MenuItem value="isDefault">Created By</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl variant="outlined" sx={{ m: 2 }}>
@@ -176,6 +176,7 @@ export default function FoodItemTable({ user }) {
                                 <TableCell>Fat</TableCell>
                                 <TableCell>Carbohydrate</TableCell>
                                 <TableCell>Created By</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -190,7 +191,6 @@ export default function FoodItemTable({ user }) {
                                     <TableRow key={ele._id}
                                         sx={{
                                             backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
-                                            cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
                                         }}
                                     >
                                         <TableCell>{ele.foodName}</TableCell>
@@ -205,6 +205,13 @@ export default function FoodItemTable({ user }) {
                                         ) : (
                                             <Chip label={ele.coach.firstName} color="success" />
                                         )}</TableCell>
+                                        <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease',  }}>
+                                            {ele.coach._id === user.account._id ? (
+                                                <IconButton size="small" sx={{ '&:hover': { borderRadius: '50%', } }}>
+                                                    <MoreHorizIcon fontSize="small" />
+                                                </IconButton>
+                                            ) : null}
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             )}

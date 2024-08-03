@@ -3,6 +3,7 @@
         "appbar",
         "bgcolor",
         "Formik",
+        "Horiz",
         "Mountedtransform",
         "reduxjs",
         "toastify"
