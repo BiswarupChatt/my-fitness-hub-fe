@@ -23,8 +23,7 @@ const modalStyle = {
 }
 
 
-export default function AddFoodItem({ onChange }) {
-
+export default function AddFoodItem({ onChange, title }) {
 
     const token = localStorage.getItem('token')
     const [open, setOpen] = useState(false)
@@ -131,18 +130,9 @@ export default function AddFoodItem({ onChange }) {
 
     return (
         <>
-            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
-                <Grid item margin={1}>
-                    <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
-                        Food Item List
-                    </Typography>
-                </Grid>
-                <Grid item margin={1}>
-                    <Button variant="contained" color="primary" onClick={handleToggle}>
-                        Add Food Item
-                    </Button>
-                </Grid>
-            </Grid>
+            <Button variant="contained" color="primary" onClick={handleToggle}>
+                {title}
+            </Button>
 
             <Modal open={open} onClose={handleToggle}>
                 <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
@@ -293,7 +283,7 @@ export default function AddFoodItem({ onChange }) {
                             Cancel
                         </Button>
                         <Button type='submit' color="primary" variant="contained" disabled={isSubmitting}>
-                            Send Invitation
+                            Add Food Item
                         </Button>
                     </Box>
                 </Box>

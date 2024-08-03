@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton} from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography } from '@mui/material'
 import { errorToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import { useNavigate } from 'react-router-dom';
 import AddFoodItem from '../form/AddFoodItem';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useAuth } from '../../../services/context/AuthContext';
-
+ 
 export default function FoodItemTable() {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
@@ -26,7 +26,7 @@ export default function FoodItemTable() {
     const [addFoodItemChanges, setAddFoodItemChanged] = useState(false)
 
     const handleAddFoodItemChange = () => {
-        setAddFoodItemChanged(true)
+            setAddFoodItemChanged(true)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -86,19 +86,18 @@ export default function FoodItemTable() {
     }
     console.log('user', user)
 
-    // let filteredFoodItems;
-
-    // if (showOnlyUserFoodItem) {
-    //     filteredFoodItems = foodItems.filter((ele) => {
-    //         return !ele.isDefault
-    //     });
-    // } else {
-    //     filteredFoodItems = foodItems;
-    // }
-
     return (
         <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
-            <AddFoodItem onChange={handleAddFoodItemChange} />
+            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
+                <Grid item margin={1}>
+                    <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
+                        Food Item List
+                    </Typography>
+                </Grid>
+                <Grid item margin={1}>
+                    <AddFoodItem onChange={handleAddFoodItemChange} title={"Add Food Item"} />
+                </Grid>
+            </Grid>
             <Paper>
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }}>
                     <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
@@ -205,7 +204,7 @@ export default function FoodItemTable() {
                                         ) : (
                                             <Chip label={ele.coach.firstName} color="success" />
                                         )}</TableCell>
-                                        <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease',  }}>
+                                        <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
                                             {ele.coach._id === user.account._id ? (
                                                 <IconButton size="small" sx={{ '&:hover': { borderRadius: '50%', } }}>
                                                     <MoreHorizIcon fontSize="small" />
