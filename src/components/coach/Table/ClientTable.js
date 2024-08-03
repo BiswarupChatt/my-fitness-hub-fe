@@ -135,7 +135,7 @@ export default function ClientTable({ user }) {
                 </Grid>
             </Grid>
 
-            <Paper>
+            <Paper elevation={3}>
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }} >
                     <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
                         <TextField

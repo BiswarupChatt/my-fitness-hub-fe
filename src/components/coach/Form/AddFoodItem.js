@@ -124,7 +124,7 @@ export default function AddFoodItem({ onChange, title }) {
         if (!isNaN(calories)) {
             setFieldValue('calories', calories.toFixed(2))
         } else {
-            setFieldValue('calories', '0.00')
+            setFieldValue('calories', '0')
         }
     }, [values.protein, values.fat, values.carbohydrate, setFieldValue])
 
@@ -153,7 +153,7 @@ export default function AddFoodItem({ onChange, title }) {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.foodName && !!errors.foodName}
-                                helperText={(touched && errors.foodName)}
+                                helperText={(touched.foodName && errors.foodName)}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -198,7 +198,7 @@ export default function AddFoodItem({ onChange, title }) {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.quantity && !!errors.quantity}
-                                helperText={(touched && errors.quantity)}
+                                helperText={(touched.quantity && errors.quantity)}
                                 InputProps={{ readOnly: true }}
                             />
                         </Grid>
@@ -216,8 +216,8 @@ export default function AddFoodItem({ onChange, title }) {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.protein && !!errors.protein}
-                                helperText={(touched && errors.protein)}
-                                InputProps={{ inputProps: { min: 0 }, disableUnderline: true }}
+                                helperText={(touched.protein && errors.protein)}
+                                InputProps={{ inputProps: { min: 0 } }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -234,8 +234,8 @@ export default function AddFoodItem({ onChange, title }) {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.fat && !!errors.fat}
-                                helperText={(touched && errors.fat)}
-                                InputProps={{ inputProps: { min: 0 }, disableUnderline: true }}
+                                helperText={(touched.fat && errors.fat)}
+                                InputProps={{ inputProps: { min: 0 } }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -245,15 +245,15 @@ export default function AddFoodItem({ onChange, title }) {
                                 required
                                 fullWidth
                                 id="carbohydrate"
-                                label="carbohydrate"
+                                label="Carbohydrate"
                                 name="carbohydrate"
                                 autoComplete="carbohydrate"
                                 value={values.carbohydrate}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.carbohydrate && !!errors.carbohydrate}
-                                helperText={(touched && errors.carbohydrate)}
-                                InputProps={{ inputProps: { min: 0 }, disableUnderline: true }}
+                                helperText={(touched.carbohydrate && errors.carbohydrate)}
+                                InputProps={{ inputProps: { min: 0 } }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -270,8 +270,8 @@ export default function AddFoodItem({ onChange, title }) {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.calories && !!errors.calories}
-                                helperText={(touched && errors.calories)}
-                                InputProps={{ readOnly: true, inputProps: { min: 0 }, disableUnderline: true }}
+                                helperText={(touched.calories && errors.calories)}
+                                InputProps={{ readOnly: true, inputProps: { min: 0 } }}
                             />
                         </Grid>
                     </Grid>

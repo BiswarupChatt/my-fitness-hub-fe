@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography } from '@mui/material'
-import { errorToast } from '../../../utils/toastify';
-import axios from '../../../services/api/axios';
-import { useNavigate } from 'react-router-dom';
-import AddFoodItem from '../form/AddFoodItem';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { useAuth } from '../../../services/context/AuthContext';
- 
+import { useState, useEffect } from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu } from '@mui/material'
+import { errorToast } from '../../../utils/toastify'
+import axios from '../../../services/api/axios'
+import AddFoodItem from '../form/AddFoodItem'
+import EditFoodItem from '../form/EditFoodItem'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import { useAuth } from '../../../services/context/AuthContext'
+
 export default function FoodItemTable() {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
-    const navigate = useNavigate()
 
     const [foodItems, setFoodItems] = useState([])
     const [loading, setLoading] = useState(false)
@@ -23,14 +22,25 @@ export default function FoodItemTable() {
     const [currentPage, setCurrentPage] = useState(null)
     const [search, setSearch] = useState('')
     const [userFoodItem, setUserFoodItem] = useState(false)
-    const [addFoodItemChanges, setAddFoodItemChanged] = useState(false)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [openEditModal, setOpenEditModal] = useState(false)
 
-    const handleAddFoodItemChange = () => {
-            setAddFoodItemChanged(true)
+    const handleMenuToggle = (event) => {
+        setAnchorEl(anchorEl ? null : event.currentTarget)
+    }
+
+    const handleEdit = () => {
+        setOpenEditModal(true)
+        handleMenuToggle()
+    }
+
+    const handleDelete = () => {
+        handleMenuToggle()
+        // Implement delete functionality
     }
 
     const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+        setPage(newPage)
     }
 
     const handleChangeRowsPerPage = (event) => {
@@ -42,49 +52,36 @@ export default function FoodItemTable() {
         setLoading(true)
         try {
             const response = await axios.get('/food-item', {
-                headers: {
-                    Authorization: token
-                },
-                params: {
-                    page: page + 1,
-                    limit: rowsPerPage,
-                    sortBy: sortBy,
-                    sortOrder: sortOrder,
-                    search: search,
-                    userFoodItem: userFoodItem
-                }
-            });
-            console.log('response', response)
+                headers: { Authorization: token },
+                params: { page: page + 1, limit: rowsPerPage, sortBy, sortOrder, search, userFoodItem }
+            })
             setFoodItems(response.data.foodItems)
             setTotalFoodItems(response.data.totalFoodItems)
             setTotalPages(response.data.totalPages)
             setCurrentPage(response.data.currentPage)
         } catch (err) {
             console.error('Error fetching data:', err)
-            if (err.response) {
-                const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
-                errorToast(errorMessage)
-            } else if (err.request) {
-                errorToast('No response from server')
-            } else {
-                errorToast('An unknown error occurred')
-            }
+            const errorMessage = err.response?.data?.errors?.[0]?.msg || err.response?.data?.errors || 'An error occurred'
+            errorToast(errorMessage || 'An unknown error occurred')
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
     useEffect(() => {
         fetchFoodItems()
-
-    }, [page, rowsPerPage, sortBy, sortOrder, token, addFoodItemChanges, userFoodItem])
+    }, [page, rowsPerPage, sortBy, sortOrder, token, search, userFoodItem])
 
     const handleSearchSubmit = (e) => {
         e.preventDefault()
         fetchFoodItems()
         setPage(0)
     }
-    console.log('user', user)
+
+    const handleCloseEditModal = () => {
+        setOpenEditModal(false)
+        // setFoodItemToEdit(null)
+    }
 
     return (
         <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
@@ -95,19 +92,17 @@ export default function FoodItemTable() {
                     </Typography>
                 </Grid>
                 <Grid item margin={1}>
-                    <AddFoodItem onChange={handleAddFoodItemChange} title={"Add Food Item"} />
+                    <AddFoodItem onChange={() => fetchFoodItems()} title={"Add Food Item"} />
                 </Grid>
             </Grid>
-            <Paper>
+            <Paper elevation={3}>
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }}>
                     <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
                         <TextField
                             label="Search"
                             variant="outlined"
                             value={search}
-                            onChange={(e) => {
-                                setSearch(e.target.value);
-                            }}
+                            onChange={(e) => setSearch(e.target.value)}
                             fullWidth
                         />
                         <Button variant="contained" color="primary" type="submit" sx={{ m: 2 }} fullWidth>
@@ -122,9 +117,7 @@ export default function FoodItemTable() {
                                 id="sort-by"
                                 label="Sort By"
                                 value={sortBy}
-                                onChange={(e) => {
-                                    setSortBy(e.target.value);
-                                }}
+                                onChange={(e) => setSortBy(e.target.value)}
                             >
                                 <MenuItem value="foodName">Food Name</MenuItem>
                                 <MenuItem value="calories">Calories</MenuItem>
@@ -140,9 +133,7 @@ export default function FoodItemTable() {
                                 id="sort-order"
                                 label="Sort Order"
                                 value={sortOrder}
-                                onChange={(e) => {
-                                    setSortOrder(e.target.value);
-                                }}
+                                onChange={(e) => setSortOrder(e.target.value)}
                             >
                                 <MenuItem value="asc">Ascending</MenuItem>
                                 <MenuItem value="desc">Descending</MenuItem>
@@ -163,6 +154,7 @@ export default function FoodItemTable() {
                         />
                     </Grid>
                 </Grid>
+
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -181,17 +173,13 @@ export default function FoodItemTable() {
                         <TableBody>
                             {loading ? (
                                 <TableRow>
-                                    <TableCell colSpan={7} align="center">
+                                    <TableCell colSpan={9} align="center">
                                         <CircularProgress />
                                     </TableCell>
                                 </TableRow>
                             ) : (
                                 foodItems.map((ele, index) => (
-                                    <TableRow key={ele._id}
-                                        sx={{
-                                            backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
-                                        }}
-                                    >
+                                    <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
                                         <TableCell>{ele.foodName}</TableCell>
                                         <TableCell>{ele.quantity}</TableCell>
                                         <TableCell>{ele.unit}</TableCell>
@@ -206,11 +194,27 @@ export default function FoodItemTable() {
                                         )}</TableCell>
                                         <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
                                             {ele.coach._id === user.account._id ? (
-                                                <IconButton size="small" sx={{ '&:hover': { borderRadius: '50%', } }}>
-                                                    <MoreHorizIcon fontSize="small" />
-                                                </IconButton>
+                                                <>
+                                                    <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
+                                                        <MoreHorizIcon fontSize="small" />
+                                                    </IconButton>
+                                                    <Menu
+                                                        anchorEl={anchorEl}
+                                                        open={Boolean(anchorEl)}
+                                                        onClose={handleMenuToggle}
+                                                    >
+                                                        <MenuItem onClick={() => handleEdit()}>Edit</MenuItem>
+                                                        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                                                    </Menu>
+                                                </>
                                             ) : null}
                                         </TableCell>
+                                        <EditFoodItem
+                                            open={openEditModal}
+                                            handleClose={handleCloseEditModal}
+                                            foodItem={ele}
+                                            onChange={() => fetchFoodItems()}
+                                        />
                                     </TableRow>
                                 ))
                             )}
@@ -231,6 +235,8 @@ export default function FoodItemTable() {
                     }
                 />
             </Paper>
+
+
         </Container>
-    );
+    )
 }
