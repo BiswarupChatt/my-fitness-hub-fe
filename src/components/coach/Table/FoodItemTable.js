@@ -12,14 +12,14 @@ export default function FoodItemTable() {
     const token = localStorage.getItem('token')
 
     const [foodItems, setFoodItems] = useState([])
+    const [totalFoodItems, setTotalFoodItems] = useState(0)
+    const [currentPage, setCurrentPage] = useState(null)
+    const [totalPages, setTotalPages] = useState(null)
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [totalFoodItems, setTotalFoodItems] = useState(0)
     const [sortBy, setSortBy] = useState('foodName')
     const [sortOrder, setSortOrder] = useState('asc')
-    const [totalPages, setTotalPages] = useState(null)
-    const [currentPage, setCurrentPage] = useState(null)
     const [search, setSearch] = useState('')
     const [userFoodItem, setUserFoodItem] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -70,7 +70,7 @@ export default function FoodItemTable() {
 
     useEffect(() => {
         fetchFoodItems()
-    }, [page, rowsPerPage, sortBy, sortOrder, token, search, userFoodItem])
+    }, [page, rowsPerPage, sortBy, sortOrder, search, userFoodItem])
 
     const handleSearchSubmit = (e) => {
         e.preventDefault()
