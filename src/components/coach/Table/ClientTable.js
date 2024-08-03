@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel, Typography } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel, Typography, Box } from '@mui/material'
 import { errorToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import moment from 'moment';
@@ -123,7 +123,17 @@ export default function ClientTable({ user }) {
     console.log('c', clients)
     return (
         <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
-            <AddClient />
+
+            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
+                <Grid item margin={1}>
+                    <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
+                        Client List
+                    </Typography>
+                </Grid>
+                <Grid item margin={1}>
+                    <AddClient title={"Add Client"} />
+                </Grid>
+            </Grid>
 
             <Paper>
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }} >
@@ -204,8 +214,11 @@ export default function ClientTable({ user }) {
                                     <TableRow>
                                         <TableCell colSpan={6} align="center">
                                             <Typography variant="body1" fontWeight="bold">
-                                                You don't have any clients. Invite your first client!
+                                                You don't have any clients.
                                             </Typography>
+                                            <Box mt={2}>
+                                                <AddClient title={'Invite First Client'} />
+                                            </Box>
                                         </TableCell>
                                     </TableRow>
                                 ) : (

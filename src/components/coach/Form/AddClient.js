@@ -21,7 +21,7 @@ const modalStyle = {
 };
 
 
-export default function AddClient() {
+export default function AddClient({ title }) {
 
 
     const token = localStorage.getItem('token')
@@ -72,18 +72,10 @@ export default function AddClient() {
 
     return (
         <>
-            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
-                <Grid item margin={1}>
-                    <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
-                        Client List
-                    </Typography>
-                </Grid>
-                <Grid item margin={1}>
-                    <Button variant="contained" color="primary" onClick={handleToggle}>
-                        Invite Client
-                    </Button>
-                </Grid>
-            </Grid>
+            <Button variant="contained" color="primary" onClick={handleToggle}>
+                {title}
+            </Button>
+
 
             <Modal open={open} onClose={handleToggle}>
                 <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
