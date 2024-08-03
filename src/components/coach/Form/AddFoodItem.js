@@ -1,7 +1,7 @@
 import { TextField, Grid, Button, Typography, Modal, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import { useFormik } from 'formik'
-import { loadingToast, updateToast } from '../../../utils/toastify' 
-import axios from '../../../services/api/axios' 
+import { loadingToast, updateToast } from '../../../utils/toastify'
+import axios from '../../../services/api/axios'
 import { addFoodItemValidation } from '../../../validations/addFoodItemValidation'
 import { useState, useEffect } from 'react'
 
@@ -20,10 +20,10 @@ const modalStyle = {
     p: 4,
     maxHeight: '75vh',
     overflowY: 'auto',
-} 
+}
 
 
-export default function AddFoodItem() {
+export default function AddFoodItem({ onChange }) {
 
 
     const token = localStorage.getItem('token')
@@ -33,9 +33,9 @@ export default function AddFoodItem() {
 
     const handleToggle = () => {
         setOpen((ele) => {
-            return !ele 
-        }) 
-    } 
+            return !ele
+        })
+    }
 
     const initialValues = {
         foodName: '',
@@ -73,6 +73,7 @@ export default function AddFoodItem() {
                 })
                 updateToast('Food item added successfully', 'client-invite-toast', 'success')
                 resetForm()
+                onChange()
             } catch (err) {
                 console.error('Error caught in catch block:', err)
 
@@ -90,7 +91,7 @@ export default function AddFoodItem() {
                 handleToggle()
             }
         }
-    }) 
+    })
 
     useEffect(() => {
         const selectedUnit = units.find((ele) => {
@@ -98,9 +99,9 @@ export default function AddFoodItem() {
         })
         if (selectedUnit) {
             setFieldValue('quantity', selectedUnit.quantity)
-            setMessage(`Note: Please ensure that all values are based on the default quantity of ${selectedUnit.quantity} ${selectedUnit.label} for ${values.foodName ? values.foodName : 'this food item'}.`) 
+            setMessage(`Note: Please ensure that all values are based on the default quantity of ${selectedUnit.quantity} ${selectedUnit.label} for ${values.foodName ? values.foodName : 'this food item'}.`)
         } else {
-            setMessage('') 
+            setMessage('')
         }
     }, [values.unit, setFieldValue, values.foodName])
 
@@ -116,9 +117,9 @@ export default function AddFoodItem() {
     }
 
     useEffect(() => {
-        const protein = parseFloat(values.protein) || 0 
-        const fat = parseFloat(values.fat) || 0 
-        const carbohydrate = parseFloat(values.carbohydrate) || 0 
+        const protein = parseFloat(values.protein) || 0
+        const fat = parseFloat(values.fat) || 0
+        const carbohydrate = parseFloat(values.carbohydrate) || 0
 
         const calories = (protein * 4) + (fat * 9) + (carbohydrate * 4)
         if (!isNaN(calories)) {

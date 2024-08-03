@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel, Typography } from '@mui/material'
 import { errorToast } from '../../../utils/toastify';
 import axios from '../../../services/api/axios';
 import moment from 'moment';
@@ -126,7 +126,6 @@ export default function ClientTable({ user }) {
             <AddClient />
 
             <Paper>
-
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }} >
                     <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
                         <TextField
@@ -201,28 +200,38 @@ export default function ClientTable({ user }) {
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                clients.map((ele, index) => (
-                                    <TableRow key={ele._id}
-                                        onClick={() => {
-                                            return handleClick(ele.user._id)
-                                        }}
-                                        sx={{
-                                            backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
-                                            cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
-                                        }}
-                                    >
-                                        <TableCell>
-                                            <AvatarDisplay user={ele.user} />
-                                        </TableCell>
-                                        <TableCell>{ele.firstName}</TableCell>
-                                        <TableCell>{ele.lastName}</TableCell>
-                                        <TableCell>{ele.email}</TableCell>
-                                        <TableCell>{moment(ele.createdAt).format("Do MMM YYYY")}</TableCell>
-                                        <TableCell>
-                                            <ProgramStatus program={ele.program} />
+                                clients.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={6} align="center">
+                                            <Typography variant="body1" fontWeight="bold">
+                                                You don't have any clients. Invite your first client!
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
-                                ))
+                                ) : (
+                                    clients.map((ele, index) => (
+                                        <TableRow key={ele._id}
+                                            onClick={() => {
+                                                return handleClick(ele.user._id)
+                                            }}
+                                            sx={{
+                                                backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
+                                                cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
+                                            }}
+                                        >
+                                            <TableCell>
+                                                <AvatarDisplay user={ele.user} />
+                                            </TableCell>
+                                            <TableCell>{ele.firstName}</TableCell>
+                                            <TableCell>{ele.lastName}</TableCell>
+                                            <TableCell>{ele.email}</TableCell>
+                                            <TableCell>{moment(ele.createdAt).format("Do MMM YYYY")}</TableCell>
+                                            <TableCell>
+                                                <ProgramStatus program={ele.program} />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )
                             )}
                         </TableBody>
                     </Table>
