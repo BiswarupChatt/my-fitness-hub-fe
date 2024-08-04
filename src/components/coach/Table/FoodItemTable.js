@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
 import { errorToast } from '../../../utils/toastify'
 import axios from '../../../services/api/axios'
 import AddFoodItem from '../form/AddFoodItem'
@@ -80,15 +80,6 @@ export default function FoodItemTable() {
         setPage(0)
     }
 
-    // const handleCloseEditModal = () => {
-    //     setOpenEditModal(false)
-    //     // setFoodItemToEdit(null)
-    // }
-
-    // handleCloseDeleteModal = () => {
-
-    // }
-
 
     return (
         <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
@@ -102,7 +93,7 @@ export default function FoodItemTable() {
                     <AddFoodItem onChange={() => fetchFoodItems()} title={"Add Food Item"} />
                 </Grid>
             </Grid>
-            <Paper elevation={3}>
+            <Paper elevation={3} sx={{ padding: '20px' }}>
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }}>
                     <Grid>
                         <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
@@ -163,92 +154,102 @@ export default function FoodItemTable() {
                         />
                     </Grid>
                 </Grid>
-
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Food Name</TableCell>
-                                <TableCell>Quantity</TableCell>
-                                <TableCell>Unit</TableCell>
-                                <TableCell>Calories</TableCell>
-                                <TableCell>Protein</TableCell>
-                                <TableCell>Fat</TableCell>
-                                <TableCell>Carbohydrate</TableCell>
-                                <TableCell>Created By</TableCell>
-                                <TableCell></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {loading ? (
-                                <TableRow>
-                                    <TableCell colSpan={9} align="center">
-                                        <CircularProgress />
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                foodItems.map((ele, index) => (
-                                    <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
-                                        <TableCell>{ele.foodName}</TableCell>
-                                        <TableCell>{ele.quantity}</TableCell>
-                                        <TableCell>{ele.unit}</TableCell>
-                                        <TableCell>{ele.calories}</TableCell>
-                                        <TableCell>{ele.protein}</TableCell>
-                                        <TableCell>{ele.fat}</TableCell>
-                                        <TableCell>{ele.carbohydrate}</TableCell>
-                                        <TableCell>{ele.isDefault ? (
-                                            <Chip label="Default" color="primary" />
-                                        ) : (
-                                            <Chip label={ele.coach.firstName} color="success" />
-                                        )}</TableCell>
-                                        <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
-                                            {ele.coach._id === user.account._id ? (
-                                                <>
-                                                    <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
-                                                        <MoreHorizIcon fontSize="small" />
-                                                    </IconButton>
-                                                    <Menu
-                                                        anchorEl={anchorEl}
-                                                        open={Boolean(anchorEl)}
-                                                        onClose={handleMenuToggle}
-                                                    >
-                                                        <MenuItem onClick={() => handleEdit()}>Edit</MenuItem>
-                                                        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-                                                    </Menu>
-                                                </>
-                                            ) : null}
-                                        </TableCell>
-                                        <EditFoodItem
-                                            open={openEditModal}
-                                            handleClose={() => setOpenEditModal(false)}
-                                            foodItem={ele}
-                                            onChange={() => fetchFoodItems()}
-                                        />
-                                        <DeleteFoodItem
-                                            open={openDeleteModal}
-                                            handleClose={() => setOpenDeleteModal(false)}
-                                            foodItem={ele}
-                                            onChange={() => fetchFoodItems()}
-                                        />
+                {loading ? (
+                    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '200px' }}>
+                        <CircularProgress />
+                    </Grid>
+                ) : foodItems.length === 0 ? (
+                    <Grid>
+                        <Typography variant="body1" fontWeight="bold">
+                            You don't have any food items.
+                        </Typography>
+                        <Box mt={2}>
+                            <AddFoodItem onChange={() => fetchFoodItems()} title={"Add First Food Item"} />
+                        </Box>
+                    </Grid>
+                ) : (
+                    <>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Food Name</TableCell>
+                                        <TableCell>Quantity</TableCell>
+                                        <TableCell>Unit</TableCell>
+                                        <TableCell>Calories</TableCell>
+                                        <TableCell>Protein</TableCell>
+                                        <TableCell>Fat</TableCell>
+                                        <TableCell>Carbohydrate</TableCell>
+                                        <TableCell>Created By</TableCell>
+                                        <TableCell></TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                </TableHead>
+                                <TableBody>
+                                    {foodItems.map((ele, index) => (
+                                        <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
+                                            <TableCell>{ele.foodName}</TableCell>
+                                            <TableCell>{ele.quantity}</TableCell>
+                                            <TableCell>{ele.unit}</TableCell>
+                                            <TableCell>{ele.calories}</TableCell>
+                                            <TableCell>{ele.protein}</TableCell>
+                                            <TableCell>{ele.fat}</TableCell>
+                                            <TableCell>{ele.carbohydrate}</TableCell>
+                                            <TableCell>{ele.isDefault ? (
+                                                <Chip label="Default" color="primary" />
+                                            ) : (
+                                                <Chip label={ele.coach.firstName} color="success" />
+                                            )}</TableCell>
+                                            <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
+                                                {ele.coach._id === user.account._id ? (
+                                                    <>
+                                                        <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
+                                                            <MoreHorizIcon fontSize="small" />
+                                                        </IconButton>
+                                                        <Menu
+                                                            anchorEl={anchorEl}
+                                                            open={Boolean(anchorEl)}
+                                                            onClose={handleMenuToggle}
+                                                        >
+                                                            <MenuItem onClick={() => handleEdit()}>Edit</MenuItem>
+                                                            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                                                        </Menu>
+                                                    </>
+                                                ) : null}
+                                            </TableCell>
+                                            <EditFoodItem
+                                                open={openEditModal}
+                                                handleClose={() => setOpenEditModal(false)}
+                                                foodItem={ele}
+                                                onChange={() => fetchFoodItems()}
+                                            />
+                                            <DeleteFoodItem
+                                                open={openDeleteModal}
+                                                handleClose={() => setOpenDeleteModal(false)}
+                                                foodItem={ele}
+                                                onChange={() => fetchFoodItems()}
+                                            />
+                                        </TableRow>
+                                    ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
 
-                <TablePagination
-                    rowsPerPageOptions={[2, 5, 10, 25]}
-                    component="div"
-                    count={totalFoodItems}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelDisplayedRows={({ from, to, count }) =>
-                        `${from}–${to} of ${count} | Page ${currentPage} of ${totalPages}`
-                    }
-                />
+                        <TablePagination
+                            rowsPerPageOptions={[2, 5, 10, 25]}
+                            component="div"
+                            count={totalFoodItems}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelDisplayedRows={({ from, to, count }) =>
+                                `${from}–${to} of ${count} | Page ${currentPage} of ${totalPages}`
+                            }
+                        />
+                    </>
+                )}
+
             </Paper>
 
 

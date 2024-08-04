@@ -1,72 +1,48 @@
-import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, Divider, CircularProgress, FormControl, MenuItem, Select, Avatar, Tooltip, InputLabel } from '@mui/material'
-import { errorToast } from '../../../utils/toastify';
-import axios from '../../../services/api/axios';
-import moment from 'moment';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import HelpIcon from '@mui/icons-material/Help';
-import { useNavigate } from 'react-router-dom';
-import AddWorkoutItem from '../form/AddWorkoutitem';
+import { useState, useEffect } from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
+import { errorToast } from '../../../utils/toastify'
+import axios from '../../../services/api/axios'
+import AddFoodItem from '../form/AddFoodItem'
+import EditWorkoutItem from '../form/EditWorkoutItem'
+import DeleteWorkoutItem from '../form/DeleteWorkoutItem'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import { useAuth } from '../../../services/context/AuthContext'
 
-
-
-const ProgramStatus = ({ program }) => {
-    if (program?.isActive !== undefined) {
-        return program.isActive ? (
-            <Tooltip title="Program is Active">
-                <CheckCircleIcon sx={{ color: 'green', cursor: 'pointer' }} />
-            </Tooltip>
-        ) : (
-            <Tooltip title="Program is not Active">
-                <CancelIcon sx={{ color: 'red', cursor: 'pointer' }} />
-            </Tooltip>
-        )
-    }
-    return (
-        <Tooltip title="Program Not Assigned Yet">
-            <HelpIcon sx={{ color: 'grey', cursor: 'pointer' }} />
-        </Tooltip>
-    )
-}
-
-const AvatarDisplay = ({ user }) => {
-    const { profileImage, firstName } = user
-
-    return (
-        <Avatar
-            src={profileImage ? profileImage : firstName}
-            alt={firstName}
-            sx={{
-                width: 56,
-                height: 56,
-            }} />
-    )
-}
-
-
-export default function WorkoutItemTable({ user }) {
-
+export default function WorkoutItemTable() {
+    const { user } = useAuth()
     const token = localStorage.getItem('token')
-    const navigate = useNavigate()
 
-    const [clients, setClients] = useState([])
+    const [foodItems, setFoodItems] = useState([])
+    const [totalFoodItems, setTotalFoodItems] = useState(0)
+    const [currentPage, setCurrentPage] = useState(null)
+    const [totalPages, setTotalPages] = useState(null)
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [totalClients, setTotalClients] = useState(0)
-    const [sortBy, setSortBy] = useState('createdAt')
+    const [sortBy, setSortBy] = useState('foodName')
     const [sortOrder, setSortOrder] = useState('asc')
-    const [totalPages, setTotalPages] = useState(null)
-    const [currentPages, setCurrentPages] = useState(null)
     const [search, setSearch] = useState('')
+    const [userFoodItem, setUserFoodItem] = useState(false)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [openEditModal, setOpenEditModal] = useState(false)
+    const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
-    const handleClick = (userId) => {
-        navigate(`/client/${userId}`)
+    const handleMenuToggle = (event) => {
+        setAnchorEl(anchorEl ? null : event.currentTarget)
+    }
+
+    const handleEdit = () => {
+        setOpenEditModal(true)
+        handleMenuToggle()
+    }
+
+    const handleDelete = () => {
+        setOpenDeleteModal(true)
+        handleMenuToggle()
     }
 
     const handleChangePage = (event, newPage) => {
-        setPage(newPage);
+        setPage(newPage)
     }
 
     const handleChangeRowsPerPage = (event) => {
@@ -74,177 +50,209 @@ export default function WorkoutItemTable({ user }) {
         setPage(0)
     }
 
-    const fetchClients = async () => {
+    const fetchFoodItems = async () => {
         setLoading(true)
         try {
-            const response = await axios.get('/coach/getAllClient', {
-                headers: {
-                    Authorization: token
-                },
-                params: {
-                    page: page + 1,
-                    limit: rowsPerPage,
-                    sortBy: sortBy,
-                    sortOrder: sortOrder,
-                    search: search
-                }
-            });
-            console.log('response', response)
-            setClients(response.data.client)
-            setTotalClients(response.data.totalClients)
+            const response = await axios.get('/food-item', {
+                headers: { Authorization: token },
+                params: { page: page + 1, limit: rowsPerPage, sortBy, sortOrder, search, userFoodItem }
+            })
+            setFoodItems(response.data.foodItems)
+            setTotalFoodItems(response.data.totalFoodItems)
             setTotalPages(response.data.totalPages)
-            setCurrentPages(response.data.currentPages)
+            setCurrentPage(response.data.currentPage)
         } catch (err) {
             console.error('Error fetching data:', err)
-            if (err.response) {
-                const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
-                errorToast(errorMessage)
-            } else if (err.request) {
-                errorToast('No response from server')
-            } else {
-                errorToast('An unknown error occurred')
-            }
+            const errorMessage = err.response?.data?.errors?.[0]?.msg || err.response?.data?.errors || 'An error occurred'
+            errorToast(errorMessage || 'An unknown error occurred')
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
     useEffect(() => {
-        fetchClients()
-
-    }, [page, rowsPerPage, sortBy, sortOrder, token])
+        fetchFoodItems()
+    }, [page, rowsPerPage, sortBy, sortOrder, search, userFoodItem])
 
     const handleSearchSubmit = (e) => {
         e.preventDefault()
-        fetchClients()
+        fetchFoodItems()
         setPage(0)
     }
 
-    console.log('c', clients)
+
     return (
-        <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
-            <AddWorkoutItem />
-
-            <Paper>
-
-                <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }} >
-                    <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
-                        <TextField
-                            label="Search"
-                            variant="outlined"
-                            value={search}
-                            onChange={(e) => {
-                                setSearch(e.target.value)
-                            }}
-                            fullWidth
-                        />
-                        <Button variant="contained" color="primary" type='submit' sx={{ m: 2 }} fullWidth>
-                            Search
-                        </Button>
-                    </FormControl>
-                    <Grid >
-                        <FormControl variant="outlined" sx={{ m: 2 }}>
+        <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
+            <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
+                <Grid item margin={1}>
+                    <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
+                        Food Item List
+                    </Typography>
+                </Grid>
+                <Grid item margin={1}>
+                    <AddFoodItem onChange={() => fetchFoodItems()} title={"Add Food Item"} />
+                </Grid>
+            </Grid>
+            <Paper elevation={3} sx={{ padding: '20px' }}>
+                <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }}>
+                    <Grid>
+                        <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
+                            <TextField
+                                label="Search"
+                                variant="outlined"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                fullWidth
+                            />
+                            <Button variant="contained" color="primary" type="submit" sx={{ m: 2 }} fullWidth>
+                                Search
+                            </Button>
+                        </FormControl>
+                    </Grid>
+                    <Grid>
+                        <FormControl variant="outlined" sx={{ m: 1 }}>
                             <InputLabel id="sort-by">Sort by</InputLabel>
                             <Select
                                 labelId="sort-by"
                                 id="sort-by"
                                 label="Sort By"
                                 value={sortBy}
-                                onChange={(e) => {
-                                    setSortBy(e.target.value)
-                                }}
+                                onChange={(e) => setSortBy(e.target.value)}
                             >
-                                <MenuItem value="createdAt">Created At</MenuItem>
-                                <MenuItem value="firstName">First Name</MenuItem>
-                                <MenuItem value="lastName">Last Name</MenuItem>
-                                <MenuItem value="email">Email</MenuItem>
+                                <MenuItem value="foodName">Food Name</MenuItem>
+                                <MenuItem value="calories">Calories</MenuItem>
+                                <MenuItem value="protein">Protein</MenuItem>
+                                <MenuItem value="fat">Fat</MenuItem>
+                                <MenuItem value="carbohydrate">Carbohydrate</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl variant="outlined" sx={{ m: 2 }}>
+                        <FormControl variant="outlined" sx={{ m: 1 }}>
                             <InputLabel id="sort-order">Sort Order</InputLabel>
                             <Select
                                 labelId="sort-order"
                                 id="sort-order"
-                                label="Sort By"
+                                label="Sort Order"
                                 value={sortOrder}
-                                onChange={(e) => {
-                                    setSortOrder(e.target.value)
-                                }}
+                                onChange={(e) => setSortOrder(e.target.value)}
                             >
                                 <MenuItem value="asc">Ascending</MenuItem>
                                 <MenuItem value="desc">Descending</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
+                    <Grid>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={userFoodItem}
+                                    onChange={(e) => setUserFoodItem(e.target.checked)}
+                                    name="myEntriesOnly"
+                                    color="primary"
+                                />
+                            }
+                            label="My Entries Only"
+                        />
+                    </Grid>
                 </Grid>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell>
-                                    First Name
-                                </TableCell>
-                                <TableCell>
-                                    Last Name
-                                </TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Created At</TableCell>
-                                <TableCell>Status</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {loading ? (
-                                <TableRow>
-                                    <TableCell colSpan={4} align="center">
-                                        <CircularProgress />
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                clients.map((ele, index) => (
-                                    <TableRow key={ele._id}
-                                        onClick={() => {
-                                            return handleClick(ele.user._id)
-                                        }}
-                                        sx={{
-                                            backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
-                                            cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
-                                        }}
-                                    >
-                                        <TableCell>
-                                            <AvatarDisplay user={ele.user} />
-                                        </TableCell>
-                                        <TableCell>{ele.firstName}</TableCell>
-                                        <TableCell>{ele.lastName}</TableCell>
-                                        <TableCell>{ele.email}</TableCell>
-                                        <TableCell>{moment(ele.createdAt).format("Do MMM YYYY")}</TableCell>
-                                        <TableCell>
-                                            <ProgramStatus program={ele.program} />
-                                        </TableCell>
+                {loading ? (
+                    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '200px' }}>
+                        <CircularProgress />
+                    </Grid>
+                ) : foodItems.length === 0 ? (
+                    <Grid>
+                        <Typography variant="body1" fontWeight="bold">
+                            You don't have any food items.
+                        </Typography>
+                        <Box mt={2}>
+                            <AddFoodItem onChange={() => fetchFoodItems()} title={"Add First Food Item"} />
+                        </Box>
+                    </Grid>
+                ) : (
+                    <>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Food Name</TableCell>
+                                        <TableCell>Quantity</TableCell>
+                                        <TableCell>Unit</TableCell>
+                                        <TableCell>Calories</TableCell>
+                                        <TableCell>Protein</TableCell>
+                                        <TableCell>Fat</TableCell>
+                                        <TableCell>Carbohydrate</TableCell>
+                                        <TableCell>Created By</TableCell>
+                                        <TableCell></TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                </TableHead>
+                                <TableBody>
+                                    {foodItems.map((ele, index) => (
+                                        <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
+                                            <TableCell>{ele.foodName}</TableCell>
+                                            <TableCell>{ele.quantity}</TableCell>
+                                            <TableCell>{ele.unit}</TableCell>
+                                            <TableCell>{ele.calories}</TableCell>
+                                            <TableCell>{ele.protein}</TableCell>
+                                            <TableCell>{ele.fat}</TableCell>
+                                            <TableCell>{ele.carbohydrate}</TableCell>
+                                            <TableCell>{ele.isDefault ? (
+                                                <Chip label="Default" color="primary" />
+                                            ) : (
+                                                <Chip label={ele.coach.firstName} color="success" />
+                                            )}</TableCell>
+                                            <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
+                                                {ele.coach._id === user.account._id ? (
+                                                    <>
+                                                        <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
+                                                            <MoreHorizIcon fontSize="small" />
+                                                        </IconButton>
+                                                        <Menu
+                                                            anchorEl={anchorEl}
+                                                            open={Boolean(anchorEl)}
+                                                            onClose={handleMenuToggle}
+                                                        >
+                                                            <MenuItem onClick={() => handleEdit()}>Edit</MenuItem>
+                                                            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                                                        </Menu>
+                                                    </>
+                                                ) : null}
+                                            </TableCell>
+                                            <EditWorkoutItem
+                                                open={openEditModal}
+                                                handleClose={() => setOpenEditModal(false)}
+                                                foodItem={ele}
+                                                onChange={() => fetchFoodItems()}
+                                            />
+                                            <DeleteWorkoutItem
+                                                open={openDeleteModal}
+                                                handleClose={() => setOpenDeleteModal(false)}
+                                                foodItem={ele}
+                                                onChange={() => fetchFoodItems()}
+                                            />
+                                        </TableRow>
+                                    ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
 
-                <TablePagination
-                    rowsPerPageOptions={[2, 5, 10, 25]}
-                    component="div"
-                    count={totalClients}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelDisplayedRows={({ from, to, count }) =>
-                        `${from}–${to} of ${count} | Page ${currentPages} of ${totalPages}`
-                    }
-                />
+                        <TablePagination
+                            rowsPerPageOptions={[2, 5, 10, 25]}
+                            component="div"
+                            count={totalFoodItems}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelDisplayedRows={({ from, to, count }) =>
+                                `${from}–${to} of ${count} | Page ${currentPage} of ${totalPages}`
+                            }
+                        />
+                    </>
+                )}
 
             </Paper>
 
-            <Divider variant="middle" />
 
-        </Container >
-    );
+        </Container>
+    )
 }

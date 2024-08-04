@@ -120,7 +120,6 @@ export default function ClientTable({ user }) {
         setPage(0)
     }
 
-    console.log('c', clients)
     return (
         <Container id="clients" sx={{ py: { xs: 8, sm: 4 } }}>
 
@@ -135,135 +134,135 @@ export default function ClientTable({ user }) {
                 </Grid>
             </Grid>
 
-            <Paper elevation={3}>
-                <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }} >
-                    <Grid>
-                        <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
-                            <TextField
-                                label="Search"
-                                variant="outlined"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value)
-                                }}
-                                fullWidth
-                            />
-                            <Button variant="contained" color="primary" type='submit' sx={{ m: 2 }} fullWidth>
-                                Search
-                            </Button>
-                        </FormControl>
+            <Paper elevation={3} sx={{ padding: '20px' }}>
+                {loading ? (
+                    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '200px' }}>
+                        <CircularProgress />
                     </Grid>
-                    <Grid >
-                        <FormControl variant="outlined" sx={{ m: 1 }}>
-                            <InputLabel id="sort-by">Sort by</InputLabel>
-                            <Select
-                                labelId="sort-by"
-                                id="sort-by"
-                                label="Sort By"
-                                value={sortBy}
-                                onChange={(e) => {
-                                    setSortBy(e.target.value)
-                                }}
-                            >
-                                <MenuItem value="createdAt">Created At</MenuItem>
-                                <MenuItem value="firstName">First Name</MenuItem>
-                                <MenuItem value="lastName">Last Name</MenuItem>
-                                <MenuItem value="email">Email</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl variant="outlined" sx={{ m: 1 }}>
-                            <InputLabel id="sort-order">Sort Order</InputLabel>
-                            <Select
-                                labelId="sort-order"
-                                id="sort-order"
-                                label="Sort By"
-                                value={sortOrder}
-                                onChange={(e) => {
-                                    setSortOrder(e.target.value)
-                                }}
-                            >
-                                <MenuItem value="asc">Ascending</MenuItem>
-                                <MenuItem value="desc">Descending</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell>
-                                    First Name
-                                </TableCell>
-                                <TableCell>
-                                    Last Name
-                                </TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Created At</TableCell>
-                                <TableCell>Status</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {loading ? (
-                                <TableRow>
-                                    <TableCell colSpan={4} align="center">
-                                        <CircularProgress />
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                clients.length === 0 ? (
-                                    <TableRow>
-                                        <TableCell colSpan={6} align="center">
-                                            <Typography variant="body1" fontWeight="bold">
-                                                You don't have any clients.
-                                            </Typography>
-                                            <Box mt={2}>
-                                                <AddClient title={'Invite First Client'} />
-                                            </Box>
-                                        </TableCell>
-                                    </TableRow>
-                                ) : (
-                                    clients.map((ele, index) => (
-                                        <TableRow key={ele._id}
-                                            onClick={() => {
-                                                return handleClick(ele.user._id)
-                                            }}
-                                            sx={{
-                                                backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
-                                                cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
-                                            }}
-                                        >
-                                            <TableCell>
-                                                <AvatarDisplay user={ele.user} />
-                                            </TableCell>
-                                            <TableCell>{ele.firstName}</TableCell>
-                                            <TableCell>{ele.lastName}</TableCell>
-                                            <TableCell>{ele.email}</TableCell>
-                                            <TableCell>{moment(ele.createdAt).format("Do MMM YYYY")}</TableCell>
-                                            <TableCell>
-                                                <ProgramStatus program={ele.program} />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                )
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                ) :
+                    clients.length === 0 ?
+                        (
+                            <Grid>
+                                <Typography variant="body1" fontWeight="bold">
+                                    You don't have any clients.
+                                </Typography>
+                                <Box mt={2}>
+                                    <AddClient title={'Invite First Client'} />
+                                </Box>
+                            </Grid>
+                        ) : (
+                            <>
+                                <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }} >
+                                    <Grid>
+                                        <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
+                                            <TextField
+                                                label="Search"
+                                                variant="outlined"
+                                                value={search}
+                                                onChange={(e) => {
+                                                    setSearch(e.target.value)
+                                                }}
+                                                fullWidth
+                                            />
+                                            <Button variant="contained" color="primary" type='submit' sx={{ m: 2 }} fullWidth>
+                                                Search
+                                            </Button>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid >
+                                        <FormControl variant="outlined" sx={{ m: 1 }}>
+                                            <InputLabel id="sort-by">Sort by</InputLabel>
+                                            <Select
+                                                labelId="sort-by"
+                                                id="sort-by"
+                                                label="Sort By"
+                                                value={sortBy}
+                                                onChange={(e) => {
+                                                    setSortBy(e.target.value)
+                                                }}
+                                            >
+                                                <MenuItem value="createdAt">Created At</MenuItem>
+                                                <MenuItem value="firstName">First Name</MenuItem>
+                                                <MenuItem value="lastName">Last Name</MenuItem>
+                                                <MenuItem value="email">Email</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <FormControl variant="outlined" sx={{ m: 1 }}>
+                                            <InputLabel id="sort-order">Sort Order</InputLabel>
+                                            <Select
+                                                labelId="sort-order"
+                                                id="sort-order"
+                                                label="Sort By"
+                                                value={sortOrder}
+                                                onChange={(e) => {
+                                                    setSortOrder(e.target.value)
+                                                }}
+                                            >
+                                                <MenuItem value="asc">Ascending</MenuItem>
+                                                <MenuItem value="desc">Descending</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <TableContainer>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell></TableCell>
+                                                <TableCell>
+                                                    First Name
+                                                </TableCell>
+                                                <TableCell>
+                                                    Last Name
+                                                </TableCell>
+                                                <TableCell>Email</TableCell>
+                                                <TableCell>Created At</TableCell>
+                                                <TableCell>Status</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {clients.map((ele, index) => (
+                                                <TableRow key={ele._id}
+                                                    onClick={() => {
+                                                        return handleClick(ele.user._id)
+                                                    }}
+                                                    sx={{
+                                                        backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
+                                                        cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', '&:hover': { backgroundColor: index % 2 === 0 ? "#e0e0e0" : "#f0f0f0", }, '&:active': { backgroundColor: index % 2 === 0 ? "#d0d0d0" : "#e0e0e0", }
+                                                    }}
+                                                >
+                                                    <TableCell>
+                                                        <AvatarDisplay user={ele.user} />
+                                                    </TableCell>
+                                                    <TableCell>{ele.firstName}</TableCell>
+                                                    <TableCell>{ele.lastName}</TableCell>
+                                                    <TableCell>{ele.email}</TableCell>
+                                                    <TableCell>{moment(ele.createdAt).format("Do MMM YYYY")}</TableCell>
+                                                    <TableCell>
+                                                        <ProgramStatus program={ele.program} />
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                            }
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
 
-                <TablePagination
-                    rowsPerPageOptions={[2, 5, 10, 25]}
-                    component="div"
-                    count={totalClients}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelDisplayedRows={({ from, to, count }) =>
-                        `${from}–${to} of ${count} | Page ${currentPages} of ${totalPages}`
-                    }
-                />
+                                <TablePagination
+                                    rowsPerPageOptions={[2, 5, 10, 25]}
+                                    component="div"
+                                    count={totalClients}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelDisplayedRows={({ from, to, count }) =>
+                                        `${from}–${to} of ${count} | Page ${currentPages} of ${totalPages}`
+                                    }
+                                />
+                            </>
+                        )
+                }
 
             </Paper>
 
