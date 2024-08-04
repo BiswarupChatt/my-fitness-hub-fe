@@ -4,6 +4,7 @@ import { errorToast } from '../../../utils/toastify'
 import axios from '../../../services/api/axios'
 import AddFoodItem from '../form/AddFoodItem'
 import EditFoodItem from '../form/EditFoodItem'
+import DeleteFoodItem from '../form/DeleteFoodItem'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { useAuth } from '../../../services/context/AuthContext'
 
@@ -24,6 +25,7 @@ export default function FoodItemTable() {
     const [userFoodItem, setUserFoodItem] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
     const [openEditModal, setOpenEditModal] = useState(false)
+    const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
     const handleMenuToggle = (event) => {
         setAnchorEl(anchorEl ? null : event.currentTarget)
@@ -35,8 +37,8 @@ export default function FoodItemTable() {
     }
 
     const handleDelete = () => {
+        setOpenDeleteModal(true)
         handleMenuToggle()
-        // Implement delete functionality
     }
 
     const handleChangePage = (event, newPage) => {
@@ -78,10 +80,15 @@ export default function FoodItemTable() {
         setPage(0)
     }
 
-    const handleCloseEditModal = () => {
-        setOpenEditModal(false)
-        // setFoodItemToEdit(null)
-    }
+    // const handleCloseEditModal = () => {
+    //     setOpenEditModal(false)
+    //     // setFoodItemToEdit(null)
+    // }
+
+    // handleCloseDeleteModal = () => {
+
+    // }
+
 
     return (
         <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
@@ -97,20 +104,22 @@ export default function FoodItemTable() {
             </Grid>
             <Paper elevation={3}>
                 <Grid sx={{ margin: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: { xs: 'column', md: 'row' } }}>
-                    <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
-                        <TextField
-                            label="Search"
-                            variant="outlined"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            fullWidth
-                        />
-                        <Button variant="contained" color="primary" type="submit" sx={{ m: 2 }} fullWidth>
-                            Search
-                        </Button>
-                    </FormControl>
                     <Grid>
-                        <FormControl variant="outlined" sx={{ m: 2 }}>
+                        <FormControl variant="outlined" component={'form'} onSubmit={handleSearchSubmit} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', m: 2 }}>
+                            <TextField
+                                label="Search"
+                                variant="outlined"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                fullWidth
+                            />
+                            <Button variant="contained" color="primary" type="submit" sx={{ m: 2 }} fullWidth>
+                                Search
+                            </Button>
+                        </FormControl>
+                    </Grid>
+                    <Grid>
+                        <FormControl variant="outlined" sx={{ m: 1 }}>
                             <InputLabel id="sort-by">Sort by</InputLabel>
                             <Select
                                 labelId="sort-by"
@@ -126,7 +135,7 @@ export default function FoodItemTable() {
                                 <MenuItem value="carbohydrate">Carbohydrate</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl variant="outlined" sx={{ m: 2 }}>
+                        <FormControl variant="outlined" sx={{ m: 1 }}>
                             <InputLabel id="sort-order">Sort Order</InputLabel>
                             <Select
                                 labelId="sort-order"
@@ -211,7 +220,13 @@ export default function FoodItemTable() {
                                         </TableCell>
                                         <EditFoodItem
                                             open={openEditModal}
-                                            handleClose={handleCloseEditModal}
+                                            handleClose={() => setOpenEditModal(false)}
+                                            foodItem={ele}
+                                            onChange={() => fetchFoodItems()}
+                                        />
+                                        <DeleteFoodItem
+                                            open={openDeleteModal}
+                                            handleClose={() => setOpenDeleteModal(false)}
                                             foodItem={ele}
                                             onChange={() => fetchFoodItems()}
                                         />
