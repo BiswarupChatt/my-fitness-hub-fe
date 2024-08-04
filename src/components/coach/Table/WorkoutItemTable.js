@@ -2,24 +2,28 @@ import { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
 import { errorToast } from '../../../utils/toastify'
 import axios from '../../../services/api/axios'
-import AddFoodItem from '../form/AddFoodItem'
+import AddWorkoutItem from '../form/AddWorkoutItem'
 import EditWorkoutItem from '../form/EditWorkoutItem'
 import DeleteWorkoutItem from '../form/DeleteWorkoutItem'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import { useAuth } from '../../../services/context/AuthContext'
+import moment from 'moment'
+
+
 
 export default function WorkoutItemTable() {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
 
-    const [foodItems, setFoodItems] = useState([])
+    const [workoutItems, setWorkoutItems] = useState([])
     const [totalFoodItems, setTotalFoodItems] = useState(0)
     const [currentPage, setCurrentPage] = useState(null)
     const [totalPages, setTotalPages] = useState(null)
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [sortBy, setSortBy] = useState('foodName')
+    const [sortBy, setSortBy] = useState('exerciseName')
     const [sortOrder, setSortOrder] = useState('asc')
     const [search, setSearch] = useState('')
     const [userFoodItem, setUserFoodItem] = useState(false)
@@ -53,12 +57,12 @@ export default function WorkoutItemTable() {
     const fetchFoodItems = async () => {
         setLoading(true)
         try {
-            const response = await axios.get('/food-item', {
+            const response = await axios.get('/workout', {
                 headers: { Authorization: token },
                 params: { page: page + 1, limit: rowsPerPage, sortBy, sortOrder, search, userFoodItem }
             })
-            setFoodItems(response.data.foodItems)
-            setTotalFoodItems(response.data.totalFoodItems)
+            setWorkoutItems(response.data.workoutItems)
+            setTotalFoodItems(response.data.totalWorkoutItems)
             setTotalPages(response.data.totalPages)
             setCurrentPage(response.data.currentPage)
         } catch (err) {
@@ -86,11 +90,11 @@ export default function WorkoutItemTable() {
             <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
                 <Grid item margin={1}>
                     <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
-                        Food Item List
+                        Workout Item List
                     </Typography>
                 </Grid>
                 <Grid item margin={1}>
-                    <AddFoodItem onChange={() => fetchFoodItems()} title={"Add Food Item"} />
+                    <AddWorkoutItem onChange={() => fetchFoodItems()} title={"Add Workout Item"} />
                 </Grid>
             </Grid>
             <Paper elevation={3} sx={{ padding: '20px' }}>
@@ -119,11 +123,8 @@ export default function WorkoutItemTable() {
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
                             >
-                                <MenuItem value="foodName">Food Name</MenuItem>
-                                <MenuItem value="calories">Calories</MenuItem>
-                                <MenuItem value="protein">Protein</MenuItem>
-                                <MenuItem value="fat">Fat</MenuItem>
-                                <MenuItem value="carbohydrate">Carbohydrate</MenuItem>
+                                <MenuItem value="exerciseName">Exercise Name</MenuItem>
+                                <MenuItem value="createdAt">Created At</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControl variant="outlined" sx={{ m: 1 }}>
@@ -158,13 +159,13 @@ export default function WorkoutItemTable() {
                     <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '200px' }}>
                         <CircularProgress />
                     </Grid>
-                ) : foodItems.length === 0 ? (
+                ) : workoutItems.length === 0 ? (
                     <Grid>
                         <Typography variant="body1" fontWeight="bold">
-                            You don't have any food items.
+                            You don't have any Workout items.
                         </Typography>
                         <Box mt={2}>
-                            <AddFoodItem onChange={() => fetchFoodItems()} title={"Add First Food Item"} />
+                            <AddWorkoutItem onChange={() => fetchFoodItems()} title={"Add First Workout Item"} />
                         </Box>
                     </Grid>
                 ) : (
@@ -173,33 +174,32 @@ export default function WorkoutItemTable() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Food Name</TableCell>
-                                        <TableCell>Quantity</TableCell>
-                                        <TableCell>Unit</TableCell>
-                                        <TableCell>Calories</TableCell>
-                                        <TableCell>Protein</TableCell>
-                                        <TableCell>Fat</TableCell>
-                                        <TableCell>Carbohydrate</TableCell>
-                                        <TableCell>Created By</TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell>Exercise Name</TableCell>
+                                        <TableCell align='center'>Play Video</TableCell>
+                                        <TableCell align='center'>Created by</TableCell>
+                                        <TableCell align='center'>Created At</TableCell>
+                                        <TableCell align='center'>Options</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {foodItems.map((ele, index) => (
+                                    {workoutItems.map((ele, index) => (
                                         <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
-                                            <TableCell>{ele.foodName}</TableCell>
-                                            <TableCell>{ele.quantity}</TableCell>
-                                            <TableCell>{ele.unit}</TableCell>
-                                            <TableCell>{ele.calories}</TableCell>
-                                            <TableCell>{ele.protein}</TableCell>
-                                            <TableCell>{ele.fat}</TableCell>
-                                            <TableCell>{ele.carbohydrate}</TableCell>
-                                            <TableCell>{ele.isDefault ? (
+                                            <TableCell>{ele.exerciseName}</TableCell>
+                                            <TableCell align='center'>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => window.open(ele.videoLink, '_blank')}
+                                                >
+                                                    <PlayArrowIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                            <TableCell align='center'>{ele.isDefault ? (
                                                 <Chip label="Default" color="primary" />
                                             ) : (
                                                 <Chip label={ele.coach.firstName} color="success" />
                                             )}</TableCell>
-                                            <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
+                                            <TableCell align='center'>{moment(ele.createdAt).format('Do MMMM YYYY')}</TableCell>
+                                            <TableCell align='center'>
                                                 {ele.coach._id === user.account._id ? (
                                                     <>
                                                         <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>

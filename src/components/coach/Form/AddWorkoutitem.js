@@ -2,9 +2,8 @@ import { TextField, Grid, Button, Typography, Modal, Box, FormControl, InputLabe
 import { useFormik } from 'formik'
 import { loadingToast, updateToast } from '../../../utils/toastify'
 import axios from '../../../services/api/axios'
-import { addFoodItemValidation } from '../../../validations/addFoodItemValidation'
+import { addWorkoutItemValidation } from '../../../validations/addWorkoutItemValidation'
 import { useState, useEffect } from 'react'
-
 
 const modalStyle = {
     position: 'absolute',
@@ -22,8 +21,7 @@ const modalStyle = {
     overflowY: 'auto',
 }
 
-
-export default function AddFoodItem({ onChange, title }) {
+export default function AddWorkoutItem({ onChange, title }) {
 
     const token = localStorage.getItem('token')
     const [open, setOpen] = useState(false)
@@ -37,13 +35,8 @@ export default function AddFoodItem({ onChange, title }) {
     }
 
     const initialValues = {
-        foodName: '',
-        unit: '',
-        quantity: '',
-        protein: '',
-        fat: '',
-        carbohydrate: '',
-        calories: '',
+        exerciseName: '',
+        videoLink: '',
     }
 
     const units = [
@@ -57,7 +50,7 @@ export default function AddFoodItem({ onChange, title }) {
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
-        validationSchema: addFoodItemValidation,
+        validationSchema: addWorkoutItemValidation,
         onSubmit: async (value, { resetForm }) => {
             try {
 
@@ -65,7 +58,7 @@ export default function AddFoodItem({ onChange, title }) {
                 loadingToast("Adding food item", 'client-invite-toast')
 
                 console.log('value', value)
-                await axios.post('/food-item', value, {
+                await axios.post('/workout', value, {
                     headers: {
                         Authorization: token
                     }
@@ -104,17 +97,6 @@ export default function AddFoodItem({ onChange, title }) {
         }
     }, [values.unit, setFieldValue, values.foodName])
 
-
-    const handleUnitChange = (e) => {
-        handleChange(e)
-        const selectedUnit = units.find((ele) => {
-            return ele.value === e.target.value
-        })
-        if (selectedUnit) {
-            setFieldValue('quantity', selectedUnit.quantity)
-        }
-    }
-
     useEffect(() => {
         const protein = parseFloat(values.protein) || 0
         const fat = parseFloat(values.fat) || 0
@@ -137,7 +119,7 @@ export default function AddFoodItem({ onChange, title }) {
             <Modal open={open} onClose={handleToggle}>
                 <Box sx={modalStyle} component="form" noValidate onSubmit={handleSubmit}>
                     <Typography variant="h6" component="h2">
-                        Add FoodItem
+                        Add Workout Item
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
@@ -145,133 +127,32 @@ export default function AddFoodItem({ onChange, title }) {
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="foodName"
-                                label="Food Name"
-                                name="foodName"
-                                autoComplete="email"
-                                value={values.foodName}
+                                id="exerciseName"
+                                label="Exercise Name"
+                                name="exerciseName"
+                                autoComplete="exerciseName"
+                                value={values.exerciseName}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={touched.foodName && !!errors.foodName}
-                                helperText={(touched.foodName && errors.foodName)}
+                                error={touched.exerciseName && !!errors.exerciseName}
+                                helperText={(touched.exerciseName && errors.exerciseName)}
                             />
                         </Grid>
-                        <Grid item xs={12} md={6}>
-                            <FormControl
-                                fullWidth
-                                margin="normal"
-                                required error={touched.unit && !!errors.unit}
-                            >
-                                <InputLabel id="unit-label">Unit</InputLabel>
-                                <Select
-                                    labelId="unit-label"
-                                    id="unit"
-                                    name="unit"
-                                    value={values.unit}
-                                    onChange={handleUnitChange}
-                                    onBlur={handleBlur}
-                                    label="Unit"
-                                >
-                                    {units.map((ele) => (
-                                        <MenuItem key={ele.value} value={ele.value}>
-                                            {ele.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                {touched.unit && errors.unit && (
-                                    <Typography color="error" variant="body2">
-                                        {errors.unit}
-                                    </Typography>
-                                )}
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
+
+                        <Grid item xs={12}>
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="quantity"
-                                label="Quantity"
-                                name="quantity"
-                                autoComplete="quantity"
-                                value={values.quantity}
+                                id="videoLink"
+                                label="Youtube Link"
+                                name="videoLink"
+                                autoComplete="videoLink"
+                                value={values.videoLink}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={touched.quantity && !!errors.quantity}
-                                helperText={(touched.quantity && errors.quantity)}
-                                InputProps={{ readOnly: true }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                type='number'
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="protein"
-                                label="Protein"
-                                name="protein"
-                                autoComplete="protein"
-                                value={values.protein}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.protein && !!errors.protein}
-                                helperText={(touched.protein && errors.protein)}
-                                InputProps={{ inputProps: { min: 0 } }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                type='number'
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="fat"
-                                label="Fat"
-                                name="fat"
-                                autoComplete="fat"
-                                value={values.fat}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.fat && !!errors.fat}
-                                helperText={(touched.fat && errors.fat)}
-                                InputProps={{ inputProps: { min: 0 } }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                type='number'
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="carbohydrate"
-                                label="Carbohydrate"
-                                name="carbohydrate"
-                                autoComplete="carbohydrate"
-                                value={values.carbohydrate}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.carbohydrate && !!errors.carbohydrate}
-                                helperText={(touched.carbohydrate && errors.carbohydrate)}
-                                InputProps={{ inputProps: { min: 0 } }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                type='number'
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="calories"
-                                label="Calories"
-                                name="calories"
-                                autoComplete="calories"
-                                value={values.calories}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.calories && !!errors.calories}
-                                helperText={(touched.calories && errors.calories)}
-                                InputProps={{ readOnly: true, inputProps: { min: 0 } }}
+                                error={touched.videoLink && !!errors.videoLink}
+                                helperText={(touched.videoLink && errors.videoLink)}
                             />
                         </Grid>
                     </Grid>
@@ -283,7 +164,7 @@ export default function AddFoodItem({ onChange, title }) {
                             Cancel
                         </Button>
                         <Button type='submit' color="primary" variant="contained" disabled={isSubmitting}>
-                            Add Food Item
+                            Add Workout Item
                         </Button>
                     </Box>
                 </Box>

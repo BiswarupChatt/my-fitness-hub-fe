@@ -174,32 +174,32 @@ export default function FoodItemTable() {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Food Name</TableCell>
-                                        <TableCell>Quantity</TableCell>
-                                        <TableCell>Unit</TableCell>
-                                        <TableCell>Calories</TableCell>
-                                        <TableCell>Protein</TableCell>
-                                        <TableCell>Fat</TableCell>
-                                        <TableCell>Carbohydrate</TableCell>
-                                        <TableCell>Created By</TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell align='center'>Quantity</TableCell>
+                                        <TableCell align='center'>Unit</TableCell>
+                                        <TableCell align='center'>Calories</TableCell>
+                                        <TableCell align='center'>Protein</TableCell>
+                                        <TableCell align='center'>Fat</TableCell>
+                                        <TableCell align='center'>Carbohydrate</TableCell>
+                                        <TableCell align='center'>Created By</TableCell>
+                                        <TableCell align='center'>Options</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {foodItems.map((ele, index) => (
                                         <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
                                             <TableCell>{ele.foodName}</TableCell>
-                                            <TableCell>{ele.quantity}</TableCell>
-                                            <TableCell>{ele.unit}</TableCell>
-                                            <TableCell>{ele.calories}</TableCell>
-                                            <TableCell>{ele.protein}</TableCell>
-                                            <TableCell>{ele.fat}</TableCell>
-                                            <TableCell>{ele.carbohydrate}</TableCell>
-                                            <TableCell>{ele.isDefault ? (
+                                            <TableCell align='center'>{ele.quantity}</TableCell>
+                                            <TableCell align='center'>{ele.unit}</TableCell>
+                                            <TableCell align='center'>{ele.calories}</TableCell>
+                                            <TableCell align='center'>{ele.protein}</TableCell>
+                                            <TableCell align='center'>{ele.fat}</TableCell>
+                                            <TableCell align='center'>{ele.carbohydrate}</TableCell>
+                                            <TableCell align='center'>{ele.isDefault ? (
                                                 <Chip label="Default" color="primary" />
                                             ) : (
                                                 <Chip label={ele.coach.firstName} color="success" />
                                             )}</TableCell>
-                                            <TableCell sx={{ cursor: 'pointer', transition: 'background-color 0.3s ease, transform 0.2s ease', }}>
+                                            <TableCell align='center'>
                                                 {ele.coach._id === user.account._id ? (
                                                     <>
                                                         <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
