@@ -11,12 +11,11 @@ import { useAuth } from '../../../services/context/AuthContext'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
 
 export default function WorkoutItemTable() {
-
     const { user } = useAuth()
     const token = localStorage.getItem('token')
 
     const [workoutItems, setWorkoutItems] = useState([])
-    const [totalFoodItems, setTotalFoodItems] = useState(0)
+    const [totalWorkoutItems, setTotalWorkoutItems] = useState(0)
     const [currentPage, setCurrentPage] = useState(null)
     const [totalPages, setTotalPages] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -25,23 +24,27 @@ export default function WorkoutItemTable() {
     const [sortBy, setSortBy] = useState('exerciseName')
     const [sortOrder, setSortOrder] = useState('asc')
     const [search, setSearch] = useState('')
-    const [userFoodItem, setUserFoodItem] = useState(false)
+    const [userWorkoutItem, setUserWorkoutItem] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
     const [openEditModal, setOpenEditModal] = useState(false)
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
+    const [workoutItemToEdit, setWorkoutItemToEdit] = useState(null)
+    const [workoutItemToDelete, setWorkoutItemToDelete] = useState(null)
 
-    const handleMenuToggle = (event) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget)
+    const handleMenuToggle = (event, ele) => {
+        setAnchorEl(event.currentTarget)
+        setWorkoutItemToEdit(ele)
+        setWorkoutItemToDelete(ele)
     }
 
     const handleEdit = () => {
         setOpenEditModal(true)
-        handleMenuToggle()
+        setAnchorEl(null)
     }
 
     const handleDelete = () => {
         setOpenDeleteModal(true)
-        handleMenuToggle()
+        setAnchorEl(null)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -53,15 +56,15 @@ export default function WorkoutItemTable() {
         setPage(0)
     }
 
-    const fetchFoodItems = async () => {
+    const fetchWorkoutItems = async () => {
         setLoading(true)
         try {
             const response = await axios.get('/workout', {
                 headers: { Authorization: token },
-                params: { page: page + 1, limit: rowsPerPage, sortBy, sortOrder, search, userFoodItem }
+                params: { page: page + 1, limit: rowsPerPage, sortBy, sortOrder, search, userWorkoutItem }
             })
             setWorkoutItems(response.data.workoutItems)
-            setTotalFoodItems(response.data.totalWorkoutItems)
+            setTotalWorkoutItems(response.data.totalWorkoutItems)
             setTotalPages(response.data.totalPages)
             setCurrentPage(response.data.currentPage)
         } catch (err) {
@@ -74,17 +77,17 @@ export default function WorkoutItemTable() {
     }
 
     useEffect(() => {
-        fetchFoodItems()
-    }, [page, rowsPerPage, sortBy, sortOrder, search, userFoodItem])
+        fetchWorkoutItems()
+    }, [page, rowsPerPage, sortBy, sortOrder, search, userWorkoutItem])
 
     const handleSearchSubmit = (e) => {
         e.preventDefault()
-        fetchFoodItems()
+        fetchWorkoutItems()
         setPage(0)
     }
 
     return (
-        <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
+        <Container id="workout-items" sx={{ py: { xs: 8, sm: 4 } }}>
             <Grid container sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'space-between' }, alignItems: 'center' }} pb={3}>
                 <Grid item margin={1}>
                     <Typography component="h2" variant="h4" color="text.primary" fontWeight="medium">
@@ -92,7 +95,7 @@ export default function WorkoutItemTable() {
                     </Typography>
                 </Grid>
                 <Grid item margin={1}>
-                    <AddWorkoutItem onChange={() => fetchFoodItems()} title={"Add Workout Item"} />
+                    <AddWorkoutItem onChange={() => fetchWorkoutItems()} title={"Add Workout Item"} />
                 </Grid>
             </Grid>
             <Paper elevation={3} sx={{ padding: '20px' }}>
@@ -143,8 +146,8 @@ export default function WorkoutItemTable() {
                         <FormControlLabel
                             control={
                                 <Switch
-                                    checked={userFoodItem}
-                                    onChange={(e) => setUserFoodItem(e.target.checked)}
+                                    checked={userWorkoutItem}
+                                    onChange={(e) => setUserWorkoutItem(e.target.checked)}
                                     name="myEntriesOnly"
                                     color="primary"
                                 />
@@ -163,7 +166,7 @@ export default function WorkoutItemTable() {
                             You don't have any Workout items.
                         </Typography>
                         <Box mt={2}>
-                            <AddWorkoutItem onChange={() => fetchFoodItems()} title={"Add First Workout Item"} />
+                            <AddWorkoutItem onChange={() => fetchWorkoutItems()} title={"Add First Workout Item"} />
                         </Box>
                     </Grid>
                 ) : (
@@ -200,43 +203,32 @@ export default function WorkoutItemTable() {
                                             <TableCell align='center'>
                                                 {ele.coach._id === user.account._id ? (
                                                     <>
-                                                        <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
-                                                            <MoreHorizIcon fontSize="small" />
+                                                        <IconButton size="small" onClick={(event) => handleMenuToggle(event, ele)}>
+                                                            <MoreHorizIcon />
                                                         </IconButton>
                                                         <Menu
                                                             anchorEl={anchorEl}
+                                                            keepMounted
                                                             open={Boolean(anchorEl)}
-                                                            onClose={handleMenuToggle}
+                                                            onClose={() => setAnchorEl(null)}
                                                         >
-                                                            <MenuItem onClick={() => handleEdit()}>Edit</MenuItem>
+                                                            <MenuItem onClick={handleEdit}>Edit</MenuItem>
                                                             <MenuItem onClick={handleDelete}>Delete</MenuItem>
                                                         </Menu>
                                                     </>
-                                                ) : null}
+                                                ) : (
+                                                    '---'
+                                                )}
                                             </TableCell>
-                                            <EditWorkoutItem
-                                                open={openEditModal}
-                                                handleClose={() => setOpenEditModal(false)}
-                                                workoutItem={ele}
-                                                onChange={() => fetchFoodItems()}
-                                            />
-                                            <DeleteWorkoutItem
-                                                open={openDeleteModal}
-                                                handleClose={() => setOpenDeleteModal(false)}
-                                                workoutItem={ele}
-                                                onChange={() => fetchFoodItems()}
-                                            />
                                         </TableRow>
-                                    ))
-                                    }
+                                    ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
-                        <TablePagination
+                       <TablePagination
                             rowsPerPageOptions={[2, 5, 10, 25]}
                             component="div"
-                            count={totalFoodItems}
+                            count={totalWorkoutItems}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
@@ -248,6 +240,24 @@ export default function WorkoutItemTable() {
                     </>
                 )}
             </Paper>
+
+            {openEditModal && workoutItemToEdit && (
+                <EditWorkoutItem
+                    workoutItem={workoutItemToEdit}
+                    open={openEditModal}
+                    handleClose={() => setOpenEditModal(false)}
+                    onChange={() => fetchWorkoutItems()}
+                />
+            )}
+
+            {openDeleteModal && workoutItemToDelete && (
+                <DeleteWorkoutItem
+                    workoutItem={workoutItemToDelete}
+                    open={openDeleteModal}
+                    handleClose={() => setOpenDeleteModal(false)}
+                    onChange={() => fetchWorkoutItems()}
+                />
+            )}
         </Container>
     )
 }
