@@ -26,19 +26,24 @@ export default function FoodItemTable() {
     const [anchorEl, setAnchorEl] = useState(null)
     const [openEditModal, setOpenEditModal] = useState(false)
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
+    const [foodItemToEdit, setFoodItemToEdit] = useState(null)
+    const [foodItemToDelete, setFoodItemToDelete] = useState(null)
 
-    const handleMenuToggle = (event) => {
-        setAnchorEl(anchorEl ? null : event.currentTarget)
+
+    const handleMenuToggle = (event, ele) => {
+        setAnchorEl(event.currentTarget)
+        setFoodItemToEdit(ele)
+        setFoodItemToDelete(ele)
     }
 
     const handleEdit = () => {
         setOpenEditModal(true)
-        handleMenuToggle()
+        setAnchorEl(null)
     }
 
     const handleDelete = () => {
         setOpenDeleteModal(true)
-        handleMenuToggle()
+        setAnchorEl(null)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -80,6 +85,10 @@ export default function FoodItemTable() {
         setPage(0)
     }
 
+    const handleSetUserFoodItem = (e) => {
+        setUserFoodItem(e.target.checked)
+        setPage(0)
+    }
 
     return (
         <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
@@ -145,7 +154,7 @@ export default function FoodItemTable() {
                             control={
                                 <Switch
                                     checked={userFoodItem}
-                                    onChange={(e) => setUserFoodItem(e.target.checked)}
+                                    onChange={(e) => handleSetUserFoodItem(e)}
                                     name="myEntriesOnly"
                                     color="primary"
                                 />
@@ -202,32 +211,21 @@ export default function FoodItemTable() {
                                             <TableCell align='center'>
                                                 {ele.coach._id === user.account._id ? (
                                                     <>
-                                                        <IconButton size="small" onClick={(e) => handleMenuToggle(e, ele)}>
+                                                        <IconButton size="small" onClick={(event) => handleMenuToggle(event, ele)}>
                                                             <MoreHorizIcon fontSize="small" />
                                                         </IconButton>
                                                         <Menu
                                                             anchorEl={anchorEl}
+                                                            keepMounted
                                                             open={Boolean(anchorEl)}
-                                                            onClose={handleMenuToggle}
+                                                            onClose={() => setAnchorEl(null)}
                                                         >
-                                                            <MenuItem onClick={() => handleEdit()}>Edit</MenuItem>
+                                                            <MenuItem onClick={handleEdit}>Edit</MenuItem>
                                                             <MenuItem onClick={handleDelete}>Delete</MenuItem>
                                                         </Menu>
                                                     </>
                                                 ) : null}
                                             </TableCell>
-                                            <EditFoodItem
-                                                open={openEditModal}
-                                                handleClose={() => setOpenEditModal(false)}
-                                                foodItem={ele}
-                                                onChange={() => fetchFoodItems()}
-                                            />
-                                            <DeleteFoodItem
-                                                open={openDeleteModal}
-                                                handleClose={() => setOpenDeleteModal(false)}
-                                                foodItem={ele}
-                                                onChange={() => fetchFoodItems()}
-                                            />
                                         </TableRow>
                                     ))
                                     }
@@ -249,9 +247,24 @@ export default function FoodItemTable() {
                         />
                     </>
                 )}
-
             </Paper>
 
+            {openEditModal && foodItemToEdit && (
+                <EditFoodItem
+                    foodItem={foodItemToEdit}
+                    open={openEditModal}
+                    handleClose={() => setOpenEditModal(false)}
+                    onChange={() => fetchFoodItems()}
+                />
+            )}
+            {openDeleteModal && foodItemToDelete && (
+                <DeleteFoodItem
+                    foodItem={foodItemToDelete}
+                    open={openDeleteModal}
+                    handleClose={() => setOpenDeleteModal(false)}
+                    onChange={() => fetchFoodItems()}
+                />
+            )}
 
         </Container>
     )
