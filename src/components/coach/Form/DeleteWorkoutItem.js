@@ -47,7 +47,7 @@ export default function DeleteWorkoutItem({ open, handleClose, workoutItem, onCh
             <DialogTitle id="dialog-title">Confirm Deletion</DialogTitle>
             <DialogContent>
                 <Typography id="dialog-description">
-                    Are you sure you want to delete this food item?
+                    Are you sure you want to delete this workout item?
                 </Typography>
             </DialogContent>
             <DialogActions>

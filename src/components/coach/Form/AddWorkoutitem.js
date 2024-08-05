@@ -45,7 +45,7 @@ export default function AddWorkoutItem({ onChange, title }) {
             try {
 
                 setIsSubmitting(true)
-                loadingToast("Adding workout item", 'client-invite-toast')
+                loadingToast("Adding workout item", 'add-workout-toast')
 
                 console.log('value', value)
                 await axios.post('/workout', value, {
@@ -53,7 +53,7 @@ export default function AddWorkoutItem({ onChange, title }) {
                         Authorization: token
                     }
                 })
-                updateToast('Workout item added successfully', 'client-invite-toast', 'success')
+                updateToast('Workout item added successfully', 'add-workout-toast', 'success')
                 resetForm()
                 onChange()
             } catch (err) {
@@ -61,14 +61,13 @@ export default function AddWorkoutItem({ onChange, title }) {
 
                 if (err.response) {
                     const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
-                    updateToast(errorMessage, 'client-invite-toast', 'error')
+                    updateToast(errorMessage, 'add-workout-toast', 'error')
                 } else if (err.request) {
-                    updateToast('No response from server', 'client-invite-toast', 'error')
+                    updateToast('No response from server', 'add-workout-toast', 'error')
                 } else {
-                    updateToast('An unknown error occurred', 'client-invite-toast', 'error')
+                    updateToast('An unknown error occurred', 'add-workout-toast', 'error')
                 }
             } finally {
-                console.log('5')
                 setIsSubmitting(false)
                 handleToggle()
             }
