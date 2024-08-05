@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-const youtubeLinkRegex = /^(https?:\/\/)?(www\.)?youtube\.com\/(watch\?v=|embed\/|v\/|.+\?v=)?([^""&\n\s]{11})$/;
+const youtubeLinkRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|.+\?v=)?([^""&\n\s]{11})|youtu\.be\/([^""&\n\s]{11}))$/;
 
 export const addWorkoutItemValidation = Yup.object({
     exerciseName: Yup.string()

@@ -1,9 +1,9 @@
-import { TextField, Grid, Button, Typography, Modal, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
+import { useState } from 'react'
 import { useFormik } from 'formik'
-import { loadingToast, updateToast } from '../../../utils/toastify'
 import axios from '../../../services/api/axios'
+import { loadingToast, updateToast } from '../../../utils/toastify'
+import { TextField, Grid, Button, Typography, Modal, Box } from '@mui/material'
 import { addWorkoutItemValidation } from '../../../validations/addWorkoutItemValidation'
-import { useState, useEffect } from 'react'
 
 const modalStyle = {
     position: 'absolute',
@@ -26,7 +26,6 @@ export default function AddWorkoutItem({ onChange, title }) {
     const token = localStorage.getItem('token')
     const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [message, setMessage] = useState('')
 
     const handleToggle = () => {
         setOpen((ele) => {
@@ -39,15 +38,6 @@ export default function AddWorkoutItem({ onChange, title }) {
         videoLink: '',
     }
 
-    const units = [
-        { value: 'grams', label: 'Grams', quantity: '100' },
-        { value: 'milliliters', label: 'Milliliters', quantity: '100' },
-        { value: 'liters', label: 'Liters', quantity: '1' },
-        { value: 'pounds', label: 'Pounds', quantity: '1' },
-        { value: 'ounces', label: 'Ounces', quantity: '1' },
-        { value: 'piece', label: 'Piece', quantity: '1' },
-    ]
-
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
         initialValues: initialValues,
         validationSchema: addWorkoutItemValidation,
@@ -55,7 +45,7 @@ export default function AddWorkoutItem({ onChange, title }) {
             try {
 
                 setIsSubmitting(true)
-                loadingToast("Adding food item", 'client-invite-toast')
+                loadingToast("Adding workout item", 'client-invite-toast')
 
                 console.log('value', value)
                 await axios.post('/workout', value, {
@@ -63,7 +53,7 @@ export default function AddWorkoutItem({ onChange, title }) {
                         Authorization: token
                     }
                 })
-                updateToast('Food item added successfully', 'client-invite-toast', 'success')
+                updateToast('Workout item added successfully', 'client-invite-toast', 'success')
                 resetForm()
                 onChange()
             } catch (err) {
@@ -84,31 +74,6 @@ export default function AddWorkoutItem({ onChange, title }) {
             }
         }
     })
-
-    useEffect(() => {
-        const selectedUnit = units.find((ele) => {
-            return ele.value === values.unit
-        })
-        if (selectedUnit) {
-            setFieldValue('quantity', selectedUnit.quantity)
-            setMessage(`Note: Please ensure that all values are based on the default quantity of ${selectedUnit.quantity} ${selectedUnit.label} for ${values.foodName ? values.foodName : 'this food item'}.`)
-        } else {
-            setMessage('')
-        }
-    }, [values.unit, setFieldValue, values.foodName])
-
-    useEffect(() => {
-        const protein = parseFloat(values.protein) || 0
-        const fat = parseFloat(values.fat) || 0
-        const carbohydrate = parseFloat(values.carbohydrate) || 0
-
-        const calories = (protein * 4) + (fat * 9) + (carbohydrate * 4)
-        if (!isNaN(calories)) {
-            setFieldValue('calories', calories.toFixed(2))
-        } else {
-            setFieldValue('calories', '0')
-        }
-    }, [values.protein, values.fat, values.carbohydrate, setFieldValue])
 
     return (
         <>
@@ -156,9 +121,6 @@ export default function AddWorkoutItem({ onChange, title }) {
                             />
                         </Grid>
                     </Grid>
-                    <Typography variant="body2" color="error" mt={2} ml={2}>
-                        {message}
-                    </Typography>
                     <Box mt={2} display="flex" justifyContent="flex-end">
                         <Button onClick={handleToggle} color="primary" sx={{ mr: 1 }}>
                             Cancel

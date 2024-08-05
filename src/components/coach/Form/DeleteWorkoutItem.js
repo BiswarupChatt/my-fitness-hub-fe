@@ -1,23 +1,39 @@
 import { useState } from 'react'
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from '@mui/material'
 import axios from '../../../services/api/axios'
-import { errorToast } from '../../../utils/toastify'
+import { loadingToast, updateToast } from '../../../utils/toastify'
 
-export default function DeleteWorkoutItem({ open, handleClose, foodItem, onChange }) {
+export default function DeleteWorkoutItem({ open, handleClose, workoutItem, onChange }) {
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const token = localStorage.getItem('token')
 
     const confirmDelete = async () => {
         try {
-            await axios.delete(`/food-item/${foodItem._id}`, {
+            setIsSubmitting(true)
+            loadingToast("Deleting Workout", 'delete-workout-item')
+
+            await axios.delete(`/workout/${workoutItem._id}`, {
                 headers: { Authorization: token }
             })
-            handleClose()
+            updateToast('Workout Deleted Successfully', 'delete-workout-item', 'success')
             onChange()
+            handleClose()
+            console.log('delete')
         } catch (err) {
-            console.error('Error deleting food item:', err)
-            const errorMessage = err.response?.data?.errors?.[0]?.msg || err.response?.data?.errors || 'An error occurred'
-            errorToast(errorMessage || 'An unknown error occurred')
+            console.error('Error caught in catch block:', err)
+
+            if (err.response) {
+                const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
+                updateToast(errorMessage, 'delete-workout-item', 'error')
+            } else if (err.request) {
+                updateToast('No response from server', 'delete-workout-item', 'error')
+            } else {
+                updateToast('An unknown error occurred', 'delete-workout-item', 'error')
+            }
+        } finally {
+            setIsSubmitting(false)
+            handleClose()
         }
     }
 
@@ -38,7 +54,7 @@ export default function DeleteWorkoutItem({ open, handleClose, foodItem, onChang
                 <Button variant="outlined" color="primary" onClick={handleClose}>
                     Cancel
                 </Button>
-                <Button variant="contained" color="primary" onClick={confirmDelete}>
+                <Button variant="contained" color="primary" onClick={confirmDelete} disabled={isSubmitting}>
                     Delete
                 </Button>
             </DialogActions>

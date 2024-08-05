@@ -1,18 +1,17 @@
+import moment from 'moment'
 import { useState, useEffect } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
-import { errorToast } from '../../../utils/toastify'
 import axios from '../../../services/api/axios'
 import AddWorkoutItem from '../form/AddWorkoutItem'
+import { errorToast } from '../../../utils/toastify'
 import EditWorkoutItem from '../form/EditWorkoutItem'
-import DeleteWorkoutItem from '../form/DeleteWorkoutItem'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import DeleteWorkoutItem from '../form/DeleteWorkoutItem'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import { useAuth } from '../../../services/context/AuthContext'
-import moment from 'moment'
-
-
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
 
 export default function WorkoutItemTable() {
+
     const { user } = useAuth()
     const token = localStorage.getItem('token')
 
@@ -83,7 +82,6 @@ export default function WorkoutItemTable() {
         fetchFoodItems()
         setPage(0)
     }
-
 
     return (
         <Container id="food-items" sx={{ py: { xs: 8, sm: 4 } }}>
@@ -219,13 +217,13 @@ export default function WorkoutItemTable() {
                                             <EditWorkoutItem
                                                 open={openEditModal}
                                                 handleClose={() => setOpenEditModal(false)}
-                                                foodItem={ele}
+                                                workoutItem={ele}
                                                 onChange={() => fetchFoodItems()}
                                             />
                                             <DeleteWorkoutItem
                                                 open={openDeleteModal}
                                                 handleClose={() => setOpenDeleteModal(false)}
-                                                foodItem={ele}
+                                                workoutItem={ele}
                                                 onChange={() => fetchFoodItems()}
                                             />
                                         </TableRow>
@@ -249,10 +247,7 @@ export default function WorkoutItemTable() {
                         />
                     </>
                 )}
-
             </Paper>
-
-
         </Container>
     )
 }
