@@ -16,7 +16,7 @@ import ClientProgram from '../../components/coach/client/ClientProgram';
 
 
 export default function SingleCLient() {
-    const [value, setValue] = useState('Profile');
+    const [value, setValue] = useState('Nutrition');
     const { userId } = useParams()
     const token = localStorage.getItem('token')
     const dispatch = useDispatch()
