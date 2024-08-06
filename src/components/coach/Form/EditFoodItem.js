@@ -40,12 +40,12 @@ export default function EditFoodItem({ open, handleClose, foodItem, onChange }) 
     }
 
     const units = [
-        { value: 'grams', label: 'Grams', quantity: '100' },
-        { value: 'milliliters', label: 'Milliliters', quantity: '100' },
-        { value: 'liters', label: 'Liters', quantity: '1' },
-        { value: 'pounds', label: 'Pounds', quantity: '1' },
-        { value: 'ounces', label: 'Ounces', quantity: '1' },
-        { value: 'piece', label: 'Piece', quantity: '1' },
+        { value: 'grams', label: 'grams', quantity: '100' },
+        { value: 'milliliters', label: 'milliliters', quantity: '100' },
+        { value: 'liters', label: 'liters', quantity: '1' },
+        { value: 'pounds', label: 'pounds', quantity: '100' },
+        { value: 'ounces', label: 'ounces', quantity: '1' },
+        { value: 'piece', label: 'piece', quantity: '1' },
     ]
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
