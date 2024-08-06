@@ -1,38 +1,12 @@
-import { Box, Button, Grid, Typography, ListItem, ListItemText, TextField, InputAdornment, IconButton, Paper, Tooltip } from '@mui/material'
+import { Box, Button, Grid, Typography, TextField, InputAdornment, IconButton, Paper, Tooltip } from '@mui/material'
 import { Add, RemoveCircle } from '@mui/icons-material'
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { PieChart } from '@mui/x-charts/PieChart';
-
-
-// const modalStyle = {
-//     position: 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     width: {
-//         xs: '90%', sm: '80%', md: '60%', lg: '50%', xl: '30%',
-//     },
-//     bgcolor: 'background.paper',
-//     boxShadow: 24,
-//     borderRadius: 2,
-//     p: 4,
-//     maxHeight: '75vh',
-//     overflowY: 'auto',
-// }
-
-const data = [
-    { id: 0, value: 20, label: 'Protein' },
-    { id: 1, value: 30, label: 'Fats' },
-    { id: 2, value: 50, label: 'Carbohydrates' },
-];
-
+import { Formik } from 'formik';
 
 export default function AddClientNutrition() {
 
     return (
         <Grid component="form" noValidate>
-            <Typography variant="h4" component="h2">
+            <Typography variant="h4" component="h2" fontWeight='bold'>
                 Create Nutrition Plan
             </Typography>
             <Paper elevation={3}>
@@ -110,12 +84,9 @@ export default function AddClientNutrition() {
                 </Grid>
             </Paper >
 
-            {/* here i want to add total nutrition value component  */}
-
             <Button variant="contained" color="primary" sx={{ mt: 2 }}>
                 Add Another Meal Plan
             </Button>
-
 
             <Paper elevation={3} sx={{ m: 2, p: 2 }}>
                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>Total Nutrition Values</Typography>
@@ -144,7 +115,7 @@ export default function AddClientNutrition() {
                 name="additionalNotes"
                 label="Additional Notes"
                 sx={{ mt: 2 }}
-                placeholder='eg: Chew Your Food Properly ' />
+                placeholder='eg: Chew The Food Properly ' />
             <Button
                 type="submit"
                 variant="contained"
