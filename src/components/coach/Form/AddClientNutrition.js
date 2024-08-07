@@ -279,7 +279,7 @@ const AddMealPlan = ({ onAdd }) => {
       calories: 10,
       protein: 10,
       carbohydrates: 10,
-      note: ''
+      note: 'Note Here'
     },
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
@@ -362,7 +362,7 @@ const MealTable = ({ meals, onDelete }) => {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={3}>
-      <Box sx={{ overflowX: 'auto', maxHeight: '300px', overflowY: 'auto' }}>
+      <Box sx={{ overflowX: 'auto', maxHeight: '350px', overflowY: 'auto' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -371,12 +371,15 @@ const MealTable = ({ meals, onDelete }) => {
               <TableCell>Fat</TableCell>
               <TableCell>Protein</TableCell>
               <TableCell>Carbohydrates</TableCell>
+              <TableCell>Note</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {meals.map((meal, index) => (
-              <TableRow key={index}>
+              <TableRow key={index} sx={{
+                backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
+              }}>
                 <TableCell>
                   <Typography variant="body1">{meal.foodItem}</Typography>
                   <Typography variant="body2" color="textSecondary">{` ${meal.quantity} g`}</Typography>
@@ -385,6 +388,7 @@ const MealTable = ({ meals, onDelete }) => {
                 <TableCell>{meal.fat}</TableCell>
                 <TableCell>{meal.protein}</TableCell>
                 <TableCell>{meal.carbohydrates}</TableCell>
+                <TableCell>{meal.note}</TableCell>
                 <TableCell>
                   <IconButton color="secondary" onClick={() => onDelete(index)}>
                     <DeleteIcon />
@@ -395,9 +399,32 @@ const MealTable = ({ meals, onDelete }) => {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={6} sx={{ position: 'sticky', bottom: 0, backgroundColor: 'white', borderTop: '1px solid rgba(224, 224, 224, 1)' }}>
-                <Typography variant="body1" align="right">
-                  Total: Calories: {totals.calories} | Fat: {totals.fat} | Protein: {totals.protein} | Carbohydrates: {totals.carbohydrates}
+              <TableCell
+                colSpan={10}
+                sx={{
+                  position: 'sticky',
+                  bottom: 0,
+                  backgroundColor: 'background.paper',
+                  borderTop: '1px solid rgba(224, 224, 224, 1)',
+                  padding: '16px',
+                  // borderRadius: '4px',
+                  boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <Typography variant="body2" align="right" sx={{ fontWeight: 'bold' }}>
+                  Total:
+                  <Typography component="span" variant="body2" sx={{ ml: 1 }}>
+                    Calories: {totals.calories} kCal
+                  </Typography>
+                  <Typography component="span" variant="body2" sx={{ ml: 2 }}>
+                    Fat: {totals.fat} g
+                  </Typography>
+                  <Typography component="span" variant="body2" sx={{ ml: 2 }}>
+                    Protein: {totals.protein} g
+                  </Typography>
+                  <Typography component="span" variant="body2" sx={{ ml: 2 }}>
+                    Carbohydrates: {totals.carbohydrates} g
+                  </Typography>
                 </Typography>
               </TableCell>
             </TableRow>
@@ -421,7 +448,7 @@ const MealPlanComponent = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
       <Typography variant="h4" component="div" gutterBottom>
         Add Meal Plan
       </Typography>
