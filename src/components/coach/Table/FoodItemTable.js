@@ -28,6 +28,7 @@ export default function FoodItemTable() {
     const [openDeleteModal, setOpenDeleteModal] = useState(false)
     const [foodItemToEdit, setFoodItemToEdit] = useState(null)
     const [foodItemToDelete, setFoodItemToDelete] = useState(null)
+    const [selectFoodItem, setSelectFoodItem] = useState(null)
 
 
     const handleMenuToggle = (event, ele) => {
@@ -88,6 +89,11 @@ export default function FoodItemTable() {
     const handleSetUserFoodItem = (e) => {
         setUserFoodItem(e.target.checked)
         setPage(0)
+    }
+
+    const handleSelectFoodItem = (ele) => {
+        setSelectFoodItem(ele)
+        console.log(selectFoodItem)
     }
 
     return (
@@ -195,7 +201,15 @@ export default function FoodItemTable() {
                                 </TableHead>
                                 <TableBody>
                                     {foodItems.map((ele, index) => (
-                                        <TableRow key={ele._id} sx={{ backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff" }}>
+                                        <TableRow
+                                            key={ele._id}
+                                            sx={{
+                                                backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff"
+                                            }}
+                                            onClick={(ele) => {
+                                                handleSelectFoodItem(ele)
+                                            }}
+                                        >
                                             <TableCell>{ele.foodName}</TableCell>
                                             <TableCell align='center'>{ele.quantity}</TableCell>
                                             <TableCell align='center'>{ele.unit}</TableCell>

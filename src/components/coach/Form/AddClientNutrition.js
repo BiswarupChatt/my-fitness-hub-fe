@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Box, Button, TextField, Typography, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, Grid, InputAdornment, TableFooter, Divider, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, Modal } from '@mui/material'
+import { Box, Button, TextField, Typography, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, Grid, InputAdornment, TableFooter, Divider, Modal, Tooltip } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -24,7 +25,7 @@ const initialValues = {
   note: 'Note Example'
 }
 
-const SelectFoodItemModal = ({ open, handleClose }) => {
+const SelectFoodItemModal = ({ open, handleFoodModalClose }) => {
 
   const modalStyle = {
     position: 'absolute',
@@ -42,20 +43,13 @@ const SelectFoodItemModal = ({ open, handleClose }) => {
     overflowY: 'auto',
   }
 
-
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Choose a Food Item
-        </Typography>
+    <Modal open={open} onClose={handleFoodModalClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" >
+      <Box sx={modalStyle} position="relative">
         <FoodItemTable />
-        <Button onClick={handleClose} style={{ marginTop: '20px' }}>Close</Button>
+        <Tooltip onClick={handleFoodModalClose} sx={{ position: 'absolute', top: 20, right: 20, cursor: 'pointer' }}>
+          <CloseIcon />
+        </Tooltip>
       </Box>
     </Modal>
   );
@@ -146,9 +140,9 @@ const AddFoodItem = ({ onAdd }) => {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleOpen = () => setModalOpen(true);
-  // const handleClose = () => setModalOpen(false)
-  const handleClose = () => {
+  const handleFoodModalOpen = () => setModalOpen(true)
+
+  const handleFoodModalClose = () => {
     return setModalOpen(false)
   }
 
@@ -176,7 +170,7 @@ const AddFoodItem = ({ onAdd }) => {
               label="Food Item"
               value={values.foodItem}
               onChange={handleChange}
-              onClick={handleOpen}
+              onClick={handleFoodModalOpen}
               error={touched.foodItem && Boolean(errors.foodItem)}
               helperText={touched.foodItem && errors.foodItem}
             />
@@ -218,11 +212,11 @@ const AddFoodItem = ({ onAdd }) => {
             />
           </Grid>
           <>
-            <SelectFoodItemModal open={modalOpen} handleClose={handleClose} />
+            <SelectFoodItemModal open={modalOpen} handleFoodModalClose={handleFoodModalClose} />
           </>
         </Grid>
         <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-          Add Food Item
+          Add Food
         </Button>
       </Grid>
     </Grid>
