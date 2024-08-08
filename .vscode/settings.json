@@ -2,8 +2,10 @@
     "cSpell.words": [
         "appbar",
         "bgcolor",
+        "describedby",
         "Formik",
         "Horiz",
+        "labelledby",
         "Mountedtransform",
         "reduxjs",
         "toastify"

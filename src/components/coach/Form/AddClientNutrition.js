@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Button, TextField, Typography, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, Grid, InputAdornment, TableFooter } from '@mui/material';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import DeleteIcon from '@mui/icons-material/Delete';
+import React, { useState } from 'react'
+import { Box, Button, TextField, Typography, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, Grid, InputAdornment, TableFooter, Divider, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, Modal } from '@mui/material'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import DeleteIcon from '@mui/icons-material/Delete'
+import FoodItemTable from '../table/FoodItemTable'
 
 const validationSchema = yup.object({
   foodItem: yup.string().required('Required'),
@@ -11,7 +12,7 @@ const validationSchema = yup.object({
   calories: yup.number().required('Required').min(0),
   protein: yup.number().required('Required').min(0),
   carbohydrates: yup.number().required('Required').min(0),
-});
+})
 
 const initialValues = {
   foodItem: 'Mango',
@@ -23,91 +24,56 @@ const initialValues = {
   note: 'Note Example'
 }
 
-const AddFoodItem = ({ onAdd }) => {
-  const { values, handleChange, handleSubmit, touched, errors } = useFormik({
-    initialValues: initialValues,
-    validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      onAdd(values);
-      resetForm();
+const SelectFoodItemModal = ({ open, handleClose }) => {
+
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: {
+      xs: '90%'
     },
-  });
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    borderRadius: 2,
+    p: 4,
+    maxHeight: '75vh',
+    overflowY: 'auto',
+  }
+
 
   return (
-    <Grid container justifyContent="flex-end">
-      <Grid component="form" xs={12} md={6} onSubmit={handleSubmit} sx={{ mt: 3, p: 1, border: '1px solid grey' }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="standard"
-              id="foodItem"
-              name="foodItem"
-              label="Food Item"
-              value={values.foodItem}
-              onChange={handleChange}
-              error={touched.foodItem && Boolean(errors.foodItem)}
-              helperText={touched.foodItem && errors.foodItem}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="standard"
-              id="quantity"
-              name="quantity"
-              label="Quantity"
-              type="number"
-              value={values.quantity}
-              onChange={handleChange}
-              error={touched.quantity && Boolean(errors.quantity)}
-              helperText={touched.quantity && errors.quantity}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    g
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="standard"
-              id="note"
-              name="note"
-              label="Note"
-              type="text"
-              placeholder='e.g., Chew Your Food'
-              value={values.note}
-              onChange={handleChange}
-              error={touched.note && Boolean(errors.note)}
-              helperText={touched.note && errors.note}
-            />
-          </Grid>
-        </Grid>
-        <Button color="primary" variant="contained" fullWidth type="submit" sx={{ mt: 2 }}>
-          Add Food Item
-        </Button>
-      </Grid>
-    </Grid>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={modalStyle}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Choose a Food Item
+        </Typography>
+        <FoodItemTable />
+        <Button onClick={handleClose} style={{ marginTop: '20px' }}>Close</Button>
+      </Box>
+    </Modal>
   );
 };
 
 const MealPlanTable = ({ mealPlan, onDelete }) => {
 
   const totals = mealPlan.reduce((acc, meal) => {
-    acc.calories += meal.calories || 0;
-    acc.fat += meal.fat || 0;
-    acc.protein += meal.protein || 0;
-    acc.carbohydrates += meal.carbohydrates || 0;
-    return acc;
-  }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 });
+    acc.calories += meal.calories || 0
+    acc.fat += meal.fat || 0
+    acc.protein += meal.protein || 0
+    acc.carbohydrates += meal.carbohydrates || 0
+    return acc
+  }, { calories: 0, fat: 0, protein: 0, carbohydrates: 0 })
 
   return (
     <Box sx={{ overflowX: 'auto', maxHeight: '350px', overflowY: 'auto', border: '1px solid grey' }}>
-      <Table>
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell>Food Item</TableCell>
@@ -173,36 +139,123 @@ const MealPlanTable = ({ mealPlan, onDelete }) => {
         </TableFooter>
       </Table>
     </Box>
-  );
-};
+  )
+}
+
+const AddFoodItem = ({ onAdd }) => {
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpen = () => setModalOpen(true);
+  // const handleClose = () => setModalOpen(false)
+  const handleClose = () => {
+    return setModalOpen(false)
+  }
+
+  const { values, handleChange, handleSubmit, touched, errors } = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (values, { resetForm }) => {
+      onAdd(values)
+      resetForm()
+    },
+  })
+
+  const foodItems = ['Apple', 'Banana', 'Carrot', 'Date'];
+
+  return (
+    <Grid container justifyContent="flex-end">
+      <Grid component="form" xs={12} md={6} onSubmit={handleSubmit} sx={{ mt: 3, p: 2, border: '1px solid grey' }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              variant="standard"
+              id="foodItem"
+              name="foodItem"
+              label="Food Item"
+              value={values.foodItem}
+              onChange={handleChange}
+              onClick={handleOpen}
+              error={touched.foodItem && Boolean(errors.foodItem)}
+              helperText={touched.foodItem && errors.foodItem}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              variant="standard"
+              id="quantity"
+              name="quantity"
+              label="Quantity"
+              type="number"
+              value={values.quantity}
+              onChange={handleChange}
+              error={touched.quantity && Boolean(errors.quantity)}
+              helperText={touched.quantity && errors.quantity}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    g
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              variant="standard"
+              id="note"
+              name="note"
+              label="Note"
+              type="text"
+              placeholder='e.g., Chew Your Food'
+              value={values.note}
+              onChange={handleChange}
+              error={touched.note && Boolean(errors.note)}
+              helperText={touched.note && errors.note}
+            />
+          </Grid>
+          <>
+            <SelectFoodItemModal open={modalOpen} handleClose={handleClose} />
+          </>
+        </Grid>
+        <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+          Add Food Item
+        </Button>
+      </Grid>
+    </Grid>
+  )
+}
 
 const MealPlan = ({ index, mealPlan, setMealPlans, onDeleteMealPlan }) => {
-  const [foods, setFoods] = useState(mealPlan.foods || []);
-  const [title, setTitle] = useState(mealPlan.title || '');
+  const [foods, setFoods] = useState(mealPlan.foods || [])
+  const [title, setTitle] = useState(mealPlan.title || '')
 
   const addFood = (foodItem) => {
-    setFoods(prevFoods => [...prevFoods, foodItem]);
-    updateMealPlan(index, foods, title);
-  };
+    setFoods(prevFoods => [...prevFoods, foodItem])
+    updateMealPlan(index, foods, title)
+  }
 
   const deleteFood = (foodIndex) => {
-    const updatedFoods = foods.filter((_, i) => i !== foodIndex);
-    setFoods(updatedFoods);
-    updateMealPlan(index, updatedFoods, title);
-  };
+    const updatedFoods = foods.filter((_, i) => i !== foodIndex)
+    setFoods(updatedFoods)
+    updateMealPlan(index, updatedFoods, title)
+  }
 
   const updateMealPlan = (index, foods, title) => {
     setMealPlans(prev => {
-      const newMealPlans = [...prev];
-      newMealPlans[index] = { title, foods };
-      return newMealPlans;
-    });
-  };
+      const newMealPlans = [...prev]
+      newMealPlans[index] = { title, foods }
+      return newMealPlans
+    })
+  }
 
   const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-    updateMealPlan(index, foods, e.target.value);
-  };
+    setTitle(e.target.value)
+    updateMealPlan(index, foods, e.target.value)
+  }
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -220,19 +273,19 @@ const MealPlan = ({ index, mealPlan, setMealPlans, onDeleteMealPlan }) => {
         Delete Meal Plan
       </Button>
     </Box>
-  );
-};
+  )
+}
 
 export default function AddClientNutrition() {
-  const [mealPlans, setMealPlans] = useState([{ title: '', foods: [] }]);
+  const [mealPlans, setMealPlans] = useState([{ title: '', foods: [] }])
 
   const addMealPlan = () => {
-    setMealPlans([...mealPlans, { title: '', foods: [] }]);
-  };
+    setMealPlans([...mealPlans, { title: '', foods: [] }])
+  }
 
   const deleteMealPlan = (index) => {
-    setMealPlans(prev => prev.filter((_, i) => i !== index));
-  };
+    setMealPlans(prev => prev.filter((_, i) => i !== index))
+  }
 
   return (
     <Box>
@@ -240,18 +293,21 @@ export default function AddClientNutrition() {
         Create Nutrition Plan
       </Typography>
       {mealPlans.map((mealPlan, index) => (
-        <Paper sx={{ p: 2, m: 2 }} key={index}>
-          <MealPlan
-            index={index}
-            mealPlan={mealPlan}
-            setMealPlans={setMealPlans}
-            onDeleteMealPlan={deleteMealPlan}
-          />
-        </Paper>
+        <>
+          <Paper elevation={4} sx={{ p: 2, m: 2 }} key={index}>
+            <MealPlan
+              index={index}
+              mealPlan={mealPlan}
+              setMealPlans={setMealPlans}
+              onDeleteMealPlan={deleteMealPlan}
+            />
+          </Paper>
+          <Divider />
+        </>
       ))}
       <Button variant="contained" onClick={addMealPlan} sx={{ mt: 2 }}>
         Add More Meal Plan
       </Button>
     </Box>
-  );
-};
+  )
+}
