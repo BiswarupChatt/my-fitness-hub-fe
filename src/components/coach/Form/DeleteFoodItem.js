@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from '@mui/material'
 import axios from '../../../services/api/axios'
 import { errorToast } from '../../../utils/toastify'
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from '@mui/material'
 
 export default function DeleteFoodItem({ open, handleClose, foodItem, onChange }) {
 

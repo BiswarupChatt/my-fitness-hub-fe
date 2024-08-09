@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from '@mui/material'
 import axios from '../../../services/api/axios'
 import { loadingToast, updateToast } from '../../../utils/toastify'
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from '@mui/material'
 
 export default function DeleteWorkoutItem({ open, handleClose, workoutItem, onChange }) {
     const [isSubmitting, setIsSubmitting] = useState(false)

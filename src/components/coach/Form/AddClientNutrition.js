@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Box, Button, TextField, Typography, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, Grid, InputAdornment, TableFooter, Divider, Modal, Tooltip } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
-import { useFormik } from 'formik'
 import * as yup from 'yup'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { useFormik } from 'formik'
+import React, { useState } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
 import FoodItemTable from '../table/FoodItemTable'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Box, Button, TextField, Typography, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Paper, Grid, InputAdornment, TableFooter, Divider, Modal, Tooltip } from '@mui/material'
 
 const validationSchema = yup.object({
   foodItem: yup.string().required('Required'),

@@ -1,9 +1,9 @@
-import { TextField, Grid, Button, Typography, Modal, Box } from '@mui/material'
-import { useFormik } from 'formik'
-import { loadingToast, updateToast } from '../../../utils/toastify'
-import axios from '../../../services/api/axios'
-import { addWorkoutItemValidation } from '../../../validations/addWorkoutItemValidation'
 import { useState } from 'react'
+import { useFormik } from 'formik'
+import axios from '../../../services/api/axios'
+import { loadingToast, updateToast } from '../../../utils/toastify'
+import { TextField, Grid, Button, Typography, Modal, Box } from '@mui/material'
+import { addWorkoutItemValidation } from '../../../validations/addWorkoutItemValidation'
 
 
 const modalStyle = {
