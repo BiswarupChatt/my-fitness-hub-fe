@@ -7,10 +7,13 @@ import EditFoodItem from '../form/EditFoodItem'
 import DeleteFoodItem from '../form/DeleteFoodItem'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { useAuth } from '../../../services/context/AuthContext'
+import { useDispatch } from 'react-redux'
+import { setFoodItem } from '../../../services/redux/action/foodItem-action'
 
-export default function FoodItemTable() {
+export default function FoodItemTable({ onClose }) {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
+    const dispatch = useDispatch()
 
     const [foodItems, setFoodItems] = useState([])
     const [totalFoodItems, setTotalFoodItems] = useState(0)
@@ -92,8 +95,10 @@ export default function FoodItemTable() {
     }
 
     const handleSelectFoodItem = (ele) => {
-        setSelectFoodItem(ele)
-        console.log(selectFoodItem)
+        dispatch(setFoodItem(ele))
+        if (typeof onClose === 'function') {
+            onClose();
+        }
     }
 
     return (
@@ -204,9 +209,13 @@ export default function FoodItemTable() {
                                         <TableRow
                                             key={ele._id}
                                             sx={{
-                                                backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff"
+                                                backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
+                                                transition: "background-color 0.3s ease-in-out",
+                                                "&:hover": {
+                                                    backgroundColor: "#e0f7fa", 
+                                                },
                                             }}
-                                            onClick={(ele) => {
+                                            onClick={() => {
                                                 handleSelectFoodItem(ele)
                                             }}
                                         >
