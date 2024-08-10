@@ -55,12 +55,12 @@ export default function AddFoodItem({ onAdd }) {
                 fat: foodItem.fat || 0,
                 protein: foodItem.protein || 0,
                 carbohydrates: foodItem.carbohydrate || 0,
-                note: values.note, 
+                note: values.note,
             });
         }
-    }, [foodItem, setValues]); 
+    }, [foodItem, setValues]);
 
-    
+
     const handleQuantityChange = (e) => {
         const newQuantity = parseFloat(e.target.value);
         if (selectedFood && newQuantity > 0) {
@@ -94,6 +94,9 @@ export default function AddFoodItem({ onAdd }) {
                             onClick={handleFoodModalOpen}
                             error={touched.foodItem && Boolean(errors.foodItem)}
                             helperText={touched.foodItem && errors.foodItem}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>
