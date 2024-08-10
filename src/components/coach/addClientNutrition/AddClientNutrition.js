@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Button, Divider, Paper, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
-import MealPlan from './MealPlan';
+import React, { useState } from 'react'
+import { Box, Button, Divider, Paper, Typography } from '@mui/material'
+import MealPlan from './MealPlan'
 
 export default function AddClientNutrition() {
-  const foodItem = useSelector((state) => {
-    return state.foodItem.data;
-  });
-  console.log('foodItem', foodItem);
+  
 
   const [mealPlans, setMealPlans] = useState([{ title: '', foods: [] }]);
 
