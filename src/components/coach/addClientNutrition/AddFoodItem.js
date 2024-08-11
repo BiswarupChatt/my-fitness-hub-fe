@@ -7,13 +7,13 @@ import SelectFoodItemModal from './SelectFoodItem'
 
 
 const validationSchema = yup.object({
-    foodItem: yup.string().required('Required'),
+    foodName: yup.string().required('Required'),
     quantity: yup.number().required('Required').min(1),
     note: yup.string(),
 })
 
 const initialValues = {
-    foodItem: '',
+    foodName: '',
     quantity: '',
     calories: 0,
     fat: 0,
@@ -49,8 +49,9 @@ export default function AddFoodItem({ onAdd }) {
         if (foodItem) {
             setSelectedFood(foodItem);
             setValues({
-                foodItem: foodItem.foodName || '',
+                foodName: foodItem.foodName || '',
                 quantity: foodItem.quantity || '',
+                unit: foodItem.unit || '',
                 calories: foodItem.calories || 0,
                 fat: foodItem.fat || 0,
                 protein: foodItem.protein || 0,
@@ -86,14 +87,14 @@ export default function AddFoodItem({ onAdd }) {
                         <TextField
                             fullWidth
                             variant="standard"
-                            id="foodItem"
-                            name="foodItem"
+                            id="foodName"
+                            name="foodName"
                             label="Food Item"
-                            value={values.foodItem}
+                            value={values.foodName}
                             onChange={handleChange}
                             onClick={handleFoodModalOpen}
-                            error={touched.foodItem && Boolean(errors.foodItem)}
-                            helperText={touched.foodItem && errors.foodItem}
+                            error={touched.foodName && Boolean(errors.foodName)}
+                            helperText={touched.foodName && errors.foodName}
                             InputProps={{
                                 readOnly: true,
                             }}

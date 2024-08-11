@@ -35,7 +35,7 @@ export default function MealPlanTable({ mealPlan, onDelete }) {
                             sx={{ backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#ffffff' }}
                         >
                             <TableCell>
-                                <Typography variant="body1">{meal.foodItem}</Typography>
+                                <Typography variant="body1">{meal.foodName}</Typography>
                                 <Typography variant="body2" color="textSecondary">{` ${meal.quantity} g`}</Typography>
                             </TableCell>
                             <TableCell>{meal.calories}</TableCell>
