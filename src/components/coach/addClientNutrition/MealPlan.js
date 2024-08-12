@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import MealPlanTable from './MealPlanTable';
-import AddFoodItem from './AddFoodItem';
+import AddFood from './AddFood';
 
 export default function MealPlan({ index, mealPlan, setMealPlans, onDeleteMealPlan }) {
     const [foods, setFoods] = useState(mealPlan.foods || []);
@@ -43,7 +43,7 @@ export default function MealPlan({ index, mealPlan, setMealPlans, onDeleteMealPl
                 sx={{ mb: 2 }}
             />
             <MealPlanTable mealPlan={foods} onDelete={deleteFood} />
-            <AddFoodItem onAdd={addFood} />
+            <AddFood onAdd={addFood} />
             <Button color="error" variant="contained" onClick={() => onDeleteMealPlan(index)} sx={{ mt: 2 }}>
                 Delete Meal Plan
             </Button>

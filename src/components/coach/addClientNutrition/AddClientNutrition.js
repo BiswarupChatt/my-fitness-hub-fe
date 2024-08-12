@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/material';
 import MealPlan from './MealPlan';
 import axios from '../../../services/api/axios';
+import { loadingToast, updateToast } from '../../../utils/toastify'
 
 export default function AddClientNutrition({ clientId: clientId }) {
+
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [mealPlans, setMealPlans] = useState([{ id: '', title: '', foods: [] }]);
   const token = localStorage.getItem('token');
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const addMealPlan = () => {
     setMealPlans([...mealPlans, { id: '', title: '', foods: [] }]);
@@ -16,7 +19,7 @@ export default function AddClientNutrition({ clientId: clientId }) {
     setMealPlans((prev) => prev.filter((_, i) => i !== index));
   };
 
-  console.log('Client ID:', clientId)
+  // console.log('Client ID:', clientId)
 
   const handleSubmit = async () => {
     const formattedMealPlans = mealPlans.map(plan => ({
@@ -41,14 +44,25 @@ export default function AddClientNutrition({ clientId: clientId }) {
     console.log('data before axios', data);
 
     try {
+      setIsSubmitting(true)
+      loadingToast("Adding Nutrition Plan", 'nutrition-plan')
       const response = await axios.post(`/nutrition-plan/${clientId}`, data, {
         headers: {
           Authorization: token
         }
       });
-      console.log(response.data);
+      updateToast('Nutrition Plan Added Successfully', 'nutrition-plan', 'success')
     } catch (err) {
-      console.error('Error submitting data:', err.response ? err.response.data : err.message);
+      if (err.response) {
+        const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred'
+        updateToast(errorMessage, 'nutrition-plan', 'error')
+      } else if (err.request) {
+        updateToast('No response from server', 'nutrition-plan', 'error')
+      } else {
+        updateToast('An unknown error occurred', 'nutrition-plan', 'error')
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   };
 
@@ -87,7 +101,7 @@ export default function AddClientNutrition({ clientId: clientId }) {
       <Button variant="contained" onClick={addMealPlan} sx={{ mt: 2 }}>
         Add More Meal Plan
       </Button>
-      <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
+      <Button variant="contained" disabled={isSubmitting} onClick={handleSubmit} sx={{ mt: 2 }}>
         Submit
       </Button>
     </Box>

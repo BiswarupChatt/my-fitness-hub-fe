@@ -22,7 +22,7 @@ const initialValues = {
     note: '',
 }
 
-export default function AddFoodItem({ onAdd }) {
+export default function AddFood({ onAdd }) {
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedFood, setSelectedFood] = useState(null)
 
