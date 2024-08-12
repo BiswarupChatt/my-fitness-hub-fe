@@ -61,8 +61,8 @@ export default function ClientTable({ user }) {
     const [currentPages, setCurrentPages] = useState(null)
     const [search, setSearch] = useState('')
 
-    const handleClick = (userId) => {
-        navigate(`/client/${userId}`)
+    const handleClick = (clientId) => {
+        navigate(`/client/${clientId}`)
     }
 
     const handleChangePage = (event, newPage) => {

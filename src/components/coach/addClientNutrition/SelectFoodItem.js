@@ -1,10 +1,9 @@
-import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import FoodItemTable from '../table/FoodItemTable'
-import { Box, Modal, Tooltip } from '@mui/material'
+import React from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import FoodItemTable from '../table/FoodItemTable';
+import { Box, Modal, Tooltip } from '@mui/material';
 
-
-export default function SelectFoodItemModal  ({ open, handleFoodModalClose })  {
+export default function SelectFoodItemModal({ open, handleFoodModalClose }) {
     const modalStyle = {
         position: 'absolute',
         top: '50%',
@@ -22,13 +21,21 @@ export default function SelectFoodItemModal  ({ open, handleFoodModalClose })  {
     };
 
     return (
-        <Modal open={open} onClose={handleFoodModalClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Modal
+            open={open}
+            onClose={handleFoodModalClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
             <Box sx={modalStyle} position="relative">
                 <FoodItemTable onClose={handleFoodModalClose} />
-                <Tooltip onClick={handleFoodModalClose} sx={{ position: 'absolute', top: 20, right: 20, cursor: 'pointer' }}>
+                <Tooltip
+                    onClick={handleFoodModalClose}
+                    sx={{ position: 'absolute', top: 20, right: 20, cursor: 'pointer' }}
+                >
                     <CloseIcon />
                 </Tooltip>
             </Box>
         </Modal>
     );
-};
+}

@@ -17,15 +17,15 @@ import ClientProgram from '../../components/coach/client/ClientProgram';
 
 export default function SingleCLient() {
     const [value, setValue] = useState('Nutrition');
-    const { userId } = useParams()
+    const { clientId } = useParams()
     const token = localStorage.getItem('token')
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (userId && token) {
-            dispatch(startGetClient(userId, token))
+        if (clientId && token) {
+            dispatch(startGetClient(clientId, token))
         }
-    }, [userId, token, dispatch])
+    }, [clientId, token, dispatch])
 
     const client = useSelector((state) => {
         return state.client.data

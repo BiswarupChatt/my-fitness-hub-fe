@@ -3,15 +3,16 @@ import { Box, IconButton, Table, TableBody, TableCell, TableFooter, TableHead, T
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function MealPlanTable({ mealPlan, onDelete }) {
+
     const totals = mealPlan.reduce(
         (acc, meal) => {
             acc.calories += meal.calories || 0;
             acc.fat += meal.fat || 0;
             acc.protein += meal.protein || 0;
-            acc.carbohydrates += meal.carbohydrates || 0;
+            acc.carbohydrate += meal.carbohydrate || 0;
             return acc;
         },
-        { calories: 0, fat: 0, protein: 0, carbohydrates: 0 }
+        { calories: 0, fat: 0, protein: 0, carbohydrate: 0 }
     );
 
     return (
@@ -41,7 +42,7 @@ export default function MealPlanTable({ mealPlan, onDelete }) {
                             <TableCell>{meal.calories}</TableCell>
                             <TableCell>{meal.fat}</TableCell>
                             <TableCell>{meal.protein}</TableCell>
-                            <TableCell>{meal.carbohydrates}</TableCell>
+                            <TableCell>{meal.carbohydrate}</TableCell>
                             <TableCell>{meal.note}</TableCell>
                             <TableCell>
                                 <IconButton color="secondary" onClick={() => onDelete(index)}>
@@ -76,7 +77,7 @@ export default function MealPlanTable({ mealPlan, onDelete }) {
                                     Protein: {totals.protein} g
                                 </Typography>
                                 <Typography component="span" variant="body2" sx={{ ml: 2 }}>
-                                    Carbohydrates: {totals.carbohydrates} g
+                                    Carbohydrates: {totals.carbohydrate} g
                                 </Typography>
                             </Typography>
                         </TableCell>

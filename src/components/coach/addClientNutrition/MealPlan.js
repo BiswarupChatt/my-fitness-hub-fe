@@ -1,5 +1,3 @@
-// MealPlan.js
-
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import MealPlanTable from './MealPlanTable';
@@ -24,7 +22,7 @@ export default function MealPlan({ index, mealPlan, setMealPlans, onDeleteMealPl
     const updateMealPlan = (index, foods, title) => {
         setMealPlans((prev) => {
             const newMealPlans = [...prev];
-            newMealPlans[index] = { title, foods };
+            newMealPlans[index] = { ...newMealPlans[index], foods, title };
             return newMealPlans;
         });
     };
@@ -51,5 +49,4 @@ export default function MealPlan({ index, mealPlan, setMealPlans, onDeleteMealPl
             </Button>
         </Box>
     );
-};
-
+}

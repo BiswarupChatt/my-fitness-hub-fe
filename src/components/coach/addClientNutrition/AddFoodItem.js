@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import { useFormik } from 'formik'
-import * as yup from 'yup'
-import { useSelector } from 'react-redux'
-import { Button, Grid, TextField, InputAdornment } from '@mui/material'
-import SelectFoodItemModal from './SelectFoodItem'
+import React, { useState, useEffect } from 'react';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import { useSelector } from 'react-redux';
+import { Button, Grid, TextField, InputAdornment } from '@mui/material';
+import SelectFoodItemModal from './SelectFoodItem';
 
-
+// Validation schema for form
 const validationSchema = yup.object({
-    foodName: yup.string().required('Required'),
+    foodName: yup.string().required('Required'), // Ensure this is a valid ObjectId
     quantity: yup.number().required('Required').min(1),
     note: yup.string(),
-})
+});
 
+// Initial form values
 const initialValues = {
-    foodName: '',
+    foodId: '',
     quantity: '',
     calories: 0,
     fat: 0,
     protein: 0,
-    carbohydrates: 0,
+    carbohydrate: 0,
     note: '',
-}
+};
 
 export default function AddFoodItem({ onAdd }) {
     const [modalOpen, setModalOpen] = useState(false);
@@ -40,7 +41,7 @@ export default function AddFoodItem({ onAdd }) {
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
-            onAdd(values);
+            onAdd(values); // Pass the selected food data to the parent component
             resetForm();
         },
     });
@@ -49,18 +50,18 @@ export default function AddFoodItem({ onAdd }) {
         if (foodItem) {
             setSelectedFood(foodItem);
             setValues({
-                foodName: foodItem.foodName || '',
-                quantity: foodItem.quantity || '',
+                foodId: foodItem._id || '', 
+                foodName: foodItem.foodName,
+                quantity: 0,
                 unit: foodItem.unit || '',
                 calories: foodItem.calories || 0,
                 fat: foodItem.fat || 0,
                 protein: foodItem.protein || 0,
-                carbohydrates: foodItem.carbohydrate || 0,
-                note: values.note,
+                carbohydrate: foodItem.carbohydrate || 0,
+                note: '',
             });
         }
     }, [foodItem, setValues]);
-
 
     const handleQuantityChange = (e) => {
         const newQuantity = parseFloat(e.target.value);
@@ -72,16 +73,23 @@ export default function AddFoodItem({ onAdd }) {
                 calories: selectedFood.calories * factor,
                 fat: selectedFood.fat * factor,
                 protein: selectedFood.protein * factor,
-                carbohydrates: selectedFood.carbohydrate * factor,
+                carbohydrate: selectedFood.carbohydrate * factor,
             });
         } else {
             setValues({ ...values, quantity: newQuantity });
         }
-    }
+    };
 
     return (
         <Grid container justifyContent="flex-end">
-            <Grid component="form" item xs={12} md={6} onSubmit={handleSubmit} sx={{ mt: 3, p: 2, border: '1px solid grey' }}>
+            <Grid
+                component="form"
+                item
+                xs={12}
+                md={6}
+                onSubmit={handleSubmit}
+                sx={{ mt: 3, p: 2, border: '1px solid grey' }}
+            >
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
@@ -113,7 +121,11 @@ export default function AddFoodItem({ onAdd }) {
                             error={touched.quantity && Boolean(errors.quantity)}
                             helperText={touched.quantity && errors.quantity}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">{selectedFood ? selectedFood.unit : null}</InputAdornment>,
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        {selectedFood ? selectedFood.unit : null}
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                     </Grid>
@@ -133,7 +145,10 @@ export default function AddFoodItem({ onAdd }) {
                         />
                     </Grid>
                     <>
-                        <SelectFoodItemModal open={modalOpen} handleFoodModalClose={handleFoodModalClose} />
+                        <SelectFoodItemModal
+                            open={modalOpen}
+                            handleFoodModalClose={handleFoodModalClose}
+                        />
                     </>
                 </Grid>
                 <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
@@ -141,6 +156,5 @@ export default function AddFoodItem({ onAdd }) {
                 </Button>
             </Grid>
         </Grid>
-    )
+    );
 }
-
