@@ -1,57 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useSelector } from 'react-redux';
-import { Button, Grid, TextField, InputAdornment } from '@mui/material';
-import SelectFoodItemModal from './SelectFoodItem';
+import React, { useState, useEffect } from 'react'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import { useSelector } from 'react-redux'
+import { Button, Grid, TextField, InputAdornment } from '@mui/material'
+import SelectFoodItemModal from './SelectFoodItem'
 
-// Validation schema for form
 const validationSchema = yup.object({
-    foodName: yup.string().required('Required'), // Ensure this is a valid ObjectId
+    foodName: yup.string().required('Required'),
     quantity: yup.number().required('Required').min(1),
     note: yup.string(),
-});
+})
 
-// Initial form values
 const initialValues = {
     foodId: '',
+    foodName: '',
     quantity: '',
     calories: 0,
     fat: 0,
     protein: 0,
     carbohydrate: 0,
     note: '',
-};
+}
 
 export default function AddFoodItem({ onAdd }) {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedFood, setSelectedFood] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false)
+    const [selectedFood, setSelectedFood] = useState(null)
 
     const handleFoodModalOpen = () => {
-        setModalOpen(true);
-    };
+        setModalOpen(true)
+    }
 
     const handleFoodModalClose = () => {
-        setModalOpen(false);
-    };
+        setModalOpen(false)
+    }
 
-    const foodItem = useSelector((state) => state.foodItem.data);
+    const foodItem = useSelector((state) => state.foodItem.data)
 
     const { values, handleChange, handleSubmit, touched, errors, setValues } = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
-            onAdd(values); // Pass the selected food data to the parent component
-            resetForm();
+            onAdd(values)
+            resetForm()
         },
-    });
+    })
 
     useEffect(() => {
         if (foodItem) {
-            setSelectedFood(foodItem);
+            setSelectedFood(foodItem)
             setValues({
-                foodId: foodItem._id || '', 
-                foodName: foodItem.foodName,
+                foodId: foodItem._id || '',
+                foodName: foodItem.foodName || '',
                 quantity: 0,
                 unit: foodItem.unit || '',
                 calories: foodItem.calories || 0,
@@ -59,14 +58,14 @@ export default function AddFoodItem({ onAdd }) {
                 protein: foodItem.protein || 0,
                 carbohydrate: foodItem.carbohydrate || 0,
                 note: '',
-            });
+            })
         }
-    }, [foodItem, setValues]);
+    }, [foodItem, setValues])
 
     const handleQuantityChange = (e) => {
-        const newQuantity = parseFloat(e.target.value);
+        const newQuantity = parseFloat(e.target.value)
         if (selectedFood && newQuantity > 0) {
-            const factor = newQuantity / selectedFood.quantity;
+            const factor = newQuantity / selectedFood.quantity
             setValues({
                 ...values,
                 quantity: newQuantity,
@@ -74,11 +73,11 @@ export default function AddFoodItem({ onAdd }) {
                 fat: selectedFood.fat * factor,
                 protein: selectedFood.protein * factor,
                 carbohydrate: selectedFood.carbohydrate * factor,
-            });
+            })
         } else {
-            setValues({ ...values, quantity: newQuantity });
+            setValues({ ...values, quantity: newQuantity })
         }
-    };
+    }
 
     return (
         <Grid container justifyContent="flex-end">
@@ -156,5 +155,5 @@ export default function AddFoodItem({ onAdd }) {
                 </Button>
             </Grid>
         </Grid>
-    );
+    )
 }

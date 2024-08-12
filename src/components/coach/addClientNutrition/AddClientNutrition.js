@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/material';
 import MealPlan from './MealPlan';
 import axios from '../../../services/api/axios';
-// import { useParams } from 'react-router-dom';
 
 export default function AddClientNutrition({ clientId: clientId }) {
   const [additionalNotes, setAdditionalNotes] = useState('');
@@ -39,7 +38,7 @@ export default function AddClientNutrition({ clientId: clientId }) {
       additionalNotes: additionalNotes || '',
     };
 
-    console.log('data before axios', data); // Log the formatted data
+    console.log('data before axios', data);
 
     try {
       const response = await axios.post(`/nutrition-plan/${clientId}`, data, {
