@@ -69,7 +69,7 @@ export default function SingleCLient() {
                                 </Box>
                                 <TabPanel value="Profile"><ClientProfile client={client} /></TabPanel>
                                 <TabPanel value="Workout"><ClientWorkout /></TabPanel>
-                                <TabPanel value="Nutrition"><ClientNutrition /></TabPanel>
+                                <TabPanel value="Nutrition"><ClientNutrition clientId={clientId} /></TabPanel>
                                 <TabPanel value="Progress"><ClientProgress /></TabPanel>
                                 <TabPanel value="Program"><ClientProgram /></TabPanel>
                             </TabContext>
