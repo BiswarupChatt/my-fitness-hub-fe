@@ -2,34 +2,33 @@ import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import MealPlanTable from './MealPlanTable';
 import AddFood from './AddFood';
+import { useDispatch } from 'react-redux';
+import { updateMealPlan, deleteMealPlan } from '../../../services/redux/action/nutritionPlan-action';
 
-export default function MealPlan({ index, mealPlan, setMealPlans, onDeleteMealPlan }) {
+export default function MealPlan({ index, mealPlan }) {
+    const dispatch = useDispatch();
     const [foods, setFoods] = useState(mealPlan.foods || []);
     const [title, setTitle] = useState(mealPlan.title || '');
 
     const addFood = (foodItem) => {
         const updatedFoods = [...foods, foodItem];
         setFoods(updatedFoods);
-        updateMealPlan(index, updatedFoods, title);
+        dispatch(updateMealPlan(index, { ...mealPlan, foods: updatedFoods, title }));
     };
 
     const deleteFood = (foodIndex) => {
         const updatedFoods = foods.filter((_, i) => i !== foodIndex);
         setFoods(updatedFoods);
-        updateMealPlan(index, updatedFoods, title);
-    };
-
-    const updateMealPlan = (index, foods, title) => {
-        setMealPlans((prev) => {
-            const newMealPlans = [...prev];
-            newMealPlans[index] = { ...newMealPlans[index], foods, title };
-            return newMealPlans;
-        });
+        dispatch(updateMealPlan(index, { ...mealPlan, foods: updatedFoods, title }));
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
-        updateMealPlan(index, foods, e.target.value);
+        dispatch(updateMealPlan(index, { ...mealPlan, foods, title: e.target.value }));
+    };
+
+    const deleteMealPlanHandler = () => {
+        dispatch(deleteMealPlan(index));
     };
 
     return (
@@ -44,7 +43,7 @@ export default function MealPlan({ index, mealPlan, setMealPlans, onDeleteMealPl
             />
             <MealPlanTable mealPlan={foods} onDelete={deleteFood} />
             <AddFood onAdd={addFood} />
-            <Button color="error" variant="contained" onClick={() => onDeleteMealPlan(index)} sx={{ mt: 2 }}>
+            <Button color="error" variant="contained" onClick={deleteMealPlanHandler} sx={{ mt: 2 }}>
                 Delete Meal Plan
             </Button>
         </Box>

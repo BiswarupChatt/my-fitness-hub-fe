@@ -1,4 +1,4 @@
-import { NUTRITION_PLAN } from "../action/nutritionPlan-action"
+import { NUTRITION_PLAN, ADD_MEAL_PLAN, UPDATE_MEAL_PLAN, DELETE_MEAL_PLAN } from "../action/nutritionPlan-action"
 
 const initialState = {
     data: null,
@@ -10,6 +10,31 @@ const nutritionPlanReducer = (state = initialState, action) => {
             return {
                 ...state, data: action.payload
             }
+        }
+        case ADD_MEAL_PLAN: {
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    mealPlans: [...state.data.mealPlans, action.payload]
+                }
+            }
+        }
+        case DELETE_MEAL_PLAN: {
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    mealPlans: state.data.mealPlans.filter((_, i) => {
+                        return i !== action.payload
+                    })
+                }
+            }
+        }
+        case UPDATE_MEAL_PLAN: {
+            const { index, updatedMealPlan } = action.payload
+            const updatedMealPlans = [...state.data.mealPlans]
+            updatedMealPlans[index] = updatedMealPlan
         }
         default: {
             return state
