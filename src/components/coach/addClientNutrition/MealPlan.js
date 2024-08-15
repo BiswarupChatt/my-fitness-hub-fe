@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import MealPlanTable from './MealPlanTable';
 import AddFood from './AddFood';
@@ -10,14 +10,10 @@ export default function MealPlan({ index, mealPlan }) {
 
     const [foods, setFoods] = useState(mealPlan?.foods || []);
     const [title, setTitle] = useState(mealPlan?.title || '');
-
-    useEffect(() => {
-        
-        setFoods(mealPlan?.foods || []);
-        setTitle(mealPlan?.title || '');
-    }, [mealPlan]);
+    const [titleError, setTitleError] = useState('');
 
     const addFood = (foodItem) => {
+        console.log("adding food Item", foodItem)
         const updatedFoods = [...foods, foodItem];
         setFoods(updatedFoods);
         dispatch(updateMealPlan(index, { ...mealPlan, foods: updatedFoods, title }));
@@ -32,7 +28,16 @@ export default function MealPlan({ index, mealPlan }) {
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
         setTitle(newTitle);
-        dispatch(updateMealPlan(index, { ...mealPlan, foods, title: newTitle }));
+
+        if (newTitle.trim()) {
+            setTitleError('');
+        }
+    };
+
+    const handleTitleBlur = () => {
+        if (!title.trim()) {
+            setTitleError('Meal Plan title cannot be empty.');
+        }
     };
 
     const deleteMealPlanHandler = () => {
@@ -47,7 +52,10 @@ export default function MealPlan({ index, mealPlan }) {
                 label="Meal Plan Title"
                 value={title}
                 onChange={handleTitleChange}
+                onBlur={handleTitleBlur}
                 sx={{ mb: 2 }}
+                error={Boolean(titleError)}
+                helperText={titleError}
             />
             <MealPlanTable mealPlan={foods} onDelete={deleteFood} />
             <AddFood onAdd={addFood} />

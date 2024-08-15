@@ -40,6 +40,7 @@ export default function AddFood({ onAdd }) {
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
+            console.log('Form submitted with values:', values)
             onAdd(values)
             resetForm()
         },
@@ -47,6 +48,7 @@ export default function AddFood({ onAdd }) {
 
     useEffect(() => {
         if (foodItem) {
+            console.log('Selected food item:', foodItem)
             setSelectedFood(foodItem)
             setValues({
                 foodId: foodItem._id || '',

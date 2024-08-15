@@ -35,6 +35,7 @@ export const deleteMealPlan = (index) => {
     return ({ type: DELETE_MEAL_PLAN, payload: index })
 }
 
-export const updateMealPlan = (index, updateMealPlan) => {
-    return ({ type: UPDATE_MEAL_PLAN, payload: { index, updateMealPlan } })
-}
+export const updateMealPlan = (index, updatedMealPlan) => {
+    console.log('Action Payload:', { index, updatedMealPlan }); // Check here
+    return ({ type: UPDATE_MEAL_PLAN, payload: { index, updatedMealPlan } });
+};

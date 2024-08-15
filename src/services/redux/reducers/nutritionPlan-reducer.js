@@ -8,45 +8,45 @@ const nutritionPlanReducer = (state = initialState, action) => {
     switch (action.type) {
         case NUTRITION_PLAN: {
             return {
-                ...state, data: action.payload
-            }
+                ...state,
+                data: action.payload,
+            };
         }
         case ADD_MEAL_PLAN: {
             return {
                 ...state,
                 data: {
                     ...state.data,
-                    mealPlans: [...state.data.mealPlans, action.payload]
-                }
-            }
+                    mealPlans: [...(state.data?.mealPlans || []), action.payload],
+                },
+            };
         }
         case DELETE_MEAL_PLAN: {
             return {
                 ...state,
                 data: {
                     ...state.data,
-                    mealPlans: state.data.mealPlans.filter((_, i) => {
-                        return i !== action.payload
-                    })
-                }
-            }
+                    mealPlans: state.data.mealPlans.filter((_, i) => i !== action.payload),
+                },
+            };
         }
         case UPDATE_MEAL_PLAN: {
-            const { index, updatedMealPlan } = action.payload;
-            const updatedMealPlans = [...state.data.mealPlans];
-            updatedMealPlans[index] = updatedMealPlan;
+            const { index, updateMealPlan } = action.payload;
+            const updatedMealPlans = [...(state.data?.mealPlans || [])];
+            updatedMealPlans[index] = updateMealPlan;
+
             return {
                 ...state,
                 data: {
                     ...state.data,
-                    mealPlans: updatedMealPlans
-                }
+                    mealPlans: updatedMealPlans,
+                },
             };
         }
         default: {
-            return state
+            return state;
         }
     }
-}
+};
 
-export default nutritionPlanReducer
+export default nutritionPlanReducer;

@@ -10,6 +10,8 @@ export default function AddClientNutrition({ clientId }) {
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log('nutritionPlan', nutritionPlan)
+
   useEffect(() => {
     dispatch(startGetNutritionPlan(clientId, localStorage.getItem('token')));
   }, [dispatch, clientId]);
@@ -23,19 +25,34 @@ export default function AddClientNutrition({ clientId }) {
   };
 
   const handleSubmit = async () => {
-    const formattedMealPlans = nutritionPlan.mealPlans.map(plan => ({
-      title: plan.title || 'Untitled Meal Plan',
-      foods: plan.foods.map(food => ({
-        foodId: food.foodId._id,
-        unit: food.unit,
-        quantity: Number(food.quantity),
-        calories: Number(food.calories),
-        carbohydrate: Number(food.carbohydrate || 0),
-        protein: Number(food.protein || 0),
-        fat: Number(food.fat || 0),
-        note: food.note || '',
-      })),
-    }));
+    if (!nutritionPlan?.mealPlans) {
+      console.error("Meal Plans are undefined");
+      return;
+    }
+
+    const formattedMealPlans = nutritionPlan.mealPlans.map((plan, index) => {
+      // if (!plan || typeof plan !== 'object') {
+      //   console.error(`Meal Plan at index ${index} is undefined or not an object`);
+      //   return {
+      //     title: 'Untitled Meal Plan',
+      //     foods: []
+      //   };
+      // }
+
+      return {
+        title: plan.title || 'Untitled Meal Plan',
+        foods: (plan.foods || []).map(food => ({
+          foodId: food.foodId?._id || '',
+          unit: food.unit || '',
+          quantity: Number(food.quantity) || 0,
+          calories: Number(food.calories) || 0,
+          carbohydrate: Number(food.carbohydrate || 0),
+          protein: Number(food.protein || 0),
+          fat: Number(food.fat || 0),
+          note: food.note || '',
+        })),
+      };
+    });
 
     const data = {
       mealPlans: formattedMealPlans,
@@ -43,11 +60,11 @@ export default function AddClientNutrition({ clientId }) {
     };
 
     console.log('Nutrition Plan Submitted:', data);
-    
+
     setIsSubmitting(false);
     setAdditionalNotes('');
-    
   };
+
 
   return (
     <Box>
