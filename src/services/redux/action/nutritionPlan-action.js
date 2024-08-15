@@ -1,4 +1,4 @@
-import MealPlan from "../../../components/coach/addClientNutrition/MealPlan"
+
 import axios from "../../api/axios"
 
 export const NUTRITION_PLAN = 'NUTRITION_PLAN'
@@ -27,14 +27,8 @@ export const setNutritionPlan = (nutritionPlanItem) => {
     return ({ type: NUTRITION_PLAN, payload: nutritionPlanItem })
 }
 
-export const addMealPlan = (mealPLan) => {
-    return (dispatch, getState) => {
-        try {
-
-        } catch (err) {
-
-        }
-    }
+export const addMealPlan = (mealPlan) => {
+    return ({type: ADD_MEAL_PLAN, payload: mealPlan})
 }
 
 export const deleteMealPlan = (index) => {

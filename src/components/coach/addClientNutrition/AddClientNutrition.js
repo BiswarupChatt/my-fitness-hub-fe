@@ -2,20 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/material';
 import MealPlan from './MealPlan';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from '../../../services/api/axios';
-import { loadingToast, updateToast } from '../../../utils/toastify';
 import { addMealPlan, startGetNutritionPlan } from '../../../services/redux/action/nutritionPlan-action';
 
 export default function AddClientNutrition({ clientId }) {
   const dispatch = useDispatch();
   const nutritionPlan = useSelector((state) => state.nutritionPlan.data);
   const [additionalNotes, setAdditionalNotes] = useState('');
-  const token = localStorage.getItem('token');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    dispatch(startGetNutritionPlan(clientId, token));
-  }, [dispatch, clientId, token]);
+    dispatch(startGetNutritionPlan(clientId, localStorage.getItem('token')));
+  }, [dispatch, clientId]);
 
   const addMealPlanHandler = () => {
     dispatch(addMealPlan({ id: '', title: '', foods: [] }));
@@ -45,29 +42,11 @@ export default function AddClientNutrition({ clientId }) {
       additionalNotes: additionalNotes || '',
     };
 
-    console.log('data before axios', data);
-
-    try {
-      setIsSubmitting(true);
-      loadingToast("Adding Nutrition Plan", 'nutrition-plan');
-      const response = await axios.post(`/nutrition-plan/${clientId}`, data, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      updateToast('Nutrition Plan Added Successfully', 'nutrition-plan', 'success');
-    } catch (err) {
-      if (err.response) {
-        const errorMessage = err.response.data.errors?.[0]?.msg || err.response.data.errors || 'An error occurred';
-        updateToast(errorMessage, 'nutrition-plan', 'error');
-      } else if (err.request) {
-        updateToast('No response from server', 'nutrition-plan', 'error');
-      } else {
-        updateToast('An unknown error occurred', 'nutrition-plan', 'error');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+    console.log('Nutrition Plan Submitted:', data);
+    
+    setIsSubmitting(false);
+    setAdditionalNotes('');
+    
   };
 
   return (

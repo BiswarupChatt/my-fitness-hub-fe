@@ -32,9 +32,16 @@ const nutritionPlanReducer = (state = initialState, action) => {
             }
         }
         case UPDATE_MEAL_PLAN: {
-            const { index, updatedMealPlan } = action.payload
-            const updatedMealPlans = [...state.data.mealPlans]
-            updatedMealPlans[index] = updatedMealPlan
+            const { index, updatedMealPlan } = action.payload;
+            const updatedMealPlans = [...state.data.mealPlans];
+            updatedMealPlans[index] = updatedMealPlan;
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    mealPlans: updatedMealPlans
+                }
+            };
         }
         default: {
             return state

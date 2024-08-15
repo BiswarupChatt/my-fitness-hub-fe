@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import MealPlanTable from './MealPlanTable';
 import AddFood from './AddFood';
@@ -7,8 +7,15 @@ import { updateMealPlan, deleteMealPlan } from '../../../services/redux/action/n
 
 export default function MealPlan({ index, mealPlan }) {
     const dispatch = useDispatch();
-    const [foods, setFoods] = useState(mealPlan.foods || []);
-    const [title, setTitle] = useState(mealPlan.title || '');
+
+    const [foods, setFoods] = useState(mealPlan?.foods || []);
+    const [title, setTitle] = useState(mealPlan?.title || '');
+
+    useEffect(() => {
+        
+        setFoods(mealPlan?.foods || []);
+        setTitle(mealPlan?.title || '');
+    }, [mealPlan]);
 
     const addFood = (foodItem) => {
         const updatedFoods = [...foods, foodItem];
@@ -23,8 +30,9 @@ export default function MealPlan({ index, mealPlan }) {
     };
 
     const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-        dispatch(updateMealPlan(index, { ...mealPlan, foods, title: e.target.value }));
+        const newTitle = e.target.value;
+        setTitle(newTitle);
+        dispatch(updateMealPlan(index, { ...mealPlan, foods, title: newTitle }));
     };
 
     const deleteMealPlanHandler = () => {
