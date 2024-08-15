@@ -1,67 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import MealPlanTable from './MealPlanTable';
 import AddFood from './AddFood';
-import { useDispatch } from 'react-redux';
-import { updateMealPlan, deleteMealPlan } from '../../../services/redux/action/nutritionPlan-action';
 
-export default function MealPlan({ index, mealPlan }) {
-    const dispatch = useDispatch();
+export default function MealPlan({ index, initialMealPlan, onUpdate, onDelete }) {
+  const [foods, setFoods] = useState(initialMealPlan?.foods || []);
+  const [title, setTitle] = useState(initialMealPlan?.title || '');
+  const [titleError, setTitleError] = useState('');
 
-    const [foods, setFoods] = useState(mealPlan?.foods || []);
-    const [title, setTitle] = useState(mealPlan?.title || '');
-    const [titleError, setTitleError] = useState('');
+  const addFood = useCallback((foodItem) => {
+    const updatedFoods = [...foods, foodItem];
+    setFoods(updatedFoods);
+    onUpdate(index, { ...initialMealPlan, foods: updatedFoods, title });
+  }, [foods, index, initialMealPlan, title, onUpdate]);
 
-    const addFood = (foodItem) => {
-        console.log("adding food Item", foodItem)
-        const updatedFoods = [...foods, foodItem];
-        setFoods(updatedFoods);
-        dispatch(updateMealPlan(index, { ...mealPlan, foods: updatedFoods, title }));
-    };
+  const deleteFood = useCallback((foodIndex) => {
+    const updatedFoods = foods.filter((_, i) => i !== foodIndex);
+    setFoods(updatedFoods);
+    onUpdate(index, { ...initialMealPlan, foods: updatedFoods, title });
+  }, [foods, index, initialMealPlan, title, onUpdate]);
 
-    const deleteFood = (foodIndex) => {
-        const updatedFoods = foods.filter((_, i) => i !== foodIndex);
-        setFoods(updatedFoods);
-        dispatch(updateMealPlan(index, { ...mealPlan, foods: updatedFoods, title }));
-    };
+  const handleTitleChange = useCallback((e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
 
-    const handleTitleChange = (e) => {
-        const newTitle = e.target.value;
-        setTitle(newTitle);
+    if (newTitle.trim()) {
+      setTitleError('');
+    } else {
+      setTitleError('Meal Plan title cannot be empty.');
+    }
 
-        if (newTitle.trim()) {
-            setTitleError('');
-        }
-    };
+    onUpdate(index, { ...initialMealPlan, foods, title: newTitle });
+  }, [foods, index, initialMealPlan, onUpdate]);
 
-    const handleTitleBlur = () => {
-        if (!title.trim()) {
-            setTitleError('Meal Plan title cannot be empty.');
-        }
-    };
+  const deleteMealPlanHandler = useCallback(() => {
+    onDelete(index);
+  }, [onDelete, index]);
 
-    const deleteMealPlanHandler = () => {
-        dispatch(deleteMealPlan(index));
-    };
-
-    return (
-        <Box sx={{ mb: 3 }}>
-            <TextField
-                fullWidth
-                variant="standard"
-                label="Meal Plan Title"
-                value={title}
-                onChange={handleTitleChange}
-                onBlur={handleTitleBlur}
-                sx={{ mb: 2 }}
-                error={Boolean(titleError)}
-                helperText={titleError}
-            />
-            <MealPlanTable mealPlan={foods} onDelete={deleteFood} />
-            <AddFood onAdd={addFood} />
-            <Button color="error" variant="contained" onClick={deleteMealPlanHandler} sx={{ mt: 2 }}>
-                Delete Meal Plan
-            </Button>
-        </Box>
-    );
+  return (
+    <Box sx={{ mb: 3 }}>
+      <TextField
+        fullWidth
+        variant="standard"
+        label="Meal Plan Title"
+        value={title}
+        onChange={handleTitleChange}
+        sx={{ mb: 2 }}
+        error={Boolean(titleError)}
+        helperText={titleError}
+      />
+      <MealPlanTable mealPlan={foods} onDelete={deleteFood} />
+      <AddFood onAdd={addFood} />
+      <Button color="error" variant="contained" onClick={deleteMealPlanHandler} sx={{ mt: 2 }}>
+        Delete Meal Plan
+      </Button>
+    </Box>
+  );
 }
