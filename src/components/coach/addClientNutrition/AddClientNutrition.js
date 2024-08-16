@@ -3,15 +3,17 @@ import { Box, Button, Divider, Paper, TextField, Typography } from '@mui/materia
 import MealPlan from './MealPlan';
 import { useSelector, useDispatch } from 'react-redux';
 import { startGetNutritionPlan } from '../../../services/redux/action/nutritionPlan-action';
+import axios from '../../../services/api/axios';
 
 export default function AddClientNutrition({ clientId }) {
   const dispatch = useDispatch();
   const [mealPlans, setMealPlans] = useState([]);
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const token = localStorage.getItem('token')
 
   const nutritionPlan = useSelector((state) => state.nutritionPlan.data);
-console.log("nutritionPlan", nutritionPlan)
+  console.log("nutritionPlan", nutritionPlan)
   useEffect(() => {
     if (clientId) {
       dispatch(startGetNutritionPlan(clientId, localStorage.getItem('token')));
@@ -50,6 +52,17 @@ console.log("nutritionPlan", nutritionPlan)
     };
 
     console.log('Nutrition Plan Before Axios', data);
+
+    // try {
+    //   const response = await axios.post(`/nutrition-plan/${clientId}`, data, {
+    //     headers: {
+    //       Authorization: token
+    //     }
+    //   })
+    //   console.log('Nutrition Plan After Axios', response.data)
+    // } catch (err) {
+    //   console.log(err)
+    // }
     // Submit the data to your backend...
   };
 
@@ -94,3 +107,4 @@ console.log("nutritionPlan", nutritionPlan)
     </Box>
   );
 }
+

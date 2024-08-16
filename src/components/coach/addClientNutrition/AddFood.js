@@ -51,8 +51,7 @@ export default function AddFood({ onAdd }) {
             console.log('Selected food item:', foodItem)
             setSelectedFood(foodItem)
             setValues({
-                foodId: foodItem._id || '',
-                foodName: foodItem.foodName || '',
+                foodId: foodItem._id,  // || '',
                 quantity: 0,
                 unit: foodItem.unit || '',
                 calories: foodItem.calories || 0,
@@ -99,7 +98,7 @@ export default function AddFood({ onAdd }) {
                             id="foodName"
                             name="foodName"
                             label="Food Item"
-                            value={values.foodName}
+                            value={foodItem.foodName}
                             onChange={handleChange}
                             onClick={handleFoodModalOpen}
                             error={touched.foodName && Boolean(errors.foodName)}
