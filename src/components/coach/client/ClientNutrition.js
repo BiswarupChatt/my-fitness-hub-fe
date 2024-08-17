@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import AddMealPlan from "../CreateMealPlan/CreateMealPlan";
+import AddMealPlan from "../MealPlan/CreateMealPlan";
 import { useParams } from "react-router-dom";
 
 export default function ClientNutrition() {
