@@ -16,7 +16,7 @@ export default function MealPlanTable({ mealPlan, onDelete }) {
     );
 
     return (
-        <Box sx={{ overflowX: 'auto', maxHeight: '350px', overflowY: 'auto', border: '1px solid grey' }}>
+        <Box sx={{ overflowX: 'auto', maxHeight: '350px', overflowY: 'auto', border: '1px solid grey', borderRadius: '5px' }}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>

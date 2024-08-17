@@ -1,53 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { Button, Grid, TextField, InputAdornment } from '@mui/material';
-import SelectFoodItemModal from './SelectFoodItem';
+import React, { useState, useEffect } from 'react'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
+import { Button, Grid, TextField, InputAdornment } from '@mui/material'
+import SelectFoodItemModal from './SelectFoodItem'
 
 const validationSchema = yup.object({
     foodName: yup.string().required('Required'),
     quantity: yup.number().required('Required').min(1),
     note: yup.string(),
-});
+})
 
 const initialValues = {
     foodId: '',
     foodName: '',
     quantity: '',
-    unit: '', // Include unit here
+    unit: '', 
     calories: 0,
     fat: 0,
     protein: 0,
     carbohydrate: 0,
     note: '',
-};
+}
 
 export default function AddFood({ onAdd }) {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedFood, setSelectedFood] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false)
+    const [selectedFood, setSelectedFood] = useState(null)
 
     const handleFoodModalOpen = () => {
-        setModalOpen(true);
-    };
+        setModalOpen(true)
+    }
 
     const handleFoodModalClose = () => {
-        setModalOpen(false);
-    };
+        setModalOpen(false)
+    }
 
     const handleFoodItemSelect = (foodItem) => {
-        setSelectedFood(foodItem);
-    };
+        setSelectedFood(foodItem)
+    }
 
     const { values, handleChange, handleSubmit, touched, errors, setValues } = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log('Form submitted with values:', values);
-            onAdd(values);
-            setSelectedFood(null);
+            console.log('Form submitted with values:', values)
+            onAdd(values)
+            setSelectedFood(null)
             setValues(initialValues)
         },
-    });
+    })
 
     useEffect(() => {
         if (selectedFood) {
@@ -61,14 +61,14 @@ export default function AddFood({ onAdd }) {
                 protein: selectedFood.protein || 0,
                 carbohydrate: selectedFood.carbohydrate || 0,
                 note: '',
-            });
+            })
         }
-    }, [selectedFood, setValues]);
+    }, [selectedFood, setValues])
 
     const handleQuantityChange = (e) => {
-        const newQuantity = parseFloat(e.target.value) || 0; // Default to 0 if NaN
+        const newQuantity = parseFloat(e.target.value) || 0 
         if (selectedFood && newQuantity > 0) {
-            const factor = newQuantity / selectedFood.quantity;
+            const factor = newQuantity / selectedFood.quantity
             setValues({
                 ...values,
                 quantity: newQuantity,
@@ -76,11 +76,11 @@ export default function AddFood({ onAdd }) {
                 fat: selectedFood.fat * factor,
                 protein: selectedFood.protein * factor,
                 carbohydrate: selectedFood.carbohydrate * factor,
-            });
+            })
         } else {
-            setValues({ ...values, quantity: newQuantity });
+            setValues({ ...values, quantity: newQuantity })
         }
-    };
+    }
 
     return (
         <Grid container justifyContent="flex-end">
@@ -90,7 +90,7 @@ export default function AddFood({ onAdd }) {
                 xs={12}
                 md={6}
                 onSubmit={handleSubmit}
-                sx={{ mt: 3, p: 2, border: '1px solid grey' }}
+                sx={{ mt: 3, p: 2, border: '1px solid grey', borderRadius:'5px' }}
             >
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -157,5 +157,5 @@ export default function AddFood({ onAdd }) {
                 onFoodItemSelect={handleFoodItemSelect} // Pass the handler here
             />
         </Grid>
-    );
+    )
 }
