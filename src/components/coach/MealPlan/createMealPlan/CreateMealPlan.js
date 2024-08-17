@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Box, Button, TextField } from '@mui/material'
 import MealPlanTable from './MealPlanTable'
 import AddFood from './AddFood'
-import axios from '../../../services/api/axios'
-import { updateToast, loadingToast } from '../../../utils/toastify'
+import axios from '../../../../services/api/axios'
+import { updateToast, loadingToast } from '../../../../utils/toastify'
 
 
-export default function AddMealPlan({ index, initialMealPlan, onUpdate, clientId }) {
+export default function CreateMealPlan({ index, initialMealPlan, onUpdate, clientId }) {
     const [foods, setFoods] = useState([])
     const [title, setTitle] = useState('')
     const [additionalNotes, setAdditionalNotes] = useState('')

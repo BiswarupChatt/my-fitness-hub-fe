@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import AddMealPlan from "../MealPlan/CreateMealPlan";
+import CreateMealPlan from "../MealPlan/createMealPlan/CreateMealPlan";
+import GetMealPlan from '../MealPlan/getMealPlan/GetMealPlan';
 import { useParams } from "react-router-dom";
 
 export default function ClientNutrition() {
@@ -17,6 +18,7 @@ export default function ClientNutrition() {
 
     return (
         <>
+            <GetMealPlan />
             <Accordion
                 expanded={expanded}
                 onChange={handleAccordionChange}
@@ -40,7 +42,7 @@ export default function ClientNutrition() {
                 </AccordionSummary>
 
                 <AccordionDetails sx={{ backgroundColor: '#e3f2fd', padding: '16px', borderRadius: '0 0 8px 8px', }}>
-                    <AddMealPlan clientId={clientId} />
+                    <CreateMealPlan clientId={clientId} />
                 </AccordionDetails>
             </Accordion>
         </>

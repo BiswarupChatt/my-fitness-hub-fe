@@ -6,6 +6,7 @@ import { Container, Box, Tab, Paper, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { startGetClient } from '../../services/redux/action/client-action';
+import { startGetMealPlan } from '../../services/redux/action/mealPlan-action';
 import { Helmet } from 'react-helmet-async';
 
 import ClientProfile from '../../components/coach/client/ClientProfile';
@@ -24,6 +25,7 @@ export default function SingleCLient() {
     useEffect(() => {
         if (clientId && token) {
             dispatch(startGetClient(clientId, token))
+            dispatch(startGetMealPlan(clientId, token))
         }
     }, [clientId, token, dispatch])
 
