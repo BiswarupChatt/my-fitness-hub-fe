@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import FoodItemTable from '../table/FoodItemTable';
 import { Box, Modal, Tooltip } from '@mui/material';
 
-export default function SelectFoodItemModal({ open, handleFoodModalClose }) {
+export default function SelectFoodItemModal({ open, handleFoodModalClose, onFoodItemSelect }) {
     const modalStyle = {
         position: 'absolute',
         top: '50%',
@@ -28,7 +28,8 @@ export default function SelectFoodItemModal({ open, handleFoodModalClose }) {
             aria-describedby="modal-modal-description"
         >
             <Box sx={modalStyle} position="relative">
-                <FoodItemTable onClose={handleFoodModalClose} />
+                {/* Pass the onFoodItemSelect function to the FoodItemTable */}
+                <FoodItemTable onClose={handleFoodModalClose} onFoodItemSelect={onFoodItemSelect} />
                 <Tooltip
                     onClick={handleFoodModalClose}
                     sx={{ position: 'absolute', top: 20, right: 20, cursor: 'pointer' }}

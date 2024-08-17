@@ -10,7 +10,7 @@ import { useAuth } from '../../../services/context/AuthContext'
 import { useDispatch } from 'react-redux'
 import { setFoodItem } from '../../../services/redux/action/foodItem-action'
 
-export default function FoodItemTable({ onClose }) {
+export default function FoodItemTable({ onClose, onFoodItemSelect }) {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
     const dispatch = useDispatch()
@@ -32,7 +32,6 @@ export default function FoodItemTable({ onClose }) {
     const [foodItemToEdit, setFoodItemToEdit] = useState(null)
     const [foodItemToDelete, setFoodItemToDelete] = useState(null)
     const [selectFoodItem, setSelectFoodItem] = useState(null)
-
 
     const handleMenuToggle = (event, ele) => {
         setAnchorEl(event.currentTarget)
@@ -96,6 +95,7 @@ export default function FoodItemTable({ onClose }) {
 
     const handleSelectFoodItem = (ele) => {
         dispatch(setFoodItem(ele))
+        onFoodItemSelect(ele) // Notify the parent component about the selected food item
         if (typeof onClose === 'function') {
             onClose();
         }
@@ -216,7 +216,7 @@ export default function FoodItemTable({ onClose }) {
                                                 },
                                             }}
                                             onClick={() => {
-                                                handleSelectFoodItem(ele)
+                                                handleSelectFoodItem(ele) // Select the food item on row click
                                             }}
                                         >
                                             <TableCell>{ele.foodName}</TableCell>
