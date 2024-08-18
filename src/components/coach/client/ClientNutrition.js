@@ -32,7 +32,7 @@ export default function ClientNutrition({ clientId, mealPlan }) {
                 }}
             >
                 <AccordionSummary
-                    expandIcon={expanded ? (<RemoveCircleIcon sx={{ color: '#1976d2' }} />) : (<AddCircleIcon sx={{ color: '#1976d2' }} />)}
+                    expandIcon={expanded ? (<RemoveCircleIcon sx={{ color: '#ffffff' }} />) : (<AddCircleIcon sx={{ color: '#ffffff' }} />)}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     sx={{ 

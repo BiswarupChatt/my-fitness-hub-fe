@@ -1,12 +1,12 @@
-import React from 'react';
-import { Box, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography } from '@mui/material';
+import React from 'react'
+import { Box, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 
 export default function GetMealPlan({ mealPlan }) {
 
-    console.log('mealPlan in get meal plan', mealPlan);
+    console.log('mealPlan in get meal plan', mealPlan)
 
     if (!mealPlan || mealPlan.length === 0) {
-        return <Typography variant="h6">No meal plans available</Typography>;
+        return <Typography variant="h6">No meal plans available</Typography>
     }
 
     return (
@@ -15,17 +15,17 @@ export default function GetMealPlan({ mealPlan }) {
 
                 const totals = meal.foods.reduce(
                     (acc, food) => {
-                        acc.calories += food.calories || 0;
-                        acc.fat += food.fat || 0;
-                        acc.protein += food.protein || 0;
-                        acc.carbohydrate += food.carbohydrate || 0;
-                        return acc;
+                        acc.calories += food.calories || 0
+                        acc.fat += food.fat || 0
+                        acc.protein += food.protein || 0
+                        acc.carbohydrate += food.carbohydrate || 0
+                        return acc
                     },
                     { calories: 0, fat: 0, protein: 0, carbohydrate: 0 }
-                );
+                )
 
                 return (
-                    <Box key={index} sx={{ maxHeight: '350px', overflow: 'auto', border: '1px solid grey', borderRadius: '5px', my: '10px' }}>
+                    <Box key={index} sx={{ maxHeight: '400px', overflow: 'auto', border: '1px solid grey', borderRadius: '5px', my: '10px' }}>
 
                         {/* Sticky Title */}
                         <Box sx={{ position: 'sticky', top: 0, zIndex: 2, backgroundColor: '#fff', padding: '10px', borderBottom: '2px solid rgba(224, 224, 224, 1)' }}>
@@ -77,10 +77,26 @@ export default function GetMealPlan({ mealPlan }) {
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                                                Total:
-                                            </Typography>
                                             <Box sx={{ display: 'flex', gap: '20px', textAlign: 'right' }}>
+
+                                                {meal.additionalNotes ? (
+                                                    <>
+                                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                            Additional Notes:
+                                                        </Typography>
+                                                        <Typography component="span" variant="body2">
+                                                            {meal.additionalNotes}
+                                                        </Typography>
+                                                    </>
+                                                ) : (
+                                                    null
+                                                )}
+
+                                            </Box>
+                                            <Box sx={{ display: 'flex', gap: '20px', textAlign: 'right' }}>
+                                                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                    Total:
+                                                </Typography>
                                                 <Typography component="span" variant="body2">
                                                     <strong>{totals.calories}</strong> kCal
                                                 </Typography>
@@ -101,8 +117,8 @@ export default function GetMealPlan({ mealPlan }) {
 
                         </Table>
                     </Box>
-                );
+                )
             })}
         </>
-    );
+    )
 }
