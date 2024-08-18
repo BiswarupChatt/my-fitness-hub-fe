@@ -94,9 +94,9 @@ export default function FoodItemTable({ onClose, onFoodItemSelect }) {
     }
 
     const handleSelectFoodItem = (ele) => {
-        dispatch(setFoodItem(ele))
-        onFoodItemSelect(ele) // Notify the parent component about the selected food item
         if (typeof onClose === 'function') {
+            dispatch(setFoodItem(ele))
+            onFoodItemSelect(ele)
             onClose();
         }
     }
@@ -212,11 +212,11 @@ export default function FoodItemTable({ onClose, onFoodItemSelect }) {
                                                 backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
                                                 transition: "background-color 0.3s ease-in-out",
                                                 "&:hover": {
-                                                    backgroundColor: "#e0f7fa", 
+                                                    backgroundColor: "#e0f7fa",
                                                 },
                                             }}
                                             onClick={() => {
-                                                handleSelectFoodItem(ele) // Select the food item on row click
+                                                handleSelectFoodItem(ele) 
                                             }}
                                         >
                                             <TableCell>{ele.foodName}</TableCell>
@@ -271,7 +271,7 @@ export default function FoodItemTable({ onClose, onFoodItemSelect }) {
                     </>
                 )}
             </Paper>
-
+ 
             {openEditModal && foodItemToEdit && (
                 <EditFoodItem
                     foodItem={foodItemToEdit}
