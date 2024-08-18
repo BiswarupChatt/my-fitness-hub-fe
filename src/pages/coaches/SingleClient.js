@@ -32,13 +32,14 @@ export default function SingleCLient() {
     const client = useSelector((state) => {
         return state.client.data
     })
+    const mealPlan = useSelector((state) => {
+        return state.mealPlan.data
+    })
     const error = useSelector((state) => {
         return state.client.error
     })
 
-    // console.log('userId', userId)
-    // console.log('client', client)
-    // console.log('error', error)
+    // console.log('mealPlan', mealPlan)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -71,7 +72,7 @@ export default function SingleCLient() {
                                 </Box>
                                 <TabPanel value="Profile"><ClientProfile client={client} /></TabPanel>
                                 <TabPanel value="Workout"><ClientWorkout /></TabPanel>
-                                <TabPanel value="Nutrition"><ClientNutrition clientId={clientId} /></TabPanel>
+                                <TabPanel value="Nutrition"><ClientNutrition clientId={clientId} mealPlan={mealPlan} /></TabPanel>
                                 <TabPanel value="Progress"><ClientProgress /></TabPanel>
                                 <TabPanel value="Program"><ClientProgram /></TabPanel>
                             </TabContext>

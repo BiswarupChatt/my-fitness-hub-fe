@@ -12,7 +12,7 @@ export const startGetMealPlan = (clientId, token) => {
                 }
             })
             const result = response.data
-            console.log("startGetMealPlan", result)
+            // console.log("startGetMealPlan", result)
             dispatch(setMealPlan(result))
         } catch (err) {
             console.log(err)
