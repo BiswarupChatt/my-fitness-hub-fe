@@ -4,6 +4,8 @@ import MealPlanTable from './MealPlanTable'
 import AddFood from './AddFood'
 import axios from '../../../../services/api/axios'
 import { updateToast, loadingToast } from '../../../../utils/toastify'
+import { useDispatch } from 'react-redux'
+import { startGetMealPlan } from '../../../../services/redux/action/mealPlan-action'
 
 
 export default function CreateMealPlan({ index, initialMealPlan, onUpdate, clientId }) {
@@ -13,6 +15,7 @@ export default function CreateMealPlan({ index, initialMealPlan, onUpdate, clien
     const [titleError, setTitleError] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    const dispatch = useDispatch()
 
 
     const addFood = (foodItem) => {
@@ -67,7 +70,7 @@ export default function CreateMealPlan({ index, initialMealPlan, onUpdate, clien
 
             console.log("Meal Plan After Axios", response.data)
             updateToast('Meal Plan Added Successfully', 'add-meal-plan', 'success')
-
+            dispatch(startGetMealPlan(clientId, token))
             setFoods([])
             setTitle('')
             setAdditionalNotes('')

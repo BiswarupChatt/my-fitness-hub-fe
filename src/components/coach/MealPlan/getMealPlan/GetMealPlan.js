@@ -3,7 +3,7 @@ import { Box, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typ
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteMealPlan from '../deleteMealPlan/DeleteMealPlan';
 
-export default function GetMealPlan({ mealPlan }) {
+export default function GetMealPlan({ mealPlan, clientId }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedMeal, setSelectedMeal] = useState(null);
@@ -53,10 +53,10 @@ export default function GetMealPlan({ mealPlan }) {
                 );
 
                 return (
-                    <Box key={index} sx={{ maxHeight: '400px', overflow: 'auto', border: '1px solid grey', borderRadius: '5px', my: '10px' }}>
+                    <Box key={index} sx={{ maxHeight: '300px', overflow: 'auto', border: '1px solid grey', borderRadius: '5px', my: '10px' }}>
                         <Table stickyHeader>
                             <TableHead>
-                                <TableRow>
+                                <TableRow >
                                     <TableCell>
                                         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{meal.title}</Typography>
                                     </TableCell>
@@ -81,7 +81,7 @@ export default function GetMealPlan({ mealPlan }) {
                                     <MenuItem onClick={() => handleDelete(meal)}>Delete</MenuItem>
                                 </Menu>
 
-                                <TableRow>
+                                <TableRow sx={{ zIndex: 2, position: 'relative' }}>
                                     <TableCell sx={{ backgroundColor: '#f5f5f5', top: '48px', position: 'sticky', zIndex: 1 }}>Food Item</TableCell>
                                     <TableCell sx={{ backgroundColor: '#f5f5f5', top: '48px', position: 'sticky', zIndex: 1 }}>Calories</TableCell>
                                     <TableCell sx={{ backgroundColor: '#f5f5f5', top: '48px', position: 'sticky', zIndex: 1 }}>Fat</TableCell>
@@ -168,6 +168,7 @@ export default function GetMealPlan({ mealPlan }) {
                     mealPlan={selectedMeal}
                     open={openDeleteModal}
                     handleClose={handleDeleteModalClose}
+                    clientId={clientId}
                 />
             )}
         </>

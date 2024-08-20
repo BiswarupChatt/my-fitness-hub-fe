@@ -17,7 +17,7 @@ export default function ClientNutrition({ clientId, mealPlan }) {
 
     return (
         <>
-            <GetMealPlan mealPlan={mealPlan} />
+            <GetMealPlan mealPlan={mealPlan} clientId={clientId} />
 
             <Accordion
                 expanded={expanded}
@@ -35,10 +35,10 @@ export default function ClientNutrition({ clientId, mealPlan }) {
                     expandIcon={expanded ? (<RemoveCircleIcon sx={{ color: '#ffffff' }} />) : (<AddCircleIcon sx={{ color: '#ffffff' }} />)}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    sx={{ 
-                        backgroundColor: '#1976d2', 
-                        color: '#fff', 
-                        '&:hover': { backgroundColor: '#155a9d' }, 
+                    sx={{
+                        backgroundColor: '#1976d2',
+                        color: '#fff',
+                        '&:hover': { backgroundColor: '#155a9d' },
                         borderRadius: '8px',
                         transition: 'background-color 0.3s',
                         padding: '0 16px',
