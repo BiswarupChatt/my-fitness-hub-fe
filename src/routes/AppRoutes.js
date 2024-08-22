@@ -70,22 +70,30 @@ export default function AppRoute() {
             } />
             <Route path='/client/:clientId' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
-                    <SingleCLient />
+                    <PaymentRoute>
+                        <SingleCLient />
+                    </PaymentRoute>
                 </PrivateRoute>
             } />
             <Route path='/subscription' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
-                    <Subscription />
+                    <PaymentRoute>
+                        <Subscription />
+                    </PaymentRoute>
                 </PrivateRoute>
             } />
             <Route path='/food-item' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
-                    <FoodItem />
+                    <PaymentRoute>
+                        <FoodItem />
+                    </PaymentRoute>
                 </PrivateRoute>
             } />
             <Route path='/workout-item' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
+                    <PaymentRoute>
                     <WorkoutItem />
+                    </PaymentRoute>
                 </PrivateRoute>
             } />
 
