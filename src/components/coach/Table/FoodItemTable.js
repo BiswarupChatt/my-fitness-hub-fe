@@ -10,7 +10,7 @@ import { useAuth } from '../../../services/context/AuthContext'
 import { useDispatch } from 'react-redux'
 import { setFoodItem } from '../../../services/redux/action/foodItem-action'
 
-export default function FoodItemTable({ onClose }) {
+export default function FoodItemTable({ onClose, onFoodItemSelect }) {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
     const dispatch = useDispatch()
@@ -32,7 +32,6 @@ export default function FoodItemTable({ onClose }) {
     const [foodItemToEdit, setFoodItemToEdit] = useState(null)
     const [foodItemToDelete, setFoodItemToDelete] = useState(null)
     const [selectFoodItem, setSelectFoodItem] = useState(null)
-
 
     const handleMenuToggle = (event, ele) => {
         setAnchorEl(event.currentTarget)
@@ -95,8 +94,9 @@ export default function FoodItemTable({ onClose }) {
     }
 
     const handleSelectFoodItem = (ele) => {
-        dispatch(setFoodItem(ele))
         if (typeof onClose === 'function') {
+            dispatch(setFoodItem(ele))
+            onFoodItemSelect(ele)
             onClose();
         }
     }
@@ -212,11 +212,11 @@ export default function FoodItemTable({ onClose }) {
                                                 backgroundColor: index % 2 === 0 ? "#f7f7f7" : "#ffffff",
                                                 transition: "background-color 0.3s ease-in-out",
                                                 "&:hover": {
-                                                    backgroundColor: "#e0f7fa", 
+                                                    backgroundColor: "#e0f7fa",
                                                 },
                                             }}
                                             onClick={() => {
-                                                handleSelectFoodItem(ele)
+                                                handleSelectFoodItem(ele) 
                                             }}
                                         >
                                             <TableCell>{ele.foodName}</TableCell>
@@ -271,7 +271,7 @@ export default function FoodItemTable({ onClose }) {
                     </>
                 )}
             </Paper>
-
+ 
             {openEditModal && foodItemToEdit && (
                 <EditFoodItem
                     foodItem={foodItemToEdit}

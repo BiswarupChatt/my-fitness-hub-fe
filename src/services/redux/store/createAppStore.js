@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import clientReducer from "../reducers/client-reducer"
 import foodItemReducer from "../reducers/foodItem-reducer"
-import nutritionPlanReducer from "../reducers/nutritionPlan-reducer";
+import nutritionPlanReducer from "../reducers/mealPlan-reducer";
 
 const createAppStore = () => {
     return configureStore({
         reducer: {
             client: clientReducer,
             foodItem: foodItemReducer,
-            nutritionPlan: nutritionPlanReducer
+            mealPlan: nutritionPlanReducer
         }
     })
 }

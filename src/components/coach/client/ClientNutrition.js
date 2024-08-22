@@ -1,28 +1,58 @@
-import AddClientNutrition from "../addClientNutrition/AddClientNutrition"
-import { useEffect } from "react";
-// import { useParams } from "react-router-dom"
-import axios from "../../../services/api/axios";
-import { useDispatch, useSelector } from "react-redux";
-import { startGetNutritionPlan } from "../../../services/redux/action/nutritionPlan-action";
+import { useState } from 'react';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Box } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CreateMealPlan from "../MealPlan/createMealPlan/CreateMealPlan";
+import GetMealPlan from '../MealPlan/getMealPlan/GetMealPlan';
 
-export default function ClientNutrition({ clientId }) {
+export default function ClientNutrition({ clientId, mealPlan }) {
 
-    const token = localStorage.getItem('token')
-    const dispatch = useDispatch()
+    const [expanded, setExpanded] = useState(false);
 
-    console.log("client id in Client Nutrition", clientId)
+    const handleAccordionChange = () => {
+        setExpanded(!expanded);
+    };
 
-    useEffect(() => {
-        if (clientId && token) {
-            dispatch(startGetNutritionPlan(clientId, token))
-        }
-    }, [clientId, token])
-
-    console.log('Client ID in ClientNutrition:', clientId)
+    console.log('Client ID in ClientNutrition:', clientId);
 
     return (
         <>
-            <AddClientNutrition clientId={clientId} />
+            <GetMealPlan mealPlan={mealPlan} clientId={clientId} />
+
+            <Accordion
+                expanded={expanded}
+                onChange={handleAccordionChange}
+                sx={{
+                    backgroundColor: '#fafafa',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    mb: 2,
+                    '&:before': { display: 'none' },
+                }}
+            >
+                <AccordionSummary
+                    expandIcon={expanded ? (<RemoveCircleIcon sx={{ color: '#ffffff' }} />) : (<AddCircleIcon sx={{ color: '#ffffff' }} />)}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    sx={{
+                        backgroundColor: '#1976d2',
+                        color: '#fff',
+                        '&:hover': { backgroundColor: '#155a9d' },
+                        borderRadius: '8px',
+                        transition: 'background-color 0.3s',
+                        padding: '0 16px',
+                    }}
+                >
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
+                        Add Meal Plan
+                    </Typography>
+                </AccordionSummary>
+
+                <AccordionDetails sx={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '0 0 8px 8px' }}>
+                    <CreateMealPlan clientId={clientId} />
+                </AccordionDetails>
+            </Accordion>
         </>
-    )
+    );
 }
