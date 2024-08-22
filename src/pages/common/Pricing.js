@@ -25,7 +25,7 @@ const subscriptions = [
   },
   {
     title: 'Yearly Subscription',
-    subTitle: 'Long Time Commitment',
+    subTitle: 'Best Value',
     price: (599 * 12 * 0.85).toFixed(2),
     discount: '15% OFF',
     features: [
@@ -49,11 +49,11 @@ export default function Pricing() {
 
   const handleButtonClick = (price, title) => {
 
-    if (user && user.isLoggedIn) {
-      console.log(`The selected subscription is $${price} ${title}`);
-    } else {
+    if (!user && !user.isLoggedIn) {
       navigate('/login', { state: { from: location }, replace: true })
     }
+    console.log(`The selected subscription is $${price} ${title}`);
+
 
   };
 
