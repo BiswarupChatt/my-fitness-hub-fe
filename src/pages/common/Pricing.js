@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
+import { CssBaseline, Box, Grid, Typography, Container, Button, Card, CardContent, CardActions } from '@mui/material';
+import Footer from '../../components/Footer'
 
 const defaultTheme = createTheme();
 
@@ -44,6 +37,11 @@ const subscriptions = [
 ];
 
 export default function Pricing() {
+
+  const handleButtonClick = (price, title) => {
+    console.log(`The selected subscription is $${price} ${title}`);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -129,7 +127,7 @@ export default function Pricing() {
                   </Typography>
                 </Box>
                 <CardActions>
-                  <Button fullWidth variant="contained" color="primary">
+                  <Button onClick={() => handleButtonClick(subscription.price, subscription.title)} fullWidth variant="contained" color="primary">
                     {subscription.buttonText}
                   </Button>
                 </CardActions>
@@ -140,19 +138,7 @@ export default function Pricing() {
       </Container>
 
       {/* Footer */}
-      <Container
-        maxWidth="md"
-        component="footer"
-        sx={{
-          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-          mt: 8,
-          py: [3, 6],
-        }}
-      >
-        <Typography variant="body2" color="text.secondary" align="center">
-          © {new Date().getFullYear()} Your Company. All rights reserved.
-        </Typography>
-      </Container>
+      <Footer />
     </ThemeProvider>
   );
 }
