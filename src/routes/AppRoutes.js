@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 
 import PrivateRoute from './PrivateRoute'
 import RedirectToMain from './RedirectToMain'
+import PaymentRoute from './PaymentRoute'
+
 
 import Home from '../pages/common/Home'
 import Login from '../pages/common/Login'
@@ -61,7 +63,9 @@ export default function AppRoute() {
             {/* coach page */}
             <Route path='/client' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
-                    <Client />
+                    <PaymentRoute>
+                        <Client />
+                    </PaymentRoute>
                 </PrivateRoute>
             } />
             <Route path='/client/:clientId' element={
