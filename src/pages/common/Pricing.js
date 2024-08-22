@@ -49,8 +49,8 @@ export default function Pricing() {
 
   const handleButtonClick = (price, title) => {
 
-    if (!user && !user.isLoggedIn) {
-      navigate('/login', { state: { from: location }, replace: true })
+    if (!user || !user.isLoggedIn) {
+      navigate('/login', { state: { from: location }, replace: true });
     }
     console.log(`The selected subscription is $${price} ${title}`);
 
