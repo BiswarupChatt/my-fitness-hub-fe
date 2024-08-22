@@ -1,186 +1,136 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
+import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import StarIcon from '@mui/icons-material/StarBorder';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import GlobalStyles from '@mui/material/GlobalStyles';
-import Container from '@mui/material/Container';
+import CardActions from '@mui/material/CardActions';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const tiers = [
-  {
-    title: 'Free',
-    price: '0',
-    description: [
-      '10 users included',
-      '2 GB of storage',
-      'Help center access',
-      'Email support',
-    ],
-    buttonText: 'Sign up for free',
-    buttonVariant: 'outlined',
-  },
-  {
-    title: 'Pro',
-    subheader: 'Most popular',
-    price: '15',
-    description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-    ],
-    buttonText: 'Get started',
-    buttonVariant: 'contained',
-  },
-  {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
-    ],
-    buttonText: 'Contact us',
-    buttonVariant: 'outlined',
-  },
-];
-
-const footers = [
-  {
-    title: 'Company',
-    description: ['Team', 'History', 'Contact us', 'Locations'],
-  },
-  {
-    title: 'Features',
-    description: [
-      'Cool stuff',
-      'Random feature',
-      'Team feature',
-      'Developer stuff',
-      'Another one',
-    ],
-  },
-  {
-    title: 'Resources',
-    description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
-  },
-  {
-    title: 'Legal',
-    description: ['Privacy policy', 'Terms of use'],
-  },
-];
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
+
+const subscriptions = [
+  {
+    title: 'Monthly Subscription',
+    price: 599,
+    features: [
+      'Full Access to Features',
+      'Priority Support',
+      'Cancel Anytime',
+    ],
+    buttonText: 'Choose Monthly',
+    hoverLabel: 'Normal',
+    borderColor: 'blue',
+    popupMessage: 'This is the standard option with no discounts.',
+  },
+  {
+    title: 'Yearly Subscription',
+    price: Math.round(599 * 12 * 0.9),
+    discount: '10% OFF',
+    features: [
+      'Full Access to Features',
+      'Priority Support',
+      'Cancel Anytime',
+      'Save 10% with Yearly Billing',
+    ],
+    buttonText: 'Choose Yearly',
+    hoverLabel: 'Best Buy',
+    borderColor: 'red',
+    popupMessage: 'Get the best value with our yearly plan and save 10%.',
+  },
+];
 
 export default function Pricing() {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
       <CssBaseline />
 
-      
-      {/* Hero unit */}
-      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+      {/* Header */}
+      <Container maxWidth="md" component="main" sx={{ pt: 8, pb: 6 }}>
         <Typography
           component="h1"
-          variant="h2"
+          variant="h3"
           align="center"
           color="text.primary"
           gutterBottom
         >
-          Pricing
+          Subscription Plans
         </Typography>
-        <Typography variant="h5" align="center" color="text.secondary" component="p">
-          Quickly build an effective pricing table for your potential customers with
-          this layout. It&apos;s built with default MUI components with little
-          customization.
+        <Typography variant="h6" align="center" color="text.secondary" component="p">
+          Choose the plan that best suits your needs. Whether you need flexibility or long-term savings, we have a plan for you.
         </Typography>
       </Container>
-      {/* End hero unit */}
-      <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
-          {tiers.map((tier) => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              sm={tier.title === 'Enterprise' ? 12 : 6}
-              md={4}
-            >
-              <Card>
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  titleTypographyProps={{ align: 'center' }}
-                  action={tier.title === 'Pro' ? <StarIcon /> : null}
-                  subheaderTypographyProps={{
-                    align: 'center',
-                  }}
-                  sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? theme.palette.grey[200]
-                        : theme.palette.grey[700],
-                  }}
-                />
-                <CardContent>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'baseline',
-                      mb: 2,
-                    }}
-                  >
-                    <Typography component="h2" variant="h3" color="text.primary">
-                      ${tier.price}
+
+      {/* Subscription Options */}
+      <Container maxWidth="lg" component="main">
+        <Grid container spacing={5} justifyContent="center">
+          {subscriptions.map((subscription) => (
+            <Grid item key={subscription.title} xs={12} sm={6} md={5}>
+              <Card
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                  backgroundColor: '#f5f5f5',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    backgroundColor: '#e0e0e0',
+                    transition: 'transform 0.3s ease-in-out, background-color 0.3s ease-in-out',
+                  },
+                  position: 'relative',
+                }}
+              >
+                <CardContent sx={{ flexGrow: 1, position: 'relative' }}>
+                  <Typography variant="h5" align="center" gutterBottom>
+                    {subscription.title}
+                  </Typography>
+                  {subscription.discount && (
+                    <Typography variant="h6" align="center" color="error">
+                      {subscription.discount}
                     </Typography>
-                    <Typography variant="h6" color="text.secondary">
-                      /mo
-                    </Typography>
-                  </Box>
+                  )}
+                  <Typography variant="h4" align="center" color="text.primary" gutterBottom>
+                    ${subscription.price}
+                  </Typography>
                   <ul>
-                    {tier.description.map((line) => (
+                    {subscription.features.map((feature) => (
                       <Typography
                         component="li"
                         variant="subtitle1"
                         align="center"
-                        key={line}
+                        key={feature}
+                        sx={{ listStyleType: 'none', mb: 1 }}
                       >
-                        {line}
+                        {feature}
                       </Typography>
                     ))}
                   </ul>
                 </CardContent>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -10,
+                    right: -10,
+                    padding: '10px',
+                    borderRadius: '5px',
+                    backgroundColor: 'white',
+                    border: `2px solid ${subscription.borderColor}`,
+                    display: 'none',
+                    '&:hover': {
+                      display: 'block',
+                    },
+                  }}
+                >
+                  <Typography variant="subtitle2" color={subscription.borderColor}>
+                    {subscription.hoverLabel}
+                  </Typography>
+                </Box>
                 <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant}>
-                    {tier.buttonText}
+                  <Button fullWidth variant="contained" color="primary">
+                    {subscription.buttonText}
                   </Button>
                 </CardActions>
               </Card>
@@ -188,6 +138,7 @@ export default function Pricing() {
           ))}
         </Grid>
       </Container>
+
       {/* Footer */}
       <Container
         maxWidth="md"
@@ -198,27 +149,10 @@ export default function Pricing() {
           py: [3, 6],
         }}
       >
-        <Grid container spacing={4} justifyContent="space-evenly">
-          {footers.map((footer) => (
-            <Grid item xs={6} sm={3} key={footer.title}>
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                {footer.title}
-              </Typography>
-              <ul>
-                {footer.description.map((item) => (
-                  <li key={item}>
-                    <Link href="#" variant="subtitle1" color="text.secondary">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Grid>
-          ))}
-        </Grid>
-        <Copyright sx={{ mt: 5 }} />
+        <Typography variant="body2" color="text.secondary" align="center">
+          © {new Date().getFullYear()} Your Company. All rights reserved.
+        </Typography>
       </Container>
-      {/* End footer */}
     </ThemeProvider>
   );
 }
