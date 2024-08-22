@@ -45,7 +45,7 @@ export default function ClientNutrition({ clientId, mealPlan }) {
                     }}
                 >
                     <Typography variant="h6" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
-                        Add Meal Plan
+                        Add Meal Plan 2
                     </Typography>
                 </AccordionSummary>
 
