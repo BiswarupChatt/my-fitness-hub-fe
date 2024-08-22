@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { startGetClient } from '../../services/redux/action/client-action';
 import { startGetMealPlan } from '../../services/redux/action/mealPlan-action';
 import { Helmet } from 'react-helmet-async';
+import { useAuth } from '../../services/context/AuthContext';
 
 import ClientProfile from '../../components/coach/client/ClientProfile';
 import ClientWorkout from '../../components/coach/client/ClientWorkout';
@@ -21,11 +22,12 @@ export default function SingleCLient() {
     const { clientId } = useParams()
     const token = localStorage.getItem('token')
     const dispatch = useDispatch()
+    const { user } = useAuth()
 
     useEffect(() => {
         if (clientId && token) {
             dispatch(startGetClient(clientId, token))
-            dispatch(startGetMealPlan(clientId, token))
+            dispatch(startGetMealPlan(clientId, token, user))
         }
     }, [clientId, token, dispatch])
 

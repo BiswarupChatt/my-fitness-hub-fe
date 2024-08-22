@@ -4,13 +4,14 @@ import { errorToast, updateToast, loadingToast } from '../../../../utils/toastif
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { startGetMealPlan } from '../../../../services/redux/action/mealPlan-action'
+import { useAuth } from '../../../../services/context/AuthContext'
 
 export default function DeleteMealPlan({ open, handleClose, mealPlan, clientId }) {
 
     const token = localStorage.getItem('token')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const dispatch = useDispatch()
-
+    const { user } = useAuth()
     console.log('mealPlan', mealPlan._id)
 
     const confirmDelete = async () => {
@@ -25,7 +26,7 @@ export default function DeleteMealPlan({ open, handleClose, mealPlan, clientId }
             console.log('Deleted successfully')
             handleClose()
             updateToast('Meal plan Deleted Successfully', 'delete-meal-plan', 'success')
-            dispatch(startGetMealPlan(clientId, token))
+            dispatch(startGetMealPlan(clientId, token, user))
         } catch (err) {
             console.error('Error deleting food item:', err)
 
