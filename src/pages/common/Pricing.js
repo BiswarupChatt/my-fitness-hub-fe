@@ -5,7 +5,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Footer from '../../components/Footer';
 import { useAuth } from '../../services/context/AuthContext';
-import { useLocation, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { errorToast, successToast } from '../../utils/toastify';
+import axios from '../../services/api/axios';
 
 const defaultTheme = createTheme();
 
@@ -44,10 +46,20 @@ export default function Pricing() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-
+  const token = localStorage.getItem('token')
   console.log("user", user)
 
-  const handleButtonClick = async (price, title) => {
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script')
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+      script.onload = () => resolve(true)
+      script.onerror = () => resolve(false)
+      document.body.appendChild(script)
+    })
+  }
+
+  const handleButtonClick = async (price, title, color) => {
 
     if (!user || !user.isLoggedIn) {
       navigate('/login', { state: { from: location }, replace: true });
@@ -55,9 +67,83 @@ export default function Pricing() {
     console.log(`The selected subscription is $${price} ${title}`);
 
     try {
+      const loaded = await loadRazorpayScript()
 
+      if (!loaded) {
+        errorToast('Razorpay failed to load. Are you online?')
+      }
+
+      const response = await axios.post('/subscription/create-order', {
+        amount: price,
+        plan: title
+      }, {
+        headers: {
+          'Authorization': token
+        }
+      })
+      console.log("response", response.data)
+
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: response.data.order.amount,
+        currency: response.data.order.currency,
+        name: 'MyFitnessHub',
+        description: `Purchase of ${title} for MyFitnessHub`,
+        order_id: response.data.order.id,
+        handler: async (ele) => {
+          const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = ele
+
+          try {
+            const result = await axios.post('/subscription/verify-signature', {
+              order_id: razorpay_order_id,
+              payment_id: razorpay_payment_id,
+              signature: razorpay_signature,
+              coachId: response.data.order.notes.coachId || response.data.subscription.coach,
+              status: 'success',
+              plan: response.data.order.notes.plan
+            })
+
+            if (result.data.status === 'Payment Successful') {
+              successToast('Payment Successful')
+              window.location.reload()
+              setTimeout(() => {
+                navigate('/')
+              }, 1000);
+            }
+
+          } catch (err) {
+            console.log('An error occurred while verifying the payment signature:', err);
+            errorToast('An error occurred while processing your payment. Please try again.')
+          }
+        },
+        theme: {
+          color
+        },
+        modal: {
+          ondismiss: async () => {
+            try {
+              const result = await axios.post('/subscription/verify-signature', {
+                order_id: response.data.order.id,
+                payment_id: null,
+                signature: null,
+                subscriptionId: response.data.subscription._id,
+                coachId: response.data.order.notes.coachId || response.data.subscription.coach,
+                status: 'failed'
+              })
+              console.log('Payment failed status stored', result)
+              errorToast('Payment Dismissed')
+            } catch (err) {
+              console.log('Payment Dismissed', err)
+              errorToast('Payment Dismissed')
+            }
+          },
+          confirm_close: true
+        }
+      }
+      const rzp1 = new window.Razorpay(options)
+      rzp1.open()
     } catch (err) {
-
+      console.log("error in pricing", err)
     }
 
   };
@@ -143,7 +229,7 @@ export default function Pricing() {
                 >
                 </Box>
                 <CardActions>
-                  <Button onClick={() => handleButtonClick(subscription.price, subscription.title)} fullWidth variant="contained" sx={{
+                  <Button onClick={() => handleButtonClick(subscription.price, subscription.title, subscription.color)} fullWidth variant="contained" sx={{
                     backgroundColor: subscription.color,
                     '&:hover': {
                       backgroundColor: subscription.color,
