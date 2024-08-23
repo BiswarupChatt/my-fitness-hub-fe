@@ -47,13 +47,18 @@ export default function Pricing() {
 
   console.log("user", user)
 
-  const handleButtonClick = (price, title) => {
+  const handleButtonClick = async (price, title) => {
 
     if (!user || !user.isLoggedIn) {
       navigate('/login', { state: { from: location }, replace: true });
     }
     console.log(`The selected subscription is $${price} ${title}`);
 
+    try {
+
+    } catch (err) {
+
+    }
 
   };
 
