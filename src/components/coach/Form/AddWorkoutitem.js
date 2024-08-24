@@ -5,6 +5,7 @@ import { loadingToast, updateToast } from '../../../utils/toastify'
 import { TextField, Grid, Button, Typography, Modal, Box } from '@mui/material'
 import { addWorkoutItemValidation } from '../../../validations/addWorkoutItemValidation'
 
+
 const modalStyle = {
     position: 'absolute',
     top: '50%',
