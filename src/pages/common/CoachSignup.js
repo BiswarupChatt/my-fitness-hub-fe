@@ -40,10 +40,10 @@ export default function CoachSignup() {
     }
 
     const initialValues = {
-        firstName: "Biswarup",
-        lastName: "Chatterjee",
-        email: "chatterjeebiswarup61@email.com",
-        password: 'secret123'
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: ""
     }
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({

@@ -43,7 +43,7 @@ export default function ClientSignup() {
         firstName: "",
         lastName: "",
         email: "",
-        password: ''
+        password: ""
     }
 
     useEffect(() => {

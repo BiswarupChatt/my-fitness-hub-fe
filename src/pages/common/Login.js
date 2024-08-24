@@ -36,8 +36,8 @@ export default function Login() {
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const initialValues = {
-        email: 'chatterjeebiswarup61@gmail.com',
-        password: 'secret123'
+        email: '',
+        password: ''
     }
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
