@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet"
-import FoodItemTable from "../../components/coach/table/FoodItemTable"
+import FoodItemTable from "../../components/coach/Table/FoodItemTable"
 export default function FoodItem() {
     return (
         <>

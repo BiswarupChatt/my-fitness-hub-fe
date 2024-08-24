@@ -1,6 +1,6 @@
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import FoodItemTable from '../../table/FoodItemTable';
+import FoodItemTable from '../../Table/FoodItemTable';
 import { Box, Modal, Tooltip } from '@mui/material';
 
 export default function SelectFoodItemModal({ open, handleFoodModalClose, onFoodItemSelect }) {

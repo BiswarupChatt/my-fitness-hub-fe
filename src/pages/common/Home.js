@@ -7,7 +7,7 @@ import Hero from "../../components/home/Hero"
 import FAQ from "../../components/home/FAQ"
 import Highlights from "../../components/home/Highlights"
 import Footer from "../../components/Footer"
-import ClientTable from "../../components/coach/table/ClientTable"
+import ClientTable from "../../components/coach/Table/ClientTable"
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
