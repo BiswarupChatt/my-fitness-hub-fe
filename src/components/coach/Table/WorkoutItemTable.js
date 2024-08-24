@@ -11,6 +11,7 @@ import { useAuth } from '../../../services/context/AuthContext'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Paper, TextField, Container, Grid, Button, CircularProgress, FormControl, MenuItem, Select, InputLabel, Chip, Switch, FormControlLabel, IconButton, Typography, Menu, Box } from '@mui/material'
 
 
+
 export default function WorkoutItemTable() {
     const { user } = useAuth()
     const token = localStorage.getItem('token')
