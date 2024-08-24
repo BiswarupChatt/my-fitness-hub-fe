@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+
 import { useAuth } from "../../services/context/AuthContext"
 import { Helmet } from "react-helmet"
 import Features from "../../components/home/Features"
