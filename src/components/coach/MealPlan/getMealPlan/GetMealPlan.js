@@ -99,7 +99,7 @@ export default function GetMealPlan({ mealPlan, clientId }) {
                                     >
                                         <TableCell>
                                             <Typography variant="body1">{foodItem.foodName}</Typography>
-                                            <Typography variant="body2" color="textSecondary">{`${foodItem.quantity} g`}</Typography>
+                                            <Typography variant="body2" color="textSecondary">{`${foodItem.quantity} ${foodItem.unit}`}</Typography>
                                         </TableCell>
                                         <TableCell>{foodItem.calories}</TableCell>
                                         <TableCell>{foodItem.fat}</TableCell>
