@@ -14,6 +14,7 @@ import ForgetPassword from '../pages/common/ForgetPassword'
 import ResetPassword from '../pages/common/ResetPassword'
 import CoachSignup from '../pages/common/CoachSignup'
 import Terms from '../pages/common/Terms'
+import PrivacyPolicy from '../pages/common/PrivacyPolicy'
 import Pricing from '../pages/common/Pricing'
 import Forbidden from '../pages/common/Forbidden'
 import ClientSignUp from '../pages/common/ClientSignup'
@@ -56,6 +57,7 @@ export default function AppRoute() {
                 </RedirectToMain>
             } />
             <Route path='/terms' element={<Terms />} />
+            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
             <Route path='/pricing' element={<Pricing />} />
             <Route path='/forbidden' element={<Forbidden />} />
             <Route path='/*' element={<ErrorPage />} />
@@ -92,7 +94,7 @@ export default function AppRoute() {
             <Route path='/workout-item' element={
                 <PrivateRoute permittedRoles={['coach', 'admin']}>
                     <PaymentRoute>
-                    <WorkoutItem />
+                        <WorkoutItem />
                     </PaymentRoute>
                 </PrivateRoute>
             } />
