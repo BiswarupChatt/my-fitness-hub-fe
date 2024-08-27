@@ -60,7 +60,7 @@ export default function Features() {
                             color="text.secondary"
                             sx={{ mb: { xs: 2, sm: 4 } }}
                         >
-                            Here you can provide a brief overview of the key features of the product. For example, you could list the number of features, the types of features, add-ons, or the benefits of the features.
+                            Discover the key features of our platform. Manage your fitness journey with ease and efficiency.
                         </Typography>
                     </div>
                     <Grid container item gap={1} sx={{ display: { xs: 'auto', sm: 'none' } }}>
@@ -182,26 +182,6 @@ export default function Features() {
                                         >
                                             {description}
                                         </Typography>
-                                        <Link
-                                            color="primary"
-                                            variant="body2"
-                                            fontWeight="bold"
-                                            sx={{
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                '& > svg': { transition: '0.2s' },
-                                                '&:hover > svg': { transform: 'translateX(2px)' },
-                                            }}
-                                            onClick={(event) => {
-                                                event.stopPropagation();
-                                            }}
-                                        >
-                                            <span>Learn more</span>
-                                            <ChevronRightRoundedIcon
-                                                fontSize="small"
-                                                sx={{ mt: '1px', ml: '2px' }}
-                                            />
-                                        </Link>
                                     </Box>
                                 </Box>
                             </Card>

@@ -8,8 +8,84 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Link as LinkComponent } from 'react-router-dom';
-
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+const faqItems = [
+    {
+        question: "How can I get assistance if I encounter an issue with the app?",
+        answer: (
+            <>
+                If you experience any issues with the app, you can reach out to our dedicated support team via email at&nbsp;
+                <Link href="mailto:support@myfitenesshub.com">support@myfitenesshub.com</Link> or by calling our toll-free number. Our support team is available to assist you promptly and ensure your experience remains seamless.
+            </>
+        ),
+    },
+    {
+        question: "What is your return policy if I'm not satisfied with the app?",
+        answer: (
+            <>
+                We stand by the quality of our app. If you're not completely satisfied, you can return the product within 30 days of purchase for a full refund. Our goal is to ensure you have the best experience possible.
+            </>
+        ),
+    },
+    {
+        question: "How does your app differentiate from others in the market?",
+        answer: (
+            <>
+                Our app is designed with adaptability, durability, and user-friendliness at its core. It stands out through its ability to evolve with your needs, offering innovative features that make managing your fitness coaching easier and more efficient.
+            </>
+        ),
+    },
+    {
+        question: "Is there a warranty included with the app?",
+        answer: (
+            <>
+                Yes, our app comes with a one-year warranty that covers any defects in functionality. We are committed to delivering a reliable product, and if any issues arise, our support team is here to help.
+            </>
+        ),
+    },
+    {
+        question: "How do I update the app to the latest version?",
+        answer: (
+            <>
+                Updating the app is easy! Simply visit your app store and check for updates. If an update is available, you'll see an option to download and install it. We recommend keeping your app updated to enjoy the latest features and improvements.
+            </>
+        ),
+    },
+    {
+        question: "Can I use the app on multiple devices?",
+        answer: (
+            <>
+                Yes, our app is designed to be used across multiple devices. You can install it on your smartphone, tablet, and even desktop to manage your coaching on the go. Simply log in with the same account credentials on each device.
+            </>
+        ),
+    },
+    {
+        question: "Is my data safe and secure with your app?",
+        answer: (
+            <>
+                Absolutely. We prioritize your data security and use industry-standard encryption methods to protect your information. Our app complies with all relevant data protection regulations to ensure your personal and client data is secure.
+            </>
+        ),
+    },
+    {
+        question: "Do you offer training or tutorials on how to use the app?",
+        answer: (
+            <>
+                We offer a range of tutorials and training materials to help you get the most out of the app. You can find these resources in the help section of the app, or visit our website for detailed guides and video tutorials.
+            </>
+        ),
+    },
+    {
+        question: "How can I provide feedback or suggest new features?",
+        answer: (
+            <>
+                We value your feedback and are always looking for ways to improve the app. You can provide feedback or suggest new features by visiting the feedback section within the app or emailing us directly at&nbsp;
+                <Link href="mailto:feedback@myfitenesshub.com">feedback@myfitenesshub.com</Link>.
+            </>
+        ),
+    },
+];
 
 export default function FAQ() {
     const [expanded, setExpanded] = React.useState(false);
@@ -40,118 +116,42 @@ export default function FAQ() {
                     textAlign: { sm: 'left', md: 'center' },
                 }}
             >
-                Frequently asked questions
+                Frequently Asked Questions
             </Typography>
             <Box sx={{ width: '100%' }}>
-                <Accordion
-                    expanded={expanded === 'panel1'}
-                    onChange={handleChange('panel1')}
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1d-content"
-                        id="panel1d-header"
+                {faqItems.map((item, index) => (
+                    <Accordion
+                        key={index}
+                        expanded={expanded === `panel${index}`}
+                        onChange={handleChange(`panel${index}`)}
                     >
-                        <Typography component="h3" variant="subtitle2" textAlign="left">
-                            How do I contact customer support if I have a question or issue?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography
-                            variant="body2"
-                            gutterBottom
-                            sx={{ maxWidth: { sm: '100%', md: '70%', textAlign: 'left', textAlign: 'left' } }}
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls={`panel${index}d-content`}
+                            id={`panel${index}d-header`}
                         >
-                            You can reach our customer support team by emailing
-                            <Link> support@email.com </Link>
-                            or calling our toll-free number. We&apos;re here to assist you
-                            promptly.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion
-                    expanded={expanded === 'panel2'}
-                    onChange={handleChange('panel2')}
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel2d-content"
-                        id="panel2d-header"
-                    >
-                        <Typography component="h3" variant="subtitle2" textAlign="left">
-                            Can I return the product if it doesn&apos;t meet my expectations?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography
-                            variant="body2"
-                            gutterBottom
-                            sx={{ maxWidth: { sm: '100%', md: '70%', textAlign: 'left' } }}
-                        >
-                            Absolutely! We offer a hassle-free return policy. If you&apos;re not
-                            completely satisfied, you can return the product within [number of
-                            days] days for a full refund or exchange.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion
-                    expanded={expanded === 'panel3'}
-                    onChange={handleChange('panel3')}
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel3d-content"
-                        id="panel3d-header"
-                    >
-                        <Typography component="h3" variant="subtitle2" textAlign="left">
-                            What makes your product stand out from others in the market?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography
-                            variant="body2"
-                            gutterBottom
-                            sx={{ maxWidth: { sm: '100%', md: '70%', textAlign: 'left' } }}
-                        >
-                            Our product distinguishes itself through its adaptability, durability,
-                            and innovative features. We prioritize user satisfaction and
-                            continually strive to exceed expectations in every aspect.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-                <Accordion
-                    expanded={expanded === 'panel4'}
-                    onChange={handleChange('panel4')}
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel4d-content"
-                        id="panel4d-header"
-                    >
-                        <Typography component="h3" variant="subtitle2" textAlign="left">
-                            Is there a warranty on the product, and what does it cover?
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography
-                            variant="body2"
-                            gutterBottom
-                            sx={{ maxWidth: { sm: '100%', md: '70%', textAlign: 'left' } }}
-                        >
-                            Yes, our product comes with a [length of warranty] warranty. It covers
-                            defects in materials and workmanship. If you encounter any issues
-                            covered by the warranty, please contact our customer support for
-                            assistance.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
+                            <Typography component="h3" variant="subtitle2" textAlign="left">
+                                {item.question}
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography
+                                variant="body2"
+                                gutterBottom
+                                sx={{ maxWidth: { sm: '100%', md: '70%' }, textAlign: 'left' }}
+                            >
+                                {item.answer}
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Button component={LinkComponent} to={'/coach-signup'} variant="contained" color="primary" sx={{ mb: 2 }}>
-                    Get started
+                    Get Started
                 </Button>
                 <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-                    No Credit Card Required. <br />By clicking &quot;Get Started as a coach&quot;  you agree to our&nbsp;
+                    No Credit Card Required. <br />By clicking &quot;Get Started as a coach&quot; you agree to our&nbsp;
                     <Link component={LinkComponent} to={'/terms'} target='_blank' color="primary">
                         Terms & Conditions
                     </Link>

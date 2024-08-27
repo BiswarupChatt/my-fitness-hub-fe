@@ -15,39 +15,39 @@ import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 const items = [
     {
         icon: <SettingsSuggestRoundedIcon />,
-        title: 'Adaptable performance',
+        title: 'Seamless Adaptability',
         description:
-            'Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.',
+            'Effortlessly adapt to your clients\' evolving needs with our app. Whether it\'s tracking progress or adjusting plans, our platform simplifies every task, enhancing your efficiency and effectiveness as a coach.',
     },
     {
         icon: <ConstructionRoundedIcon />,
-        title: 'Built to last',
+        title: 'Enduring Performance',
         description:
-            'Experience unmatched durability that goes above and beyond with lasting investment.',
+            'Built with longevity in mind, our app ensures consistent performance over time. Rely on a platform that\'s designed to grow with your coaching business, offering lasting value and reliability.',
     },
     {
         icon: <ThumbUpAltRoundedIcon />,
-        title: 'Great user experience',
+        title: 'Intuitive User Interface',
         description:
-            'Integrate our product into your routine with an intuitive and easy-to-use interface.',
+            'Experience an interface designed with fitness coaches in mind. Our app integrates smoothly into your daily routine, providing a user-friendly experience that minimizes learning curves and maximizes productivity.',
     },
     {
         icon: <AutoFixHighRoundedIcon />,
-        title: 'Innovative functionality',
+        title: 'Cutting-Edge Features',
         description:
-            'Stay ahead with features that set new standards, addressing your evolving needs better than the rest.',
+            'Stay ahead in your coaching practice with innovative tools that set new industry standards. Our app offers features that evolve alongside your needs, ensuring you always have the best resources at your fingertips.',
     },
     {
         icon: <SupportAgentRoundedIcon />,
-        title: 'Reliable support',
+        title: 'Responsive Support',
         description:
-            'Count on our responsive customer support, offering assistance that goes beyond the purchase.',
+            'Enjoy peace of mind with our dedicated support team. We\'re here to assist you with any challenges, providing ongoing help that ensures you and your clients have a seamless experience from day one.',
     },
     {
         icon: <QueryStatsRoundedIcon />,
-        title: 'Precision in every detail',
+        title: 'Precision-Driven Design',
         description:
-            'Enjoy a meticulously crafted product where small touches make a significant impact on your overall experience.',
+            'Every detail in our app is crafted with care to enhance your coaching experience. From detailed tracking to customizable options, our platform ensures precision in every aspect of client management.',
     },
 ];
 
