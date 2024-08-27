@@ -110,7 +110,7 @@ export default function Footer() {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: { xs: 'center', sm: 'flex-end' }, // Adjusted to right-align
+              alignItems: { xs: 'center', sm: 'flex-end' },
               width: { xs: '100%', sm: '50%' },
               gap: { xs: 2, sm: 4 },
             }}
@@ -123,7 +123,7 @@ export default function Footer() {
                 display: 'flex',
                 flexDirection: { xs: 'column', sm: 'row' },
                 gap: { xs: 2, sm: 4 },
-                justifyContent: 'flex-end', // Ensures the content inside is right-aligned
+                justifyContent: 'flex-end',
               }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -134,7 +134,7 @@ export default function Footer() {
                     color="text.secondary"
                     to={link.path}
                     underline="hover"
-                    sx={{ fontSize: '0.875rem', textAlign: 'right' }} // Right-aligns the text
+                    sx={{ fontSize: '0.875rem', textAlign: 'right' }}
                   >
                     {link.name}
                   </Link>
@@ -148,7 +148,7 @@ export default function Footer() {
                     color="text.secondary"
                     to={link.path}
                     underline="hover"
-                    sx={{ fontSize: '0.875rem', textAlign: 'right' }} // Right-aligns the text
+                    sx={{ fontSize: '0.875rem', textAlign: 'right' }}
                   >
                     {link.name}
                   </Link>
@@ -181,21 +181,16 @@ export default function Footer() {
           >
             <IconButton
               color="inherit"
-              href="https://github.com/mui"
+              href="https://github.com/BiswarupChatt"
+              target="_blank"
               aria-label="GitHub"
             >
               <GitHubIcon />
             </IconButton>
             <IconButton
               color="inherit"
-              href="https://twitter.com/mui"
-              aria-label="Twitter"
-            >
-              <TwitterIcon />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              href="https://www.linkedin.com/company/mui/"
+              href="https://www.linkedin.com/in/biswarupchatt/"
+              target="_blank"
               aria-label="LinkedIn"
             >
               <LinkedInIcon />
